@@ -95,33 +95,43 @@ function shouldIgnoreExe(fileName: string): boolean {
     return IGNORED_EXE_PATTERNS.some(p => p.test(fileName));
 }
 
+function findExecutables(dir: string, depth = 0, maxDepth = 6): { name: string; fullPath: string; size: number }[] {
+    let results: { name: string; fullPath: string; size: number }[] = [];
+    if (depth > maxDepth) return results;
+
+    try {
+        const entries = fs.readdirSync(dir, { withFileTypes: true });
+        for (const entry of entries) {
+            const fullPath = path.join(dir, entry.name);
+            if (entry.isDirectory()) {
+                results = results.concat(findExecutables(fullPath, depth + 1, maxDepth));
+            } else if (entry.isFile() && entry.name.toLowerCase().endsWith('.exe') && !shouldIgnoreExe(entry.name)) {
+                try {
+                    const stat = fs.statSync(fullPath);
+                    results.push({ name: entry.name, fullPath, size: stat.size });
+                } catch {
+                    results.push({ name: entry.name, fullPath, size: 0 });
+                }
+            }
+        }
+    } catch {
+        // ignore read errors
+    }
+    return results;
+}
+
 /**
- * Auto-detect the best game executable in a folder.
+ * Auto-detect the best game executable in a folder recursively.
  * Rules:
  *   1. Filter out known non-game exes
  *   2. Prefer exe whose name matches game title
  *   3. Fall back to largest exe
  */
 export function detectBestExe(folderPath: string, gameTitle: string): string | null {
-    let entries: { name: string; size: number }[] = [];
-
-    try {
-        entries = fs.readdirSync(folderPath, { withFileTypes: true })
-            .filter(e => e.isFile() && e.name.toLowerCase().endsWith('.exe') && !shouldIgnoreExe(e.name))
-            .map(e => {
-                try {
-                    const stat = fs.statSync(path.join(folderPath, e.name));
-                    return { name: e.name, size: stat.size };
-                } catch {
-                    return { name: e.name, size: 0 };
-                }
-            });
-    } catch {
-        return null;
-    }
+    const entries = findExecutables(folderPath);
 
     if (entries.length === 0) return null;
-    if (entries.length === 1) return path.join(folderPath, entries[0].name);
+    if (entries.length === 1) return entries[0].fullPath;
 
     // Try name match first
     const normalized = gameTitle.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -129,11 +139,11 @@ export function detectBestExe(folderPath: string, gameTitle: string): string | n
         const exeName = e.name.toLowerCase().replace(/[^a-z0-9]/g, '').replace(/\.exe$/, '');
         return exeName.includes(normalized) || normalized.includes(exeName);
     });
-    if (nameMatch) return path.join(folderPath, nameMatch.name);
+    if (nameMatch) return nameMatch.fullPath;
 
     // Fall back to largest
     entries.sort((a, b) => b.size - a.size);
-    return path.join(folderPath, entries[0].name);
+    return entries[0].fullPath;
 }
 
 function addTagToGame(db: Database.Database, gameId: number, tagName: string) {
