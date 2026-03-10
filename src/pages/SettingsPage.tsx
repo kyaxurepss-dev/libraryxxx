@@ -41,9 +41,15 @@ export function SettingsPage() {
 
     // Plugins State
     const [plugins, setPlugins] = useState<PluginData[]>([]);
+    const [appVersion, setAppVersion] = useState<string>('');
 
     useEffect(() => {
         loadSettings();
+        
+        // Fetch app version
+        if (window.electron.getAppVersion) {
+             window.electron.getAppVersion().then(setAppVersion).catch(console.error);
+        }
 
         // Listen to updater messages
         window.electron.onUpdateMessage((msg: { text: string; data?: any }) => {
@@ -798,7 +804,14 @@ export function SettingsPage() {
             <section className="p-6 md:p-7 rounded-2xl glass-panel border border-white/10">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
-                        <h2 className="text-2xl font-extrabold text-text-primary">Updates</h2>
+                        <h2 className="text-2xl font-extrabold text-text-primary flex items-center gap-2">
+                            Updates
+                            {appVersion && (
+                                <span className="text-sm font-semibold text-accent/80 bg-accent/10 px-2 py-0.5 rounded-md border border-accent/20">
+                                    v{appVersion}
+                                </span>
+                            )}
+                        </h2>
                         <p className="text-sm text-text-secondary mt-1">Automatic background updates are enabled</p>
                     </div>
                     <div className="flex items-center gap-3">

@@ -48,6 +48,10 @@ export function initUpdater(mainWindow: BrowserWindow) {
     });
 
     // IPC Handlers
+    ipcMain.handle('updater:getVersion', () => {
+        return require('electron').app.getVersion();
+    });
+
     ipcMain.handle('updater:check', async () => {
         try {
             const result = await autoUpdater.checkForUpdates();

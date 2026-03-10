@@ -87,6 +87,7 @@ const electronAPI = {
     maximize: () => ipcRenderer.invoke('window:maximize'),
     close: () => ipcRenderer.invoke('window:close'),
     // Updater
+    getAppVersion: () => ipcRenderer.invoke('updater:getVersion'),
     checkForUpdates: () => ipcRenderer.invoke('updater:check'),
     downloadUpdate: () => ipcRenderer.invoke('updater:download'),
     installUpdate: () => ipcRenderer.invoke('updater:install'),
