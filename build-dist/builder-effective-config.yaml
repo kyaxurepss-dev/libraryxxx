@@ -1,0 +1,37 @@
+directories:
+  output: build-dist
+  buildResources: build
+appId: com.kyaxa.library
+productName: Libraryxxx
+npmRebuild: true
+publish:
+  - provider: github
+    owner: kyaxucodes
+    repo: libraryxxx
+files:
+  - filter:
+      - dist/**/*
+      - electron/dist/**/*
+extraMetadata:
+  main: electron/dist/main.js
+win:
+  target: nsis
+  icon: build/icon.ico
+  verifyUpdateCodeSignature: false
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  installerIcon: build/icon.ico
+  uninstallerIcon: build/icon.ico
+  installerSidebar: build/installerSidebar.bmp
+  uninstallerSidebar: build/installerSidebar.bmp
+  installerHeader: build/installerHeader.bmp
+  installerHeaderIcon: build/icon.ico
+  include: build/installer.nsh
+  createDesktopShortcut: false
+  createStartMenuShortcut: false
+  shortcutName: Libraryxxx
+  artifactName: LibraryxxxSetup-${version}.exe
+  uninstallDisplayName: Libraryxxx
+  deleteAppDataOnUninstall: false
+electronVersion: 40.8.0

@@ -1,0 +1,279 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-bg-primary: #071224;
+  --color-bg-surface: #0f1c33;
+  --color-bg-surface-hover: #172746;
+  --color-bg-surface-active: #1f3258;
+  --color-accent: #3b82f6;
+  --color-accent-hover: #60a5fa;
+  --color-accent-glow: #3b82f680;
+  --color-text-primary: #f4f8ff;
+  --color-text-secondary: #a9b6cb;
+  --color-text-muted: #6f809f;
+  --color-border: #ffffff14;
+  --color-border-hover: #ffffff2e;
+  --color-success: #10b981;
+  --color-danger: #ef4444;
+  --glow-text: 0 0 20px var(--color-accent-glow);
+}
+
+:root {
+  --color-bg-primary: #071224;
+  --color-bg-surface: #0f1c33;
+  --color-bg-surface-hover: #172746;
+  --color-bg-surface-active: #1f3258;
+  --color-accent: #3b82f6;
+  --color-accent-hover: #60a5fa;
+  --color-accent-glow: #3b82f680;
+  --color-text-primary: #f4f8ff;
+  --color-text-secondary: #a9b6cb;
+  --color-text-muted: #6f809f;
+  --color-border: #ffffff14;
+  --color-border-hover: #ffffff2e;
+}
+
+:root.theme-minimal {
+  --color-bg-primary: #000000;
+  --color-bg-surface: #0a0a0a;
+  --color-bg-surface-hover: #141414;
+  --color-bg-surface-active: #1f1f1f;
+  --color-accent: #ffffff;
+  --color-accent-hover: #e5e5e5;
+  --color-accent-glow: #ffffff40;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #a3a3a3;
+  --color-text-muted: #737373;
+}
+
+:root.theme-neon {
+  --color-bg-primary: #090914;
+  --color-bg-surface: #101026;
+  --color-bg-surface-hover: #181836;
+  --color-bg-surface-active: #202047;
+  --color-accent: #f43f5e;
+  --color-accent-hover: #fb7185;
+  --color-accent-glow: #f43f5e80;
+  --color-text-primary: #fff1f2;
+  --color-text-secondary: #fda4af;
+  --color-text-muted: #f43f5e99;
+  --color-border: #f43f5e22;
+  --color-border-hover: #f43f5e44;
+}
+
+:root.theme-steamdeck {
+  --color-bg-primary: #1a1b1c;
+  --color-bg-surface: #26282d;
+  --color-bg-surface-hover: #31343a;
+  --color-bg-surface-active: #3e4148;
+  --color-accent: #1a9fff;
+  --color-accent-hover: #4db3ff;
+  --color-accent-glow: #1a9fff80;
+  --color-text-primary: #e6e7e8;
+  --color-text-secondary: #8b929a;
+  --color-text-muted: #616870;
+  --color-border: #ffffff0a;
+  --color-border-hover: #ffffff1a;
+}
+
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(1000px 480px at 10% -20%, rgba(59, 130, 246, 0.2), transparent 60%),
+    radial-gradient(900px 420px at 100% 0%, rgba(14, 165, 233, 0.12), transparent 58%),
+    linear-gradient(180deg, #071224 0%, #061022 100%);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ffffff18;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ffffff33;
+}
+
+.drag-region {
+  -webkit-app-region: drag;
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: white;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes orb-float {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(15px, -20px) scale(1.05);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-orb-float {
+  animation: orb-float 18s ease-in-out infinite;
+}
+
+.game-card {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3);
+  transform-style: preserve-3d;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: var(--color-border-hover);
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.45), 0 0 26px rgba(59, 130, 246, 0.18);
+  z-index: 10;
+}
+
+.game-card .card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(5, 10, 20, 0.95) 8%, rgba(8, 15, 31, 0.58) 45%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.game-card:hover .card-overlay {
+  opacity: 1;
+}
+
+.game-card .card-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 14px;
+  transform: translateY(8px);
+  opacity: 0;
+  transition: all 0.22s ease;
+}
+
+.game-card:hover .card-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.hero-banner {
+  position: relative;
+  min-height: 300px;
+  height: min(42vh, 380px);
+  border-radius: 22px;
+  overflow: hidden;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.35);
+}
+
+.hero-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 75% 8%, rgba(59, 130, 246, 0.16) 0%, transparent 40%),
+    linear-gradient(to top, rgba(4, 8, 18, 0.98) 4%, rgba(4, 8, 18, 0.72) 36%, rgba(4, 8, 18, 0.14) 78%, transparent 100%);
+}
+
+.glass {
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--color-border);
+}
+
+.glass-panel {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--color-bg-surface) 25%, var(--color-bg-surface-hover) 50%, var(--color-bg-surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+  border-radius: 10px;
+}

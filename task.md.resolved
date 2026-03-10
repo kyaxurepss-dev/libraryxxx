@@ -1,0 +1,37 @@
+# Kyaxa Library - Video Game Launcher
+
+## Phase 1: Project Setup & Core Structure
+- [ ] Initialize Electron + Vite + React + TypeScript project
+- [ ] Configure Tailwind CSS v4 + ShadCN UI
+- [ ] Set up SQLite database with all tables (games, screenshots, dlcs, tags, game_tags, collections, collection_games, extras)
+- [ ] Create Electron main process (IPC handlers, window management)
+- [ ] Create app shell with sidebar navigation
+
+## Phase 2: Scanning & Library UI
+- [ ] Implement folder scanning logic (main process)
+- [ ] Build library grid UI (Steam Deck style cards, animations)
+- [ ] Implement scroll and filtering
+- [ ] Build hero cover section
+
+## Phase 3: IGDB Integration
+- [ ] Implement IGDB API authentication (Twitch OAuth)
+- [ ] Game search and metadata fetching
+- [ ] Cover and screenshot downloading/caching
+- [ ] Auto-match scanned folders to IGDB games
+
+## Phase 4: Game Page & Launcher
+- [ ] Build game detail page (cover, description, Metacritic, gallery, DLCs)
+- [ ] Implement executable selector (file dialog)
+- [ ] Game launching (child process execution)
+- [ ] Playtime tracking (process monitoring + SQLite persistence)
+
+## Phase 5: Features
+- [ ] Favorites system (toggle + filter view)
+- [ ] Tags management (CRUD + filter)
+- [ ] Collections (create, add games, view)
+- [ ] Extras/Mods (associate files/folders, open)
+
+## Phase 6: Search & Settings
+- [ ] Search functionality (name, tags, collections)
+- [ ] Settings page (scan folders, IGDB credentials, preferences)
+- [ ] Auto-scan on startup

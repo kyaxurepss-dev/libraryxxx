@@ -1,0 +1,365 @@
+  • electron-builder  version=26.8.1 os=10.0.26200
+  • loaded configuration  file=package.json ("build" field)
+  • effective config  config=directories:
+  output: build-dist
+  buildResources: build
+appId: com.kyaxa.library
+productName: Kyaxa Library
+npmRebuild: true
+files:
+  - filter:
+      - dist/**/*
+      - electron/dist/**/*
+extraMetadata:
+  main: electron/dist/main.js
+win:
+  target: nsis
+  icon: build/icon.ico
+  verifyUpdateCodeSignature: false
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  installerIcon: build/icon.ico
+  uninstallerIcon: build/icon.ico
+  installerSidebar: build/installerSidebar.bmp
+  uninstallerSidebar: build/installerSidebar.bmp
+  installerHeader: build/installerHeader.bmp
+  installerHeaderIcon: build/icon.ico
+  include: build/installer.nsh
+  createDesktopShortcut: false
+  createStartMenuShortcut: false
+  shortcutName: Kyaxa Library
+  artifactName: KyaxaLibrarySetup-${version}.exe
+  uninstallDisplayName: Kyaxa Library
+  deleteAppDataOnUninstall: false
+
+  • no event listeners found  event=beforePack
+  • spawning        command=npm prefix -w cwd=C:\Users\darir\Coding shi\libraryxxx
+  • exited          command=npm code=1 pid=19236
+  • executing @electron/rebuild  electronVersion=40.8.0 arch=x64 buildFromSource=false workspaceRoot=C:\Users\darir\Coding shi\libraryxxx projectDir=./ appDir=./
+  • installing native dependencies  arch=x64
+  • preparing       moduleName=better-sqlite3 arch=x64
+  • finished        moduleName=better-sqlite3 arch=x64
+  • skipped. set ENV=electron-rebuild to determine why  moduleName=better-sqlite3 arch=x64
+  • completed installing native dependencies
+  • packaging       platform=win32 arch=x64 electron=40.8.0 appOutDir=build-dist\win-unpacked
+  • no custom electronDist provided, unpacking default Electron distribution
+  • spawning        command=C:\Users\darir\Coding shi\libraryxxx\node_modules\app-builder-bin\win\x64\app-builder.exe unpack-electron --configuration [{"platform":"win32","arch":"x64","version":"40.8.0"}] --output C:\Users\darir\Coding shi\libraryxxx\build-dist\win-unpacked --distMacOsAppName Electron.app
+  • map async       taskCount=2
+  • map async       taskCount=1
+  • map async       taskCount=75
+  • exited          command=app-builder.exe code=0 pid=22332
+  • no event listeners found  event=afterExtract
+  • searching for node modules  pm=npm searchDir=C:\Users\darir\Coding shi\libraryxxx
+(node:8016) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+  • node modules collection complete  packageName=libraryxxx depCount=49
+  • collected node modules  pm=npm nodeModules=[{"name":"base64-js","version":"1.5.1","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\base64-js"},{"name":"better-sqlite3","version":"12.6.2","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\better-sqlite3"},{"name":"bindings","version":"1.5.0","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\bindings"},{"name":"bl","version":"4.1.0","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\bl"},{"name":"buffer","version":"5.7.1","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\buffer"},{"name":"chownr","version":"1.1.4","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\tar-fs\\node_modules\\chownr"},{"name":"class-variance-authority","version":"0.7.1","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\class-variance-authority"},{"name":"clsx","version":"2.1.1","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\clsx"},{"name":"cookie","version":"1.1.1","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\cookie"},{"name":"decompress-response","version":"6.0.0","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\decompress-response"},{"name":"deep-extend","version":"0.6.0","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\deep-extend"},{"name":"detect-libc","version":"2.1.2","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\detect-libc"},{"name":"end-of-stream","version":"1.4.5","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\end-of-stream"},{"name":"expand-template","version":"2.0.3","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\expand-template"},{"name":"file-uri-to-path","version":"1.0.0","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\file-uri-to-path"},{"name":"fs-constants","version":"1.0.0","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\fs-constants"},{"name":"github-from-package","version":"0.0.0","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\github-from-package"},{"name":"ieee754","version":"1.2.1","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\ieee754"},{"name":"inherits","version":"2.0.4","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\inherits"},{"name":"ini","version":"1.3.8","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\ini"},{"name":"lucide-react","version":"0.577.0","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\lucide-react"},{"name":"mimic-response","version":"3.1.0","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\decompress-response\\node_modules\\mimic-response"},{"name":"minimist","version":"1.2.8","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\minimist"},{"name":"mkdirp-classic","version":"0.5.3","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\mkdirp-classic"},{"name":"napi-build-utils","version":"2.0.0","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\napi-build-utils"},{"name":"node-abi","version":"3.87.0","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\prebuild-install\\node_modules\\node-abi"},{"name":"once","version":"1.4.0","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\once"},{"name":"prebuild-install","version":"7.1.3","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\prebuild-install"},{"name":"pump","version":"3.0.4","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\pump"},{"name":"rc","version":"1.2.8","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\rc"},{"name":"react","version":"19.2.4","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\react"},{"name":"react-dom","version":"19.2.4","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\react-dom"},{"name":"react-router","version":"7.13.1","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\react-router"},{"name":"react-router-dom","version":"7.13.1","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\react-router-dom"},{"name":"readable-stream","version":"3.6.2","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\readable-stream"},{"name":"safe-buffer","version":"5.2.1","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\safe-buffer"},{"name":"scheduler","version":"0.27.0","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\scheduler"},{"name":"semver","version":"7.7.4","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\prebuild-install\\node_modules\\semver"},{"name":"set-cookie-parser","version":"2.7.2","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\set-cookie-parser"},{"name":"simple-concat","version":"1.0.1","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\simple-concat"},{"name":"simple-get","version":"4.0.1","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\simple-get"},{"name":"string_decoder","version":"1.3.0","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\string_decoder"},{"name":"strip-json-comments","version":"2.0.1","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\rc\\node_modules\\strip-json-comments"},{"name":"tailwind-merge","version":"3.5.0","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\tailwind-merge"},{"name":"tar-fs","version":"2.1.4","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\tar-fs"},{"name":"tar-stream","version":"2.2.0","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\tar-stream"},{"name":"tunnel-agent","version":"0.6.0","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\tunnel-agent"},{"name":"util-deprecate","version":"1.0.2","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\util-deprecate"},{"name":"wrappy","version":"1.0.2","dir":"C:\\Users\\darir\\Coding shi\\libraryxxx\\node_modules\\wrappy"}]
+  • duplicate dependency references  dependencies=["once@1.4.0","once@1.4.0","pump@3.0.4","readable-stream@3.6.2","end-of-stream@1.4.5","react-dom@19.2.4","react-dom@19.2.4"]
+  • identified module  dep=base64-js from=node_modules\base64-js to=build-dist\win-unpacked\resources\app\node_modules\base64-js filesCount=4
+  • identified module  dep=better-sqlite3 from=node_modules\better-sqlite3 to=build-dist\win-unpacked\resources\app\node_modules\better-sqlite3 filesCount=48
+  • identified module  dep=bindings from=node_modules\bindings to=build-dist\win-unpacked\resources\app\node_modules\bindings filesCount=3
+  • identified module  dep=bl from=node_modules\bl to=build-dist\win-unpacked\resources\app\node_modules\bl filesCount=4
+  • identified module  dep=buffer from=node_modules\buffer to=build-dist\win-unpacked\resources\app\node_modules\buffer filesCount=4
+  • identified module  dep=chownr from=node_modules\tar-fs\node_modules\chownr to=build-dist\win-unpacked\resources\app\node_modules\chownr filesCount=3
+  • identified module  dep=class-variance-authority from=node_modules\class-variance-authority to=build-dist\win-unpacked\resources\app\node_modules\class-variance-authority filesCount=6
+  • identified module  dep=clsx from=node_modules\clsx to=build-dist\win-unpacked\resources\app\node_modules\clsx filesCount=8
+  • identified module  dep=cookie from=node_modules\cookie to=build-dist\win-unpacked\resources\app\node_modules\cookie filesCount=4
+  • identified module  dep=decompress-response from=node_modules\decompress-response to=build-dist\win-unpacked\resources\app\node_modules\decompress-response filesCount=3
+  • identified module  dep=deep-extend from=node_modules\deep-extend to=build-dist\win-unpacked\resources\app\node_modules\deep-extend filesCount=4
+  • identified module  dep=detect-libc from=node_modules\detect-libc to=build-dist\win-unpacked\resources\app\node_modules\detect-libc filesCount=6
+  • identified module  dep=end-of-stream from=node_modules\end-of-stream to=build-dist\win-unpacked\resources\app\node_modules\end-of-stream filesCount=3
+  • identified module  dep=expand-template from=node_modules\expand-template to=build-dist\win-unpacked\resources\app\node_modules\expand-template filesCount=4
+  • identified module  dep=file-uri-to-path from=node_modules\file-uri-to-path to=build-dist\win-unpacked\resources\app\node_modules\file-uri-to-path filesCount=4
+  • identified module  dep=fs-constants from=node_modules\fs-constants to=build-dist\win-unpacked\resources\app\node_modules\fs-constants filesCount=4
+  • identified module  dep=github-from-package from=node_modules\github-from-package to=build-dist\win-unpacked\resources\app\node_modules\github-from-package filesCount=3
+  • identified module  dep=ieee754 from=node_modules\ieee754 to=build-dist\win-unpacked\resources\app\node_modules\ieee754 filesCount=3
+  • identified module  dep=inherits from=node_modules\inherits to=build-dist\win-unpacked\resources\app\node_modules\inherits filesCount=4
+  • identified module  dep=ini from=node_modules\ini to=build-dist\win-unpacked\resources\app\node_modules\ini filesCount=3
+  • identified module  dep=lucide-react from=node_modules\lucide-react to=build-dist\win-unpacked\resources\app\node_modules\lucide-react filesCount=3934
+  • identified module  dep=mimic-response from=node_modules\decompress-response\node_modules\mimic-response to=build-dist\win-unpacked\resources\app\node_modules\mimic-response filesCount=3
+  • identified module  dep=minimist from=node_modules\minimist to=build-dist\win-unpacked\resources\app\node_modules\minimist filesCount=4
+  • identified module  dep=mkdirp-classic from=node_modules\mkdirp-classic to=build-dist\win-unpacked\resources\app\node_modules\mkdirp-classic filesCount=3
+  • identified module  dep=napi-build-utils from=node_modules\napi-build-utils to=build-dist\win-unpacked\resources\app\node_modules\napi-build-utils filesCount=4
+  • identified module  dep=node-abi from=node_modules\prebuild-install\node_modules\node-abi to=build-dist\win-unpacked\resources\app\node_modules\node-abi filesCount=4
+  • identified module  dep=once from=node_modules\once to=build-dist\win-unpacked\resources\app\node_modules\once filesCount=3
+  • identified module  dep=prebuild-install from=node_modules\prebuild-install to=build-dist\win-unpacked\resources\app\node_modules\prebuild-install filesCount=13
+  • identified module  dep=pump from=node_modules\pump to=build-dist\win-unpacked\resources\app\node_modules\pump filesCount=7
+  • identified module  dep=rc from=node_modules\rc to=build-dist\win-unpacked\resources\app\node_modules\rc filesCount=8
+  • identified module  dep=react from=node_modules\react to=build-dist\win-unpacked\resources\app\node_modules\react filesCount=26
+  • identified module  dep=react-dom from=node_modules\react-dom to=build-dist\win-unpacked\resources\app\node_modules\react-dom filesCount=42
+  • identified module  dep=react-router from=node_modules\react-router to=build-dist\win-unpacked\resources\app\node_modules\react-router filesCount=50
+  • identified module  dep=react-router-dom from=node_modules\react-router-dom to=build-dist\win-unpacked\resources\app\node_modules\react-router-dom filesCount=5
+  • identified module  dep=readable-stream from=node_modules\readable-stream to=build-dist\win-unpacked\resources\app\node_modules\readable-stream filesCount=24
+  • identified module  dep=safe-buffer from=node_modules\safe-buffer to=build-dist\win-unpacked\resources\app\node_modules\safe-buffer filesCount=3
+  • identified module  dep=scheduler from=node_modules\scheduler to=build-dist\win-unpacked\resources\app\node_modules\scheduler filesCount=14
+  • identified module  dep=semver from=node_modules\prebuild-install\node_modules\semver to=build-dist\win-unpacked\resources\app\node_modules\semver filesCount=51
+  • identified module  dep=set-cookie-parser from=node_modules\set-cookie-parser to=build-dist\win-unpacked\resources\app\node_modules\set-cookie-parser filesCount=3
+  • identified module  dep=simple-concat from=node_modules\simple-concat to=build-dist\win-unpacked\resources\app\node_modules\simple-concat filesCount=3
+  • identified module  dep=simple-get from=node_modules\simple-get to=build-dist\win-unpacked\resources\app\node_modules\simple-get filesCount=3
+  • identified module  dep=string_decoder from=node_modules\string_decoder to=build-dist\win-unpacked\resources\app\node_modules\string_decoder filesCount=3
+  • identified module  dep=strip-json-comments from=node_modules\rc\node_modules\strip-json-comments to=build-dist\win-unpacked\resources\app\node_modules\strip-json-comments filesCount=3
+  • identified module  dep=tailwind-merge from=node_modules\tailwind-merge to=build-dist\win-unpacked\resources\app\node_modules\tailwind-merge filesCount=27
+  • identified module  dep=tar-fs from=node_modules\tar-fs to=build-dist\win-unpacked\resources\app\node_modules\tar-fs filesCount=3
+  • identified module  dep=tar-stream from=node_modules\tar-stream to=build-dist\win-unpacked\resources\app\node_modules\tar-stream filesCount=7
+  • identified module  dep=tunnel-agent from=node_modules\tunnel-agent to=build-dist\win-unpacked\resources\app\node_modules\tunnel-agent filesCount=3
+  • identified module  dep=util-deprecate from=node_modules\util-deprecate to=build-dist\win-unpacked\resources\app\node_modules\util-deprecate filesCount=5
+  • identified module  dep=wrappy from=node_modules\wrappy to=build-dist\win-unpacked\resources\app\node_modules\wrappy filesCount=3
+  • not packed into asar archive  file=node_modules\better-sqlite3\build\Release\better_sqlite3.node reason=contains executable code
+  • updating asar integrity executable resource  executablePath=build-dist\win-unpacked\Kyaxa Library.exe
+  • getPublishConfigsForUpdateInfo: no publishConfigs, detect using repository info
+  • spawning        command=C:\Users\darir\Coding shi\libraryxxx\node_modules\app-builder-bin\win\x64\app-builder.exe icon --format ico --root C:\Users\darir\Coding shi\libraryxxx\build --root C:\Users\darir\Coding shi\libraryxxx --out C:\Users\darir\Coding shi\libraryxxx\build-dist\.icon-ico --input build/icon.ico
+  • path doesn't exist  path=C:\Users\darir\Coding shi\libraryxxx\build\build\icon.ico
+  • path resolved   path=C:\Users\darir\Coding shi\libraryxxx\build\icon.ico outputFormat=ico
+  • exited          command=app-builder.exe code=0 pid=12052 out={"icons":[{"file":"C:\\Users\\darir\\Coding shi\\libraryxxx\\build\\icon.ico","size":256}],"isFallback":false}
+  • spawning        command=C:\Users\darir\Coding shi\libraryxxx\node_modules\app-builder-bin\win\x64\app-builder.exe rcedit --args ["C:\\Users\\darir\\Coding shi\\libraryxxx\\build-dist\\win-unpacked\\Kyaxa Library.exe","--set-version-string","FileDescription","Kyaxa Library","--set-version-string","ProductName","Kyaxa Library","--set-version-string","LegalCopyright","Copyright © 2026 Kyaxa","--set-file-version","1.0.0","--set-p 0c150958a8140d89085bc75cb138d81ff4e01e4d44b1b7baa2f8c750a7a6ff06 (sha256 hash) (sha256 hash) Library","--set-version-string","OriginalFilename","","--set-version-string","CompanyName","Kyaxa","--set-icon","C:\\Users\\darir\\Coding shi\\libraryxxx\\build\\icon.ico"]
+  • found existing  path=C:\Users\darir\AppData\Local\electron-builder\Cache\winCodeSign\winCodeSign-2.6.0
+  • execute command  command='C:\Users\darir\AppData\Local\electron-builder\Cache\winCodeSign\winCodeSign-2.6.0\rcedit-x64.exe' 'C:\Users\darir\Coding shi\libraryxxx\build-dist\win-unpacked\Kyaxa Library.exe' --set-version-string FileDescription 'Kyaxa Library' --set-version-string ProductName 'Kyaxa Library' --set-version-string LegalCopyright 'Copyright © 2026 Kyaxa' --set-file-version 1.0.0 --set-product-version 1.0.0.0 --set-version-string InternalName 'Kyaxa Library' --set-version-string OriginalFilename '' --set-version-string CompanyName Kyaxa --set-icon 'C:\Users\darir\Coding shi\libraryxxx\build\icon.ico'
+                     workingDirectory=
+  ⨯ cannot execute  cause=exit status 1
+                    errorOut=Fatal error: Unable to commit changes
+
+                    command='C:\Users\darir\AppData\Local\electron-builder\Cache\winCodeSign\winCodeSign-2.6.0\rcedit-x64.exe' 'C:\Users\darir\Coding shi\libraryxxx\build-dist\win-unpacked\Kyaxa Library.exe' --set-version-string FileDescription 'Kyaxa Library' --set-version-string ProductName 'Kyaxa Library' --set-version-string LegalCopyright 'Copyright © 2026 Kyaxa' --set-file-version 1.0.0 --set-product-version 1.0.0.0 --set-version-string InternalName 'Kyaxa Library' --set-version-string OriginalFilename '' --set-version-string CompanyName Kyaxa --set-icon 'C:\Users\darir\Coding shi\libraryxxx\build\icon.ico'
+                    workingDir=
+  • exited          command=app-builder.exe code=2 pid=21832
+  • spawning        command=C:\Users\darir\Coding shi\libraryxxx\node_modules\app-builder-bin\win\x64\app-builder.exe rcedit --args ["C:\\Users\\darir\\Coding shi\\libraryxxx\\build-dist\\win-unpacked\\Kyaxa Library.exe","--set-version-string","FileDescription","Kyaxa Library","--set-version-string","ProductName","Kyaxa Library","--set-version-string","LegalCopyright","Copyright © 2026 Kyaxa","--set-file-version","1.0.0","--set-p 0c150958a8140d89085bc75cb138d81ff4e01e4d44b1b7baa2f8c750a7a6ff06 (sha256 hash) (sha256 hash) Library","--set-version-string","OriginalFilename","","--set-version-string","CompanyName","Kyaxa","--set-icon","C:\\Users\\darir\\Coding shi\\libraryxxx\\build\\icon.ico"]
+  • found existing  path=C:\Users\darir\AppData\Local\electron-builder\Cache\winCodeSign\winCodeSign-2.6.0
+  • execute command  command='C:\Users\darir\AppData\Local\electron-builder\Cache\winCodeSign\winCodeSign-2.6.0\rcedit-x64.exe' 'C:\Users\darir\Coding shi\libraryxxx\build-dist\win-unpacked\Kyaxa Library.exe' --set-version-string FileDescription 'Kyaxa Library' --set-version-string ProductName 'Kyaxa Library' --set-version-string LegalCopyright 'Copyright © 2026 Kyaxa' --set-file-version 1.0.0 --set-product-version 1.0.0.0 --set-version-string InternalName 'Kyaxa Library' --set-version-string OriginalFilename '' --set-version-string CompanyName Kyaxa --set-icon 'C:\Users\darir\Coding shi\libraryxxx\build\icon.ico'
+                     workingDirectory=
+  • command executed  executable=C:\Users\darir\AppData\Local\electron-builder\Cache\winCodeSign\winCodeSign-2.6.0\rcedit-x64.exe
+  • exited          command=app-builder.exe code=0 pid=8760
+  • signing with signtool.exe  path=build-dist\win-unpacked\Kyaxa Library.exe
+  • no signing info identified, signing is skipped  signHook=false cscInfo=null
+wine&sign: 2s 581ms
+  • no event listeners found  event=afterSign
+  • building        target=nsis file=build-dist\KyaxaLibrarySetup-1.0.0.exe archs=x64 oneClick=false perMachine=false
+  • no event listeners found  event=artifactBuildStarted
+  • spawning        command=C:\Users\darir\Coding shi\libraryxxx\node_modules\app-builder-bin\win\x64\app-builder.exe download-artifact --name nsis-3.0.4.1-nsis-3.0.4.1 --url https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-3.0.4.1/nsis-3.0.4.1.7z --sha512 VKMiizYdmNdJOWpRGz4trl4lD++BvYP2irAXpMilheUP0pc93iKlWAoP843Vlraj8YG19CVn0j+dCo/hURz9+Q==
+  • found existing  path=C:\Users\darir\AppData\Local\electron-builder\Cache\nsis\nsis-3.0.4.1-nsis-3.0.4.1
+  • exited          command=app-builder.exe code=0 pid=20020 out=C:\Users\darir\AppData\Local\electron-builder\Cache\nsis\nsis-3.0.4.1-nsis-3.0.4.1
+  • signing with signtool.exe  path=build-dist\win-unpacked\resources\elevate.exe
+  • no signing info identified, signing is skipped  signHook=false cscInfo=null
+  • executing       file=C:\Users\darir\Coding shi\libraryxxx\node_modules\7zip-bin\win\x64\7za.exe args=a -bd -mx=9 -md=1m -mtc=off -ms=off -mtm=off -mta=off C:\Users\darir\Coding shi\libraryxxx\build-dist\libraryxxx-1.0.0-x64.nsis.7z . -xr!*.avi -xr!*.mov -xr!*.m4v -xr!*.mp4 -xr!*.m4p -xr!*.qt -xr!*.mkv -xr!*.webm -xr!*.vmdk cwd=C:\Users\darir\Coding shi\libraryxxx\build-dist\win-unpacked
+nsis package, x64: 13s 206ms
+  • executing       file=C:\Users\darir\Coding shi\libraryxxx\node_modules\7zip-bin\win\x64\7za.exe args=l C:\Users\darir\Coding shi\libraryxxx\build-dist\libraryxxx-1.0.0-x64.nsis.7z
+  • executed        file=C:\Users\darir\Coding shi\libraryxxx\node_modules\7zip-bin\win\x64\7za.exe stdout=
+7-Zip (a) 21.07 (x64) : Copyright (c) 1999-2021 Igor Pavlov : 2021-12-26
+                      Scanning the drive for archives:
+1 file, 101781726 bytes (98 MiB)
+                      Listing archive: C:\Users\darir\Coding shi\libraryxxx\build-dist\libraryxxx-1.0.0-x64.nsis.7z
+                      --
+Path = C:\Users\darir\Coding shi\libraryxxx\build-dist\libraryxxx-1.0.0-x64.nsis.7z
+Type = 7z
+Physical Size = 101781726
+Headers Size = 2369
+Method = LZMA2:20 LZMA:20 BCJ2
+Solid = -
+Blocks = 123
+                         Date      Time    Attr         Size   Compressed  Name
+------------------- ----- ------------ ------------  ------------------------
+                    D....            0            0  locales
+                    D....            0            0  resources
+                    D....            0            0  resources\app.asar.unpacked
+                    D....            0            0  resources\app.asar.unpacked\node_modules
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\build
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\build\Release
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\deps
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\patches
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\sqlite3
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\lib
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\src
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\src\objects
+                    D....            0            0  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util
+                    ....A       114781       104902  chrome_100_percent.pak
+                    ....A       186658       173299  chrome_200_percent.pak
+                    ....A     10822192      3466059  icudtl.dat
+                    ....A         1096          690  LICENSE.electron.txt
+                    ....A     15995456       444854  LICENSES.chromium.html
+                    ....A       596607       142871  locales\af.pak
+                    ....A       969188       160980  locales\am.pak
+                    ....A      1072288       165911  locales\ar.pak
+                    ....A      1105607       160479  locales\bg.pak
+                    ....A      1426968       167222  locales\bn.pak
+                    ....A       672666       146207  locales\ca.pak
+                    ....A       698933       158419  locales\cs.pak
+                    ....A       628622       143089  locales\da.pak
+                    ....A       673617       151613  locales\de.pak
+                    ....A      1216543       168948  locales\el.pak
+                    ....A       543897       132581  locales\en-GB.pak
+                    ....A       550193       133131  locales\en-US.pak
+                    ....A       663018       145878  locales\es-419.pak
+                    ....A       660240       145081  locales\es.pak
+                    ....A       602773       147666  locales\et.pak
+                    ....A       998678       157218  locales\fa.pak
+                    ....A       613544       146312  locales\fi.pak
+                    ....A       697137       145789  locales\fil.pak
+                    ....A       717683       151023  locales\fr.pak
+                    ....A      1408655       165534  locales\gu.pak
+                    ....A       874753       153513  locales\he.pak
+                    ....A      1491338       171784  locales\hi.pak
+                    ....A       672878       152714  locales\hr.pak
+                    ....A       719634       159534  locales\hu.pak
+                    ....A       594046       132939  locales\id.pak
+                    ....A       651223       143802  locales\it.pak
+                    ....A       792857       138857  locales\ja.pak
+                    ....A      1615330       168672  locales\kn.pak
+                    ....A       672986       135223  locales\ko.pak
+                    ....A       731816       155671  locales\lt.pak
+                    ....A       728832       156779  locales\lv.pak
+                    ....A      1666333       172400  locales\ml.pak
+                    ....A      1378315       162417  locales\mr.pak
+                    ....A       625550       135401  locales\ms.pak
+                    ....A       600650       139973  locales\nb.pak
+                    ....A       625155       143585  locales\nl.pak
+                    ....A       698421       158008  locales\pl.pak
+                    ....A       654009       145571  locales\pt-BR.pak
+                    ....A       657293       144005  locales\pt-PT.pak
+                    ....A       681998       148497  locales\ro.pak
+                    ....A      1132729       168884  locales\ru.pak
+                    ....A       710307       161535  locales\sk.pak
+                    ....A       680528       152852  locales\sl.pak
+                    ....A      1046626       160540  locales\sr.pak
+                    ....A       606558       139945  locales\sv.pak
+                    ....A       641434       143861  locales\sw.pak
+                    ....A      1657455       168051  locales\ta.pak
+                    ....A      1532014       168694  locales\te.pak
+                    ....A      1286246       147144  locales\th.pak
+                    ....A       653333       145161  locales\tr.pak
+                    ....A      1139851       166804  locales\uk.pak
+                    ....A       983529       156841  locales\ur.pak
+                    ....A       775605       144671  locales\vi.pak
+                    ....A       555984       134625  locales\zh-CN.pak
+                    ....A       549409       132771  locales\zh-TW.pak
+                    ....A     39949043      3102258  resources\app.asar
+                    ....A      1903104       826192  resources\app.asar.unpacked\node_modules\better-sqlite3\build\Release\better_sqlite3.node
+                    ....A         1584          576  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\common.gypi
+                    ....A          897          437  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\copy.js
+                    ....A         1128          424  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\defines.gypi
+                    ....A         3888         1703  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\download.sh
+                    ....A          597          271  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\patches\1208.patch
+                    ....A      9389807      1828487  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\sqlite3\sqlite3.c
+                    ....A       671786       138794  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\sqlite3\sqlite3.h
+                    ....A        38632         5873  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\sqlite3\sqlite3ext.h
+                    ....A         2542          734  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\sqlite3.gyp
+                    ....A          587          382  resources\app.asar.unpacked\node_modules\better-sqlite3\deps\test_extension.c
+                    ....A         4149         1450  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\database.js
+                    ....A          110           87  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\index.js
+                    ....A         1932          775  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods\aggregate.js
+                    ....A         2380          939  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods\backup.js
+                    ....A         1396          594  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods\function.js
+                    ....A          174          136  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods\inspect.js
+                    ....A          536          332  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods\pragma.js
+                    ....A          625          338  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods\serialize.js
+                    ....A         7144         2055  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods\table.js
+                    ....A         2792          987  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods\transaction.js
+                    ....A         1145          351  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\methods\wrappers.js
+                    ....A          717          371  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\sqlite-error.js
+                    ....A          331          247  resources\app.asar.unpacked\node_modules\better-sqlite3\lib\util.js
+                    ....A         1078          687  resources\app.asar.unpacked\node_modules\better-sqlite3\LICENSE
+                    ....A          936          478  resources\app.asar.unpacked\node_modules\better-sqlite3\package.json
+                    ....A         1283          642  resources\app.asar.unpacked\node_modules\better-sqlite3\src\addon.cpp
+                    ....A         2856          890  resources\app.asar.unpacked\node_modules\better-sqlite3\src\better_sqlite3.cpp
+                    ....A         4146         1389  resources\app.asar.unpacked\node_modules\better-sqlite3\src\objects\backup.cpp
+                    ....A          705          398  resources\app.asar.unpacked\node_modules\better-sqlite3\src\objects\backup.hpp
+                    ....A        14178         3351  resources\app.asar.unpacked\node_modules\better-sqlite3\src\objects\database.cpp
+                    ....A         3129         1142  resources\app.asar.unpacked\node_modules\better-sqlite3\src\objects\database.hpp
+                    ....A         3339         1190  resources\app.asar.unpacked\node_modules\better-sqlite3\src\objects\statement-iterator.cpp
+                    ....A         1391          661  resources\app.asar.unpacked\node_modules\better-sqlite3\src\objects\statement-iterator.hpp
+                    ....A        13163         3087  resources\app.asar.unpacked\node_modules\better-sqlite3\src\objects\statement.cpp
+                    ....A         1373          647  resources\app.asar.unpacked\node_modules\better-sqlite3\src\objects\statement.hpp
+                    ....A         1587          695  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\bind-map.cpp
+                    ....A         6060         2009  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\binder.cpp
+                    ....A         9068         1608  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\constants.cpp
+                    ....A         3952         1103  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\custom-aggregate.cpp
+                    ....A         1550          756  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\custom-function.cpp
+                    ....A        14960         3889  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\custom-table.cpp
+                    ....A          460          269  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\data-converter.cpp
+                    ....A         9639         1699  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\data.cpp
+                    ....A         4433         1347  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\helpers.cpp
+                    ....A         3661         1050  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\macros.cpp
+                    ....A         4138          942  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\query-macros.cpp
+                    ....A         1017          469  resources\app.asar.unpacked\node_modules\better-sqlite3\src\util\row-builder.cpp
+                    ....A      6431890      6377974  resources.pak
+                    ....A       339863        51727  snapshot_blob.bin
+                    ....A       713034       113174  v8_context_snapshot.bin
+                    ....A          106           96  vk_swiftshader_icd.json
+                    ....A      4741480      1580277  d3dcompiler_47.dll
+                    ....A     25619968      6374080  dxcompiler.dll
+                    ....A      1503600       503580  dxil.dll
+                    ....A      3086848       952136  ffmpeg.dll
+                    ....A    214218752     63235298  Kyaxa Library.exe
+                    ....A       512512       176629  libEGL.dll
+                    ....A      8010240      2236561  libGLESv2.dll
+                    ....A       107520        49095  resources\elevate.exe
+                    ....A      5628928      1380385  vk_swiftshader.dll
+                    ....A       957440       265674  vulkan-1.dll
+------------------- ----- ------------ ------------  ------------------------
+                             398689374    101779357  123 files, 15 folders
+
+  • spawning        command=C:\Users\darir\Coding shi\libraryxxx\node_modules\app-builder-bin\win\x64\app-builder.exe download-artifact --name nsis-resources-3.4.1-nsis-resources-3.4.1 --url https://github.com/electron-userland/electron-builder-binaries/releases/download/nsis-resources-3.4.1/nsis-resources-3.4.1.7z --sha512 Dqd6g+2buwwvoG1Vyf6BHR1b+25QMmPcwZx40atOT57gH27rkjOei1L0JTldxZu4NFoEmW4kJgZ3DlSWVON3+Q==
+  • found existing  path=C:\Users\darir\AppData\Local\electron-builder\Cache\nsis\nsis-resources-3.4.1-nsis-resources-3.4.1
+  • exited          command=app-builder.exe code=0 pid=13508 out=C:\Users\darir\AppData\Local\electron-builder\Cache\nsis\nsis-resources-3.4.1-nsis-resources-3.4.1
+  • spawning        command=C:\Users\darir\AppData\Local\electron-builder\Cache\nsis\nsis-3.0.4.1-nsis-3.0.4.1\Bin\makensis.exe -WX -INPUTCHARSET UTF8 -DAPP_ID=com.kyaxa.library -DAPP_GUID=232b9923-f571-54a7-b686-70ef49b2deac -DUNINSTALL_APP_KEY=232b9923-f571-54a7-b686-70ef49b2deac -DPRODUCT_NAME=Kyaxa Library -DPRODUCT_FILENAME=Kyaxa Library -DAPP_FILENAME=Kyaxa Library -DAPP_DESCRIPTION=Personal video game library launcher -DVERSION=1.0.0 -DPROJECT_DIR=C:\Users\darir\Coding shi\libraryxxx -DBUILD_RESOURCES_DIR=C:\Users\darir\Coding shi\libraryxxx\build -DAPP_PACKAGE_NAME=libraryxxx -DMUI_ICON=C:\Users\darir\Coding shi\libraryxxx\build\icon.ico -DMUI_UNICON=C:\Users\darir\Coding shi\libraryxxx\build\icon.ico -DAPP_64=C:\Users\darir\Coding shi\libraryxxx\build-dist\libraryxxx-1.0.0-x64.nsis.7z -DAPP_64_NAME=libraryxxx-1.0.0-x64.nsis.7z -DAPP_64_HASH=78BE8053BE5DB62489B631F5E15E378DD9E10F6972C62D067CD1A3BE4D00EBEE545FB7AA24492D4A17F2903842E7828E2A315ADCBD9774457722D4EB3783404E -DAPP_64_UNPACKED_SIZE=389346 -DCOMPANY_NAME=Kyaxa -DAPP_INSTALLER_STORE_FILE=libraryxxx-updater\installer.exe -DCOMPRESSION_METHOD=7z -DMULTIUSER_INSTALLMODE_ALLOW_ELEVATION -DINSTALL_MODE_PER_ALL_USERS_REQUIRED -DallowToChangeInstallationDirectory -DSHORTCUT_NAME=Kyaxa Library -DUNINSTALL_DISPLAY_NAME=Kyaxa Library -DDO_NOT_CREATE_DESKTOP_SHORTCUT -DDO_NOT_CREATE_START_MENU_SHORTCUT -DMUI_HEADERIMAGE -DMUI_HEADERIMAGE_RIGHT -DMUI_HEADERIMAGE_BITMAP=C:\Users\darir\Coding shi\libraryxxx\build\installerHeader.bmp -DMUI_WELCOMEFINISHPAGE_BITMAP=C:\Users\darir\Coding shi\libraryxxx\build\installerSidebar.bmp -DUNINSTALLER_ICON=C:\Users\darir\Coding shi\libraryxxx\build\icon.ico -DMUI_UNWELCOMEFINISHPAGE_BITMAP=C:\Users\darir\Coding shi\libraryxxx\build\installerSidebar.bmp -DESTIMATED_SIZE=389345 -DCOMPRESS=auto -DBUILD_UNINSTALLER -DUNINSTALLER_OUT_FILE=C:\Users\darir\Coding shi\libraryxxx\build-dist\KyaxaLibrarySetup-1.0.0.__uninstaller.exe -XOutFile "C:\Users\darir\Coding shi\libraryxxx\build-dist\KyaxaLibrarySetup-1.0.0.exe" -XVIProductVersion 1.0.0.0 -XVIAddVersionKey /LANG=1033 ProductName "Kyaxa Library" -XVIAddVersionKey /LANG=1033 ProductVersion "1.0.0" -XVIAddVersionKey /LANG=1033 LegalCopyright "Copyright © 2026 Kyaxa" -XVIAddVersionKey /LANG=1033 FileDescription "Personal video game library launcher" -XVIAddVersionKey /LANG=1033 FileVersion "1.0.0" -XVIAddVersionKey /LANG=1033 CompanyName "Kyaxa" -XUnicode true -XSetCompressor zlib - cwd=C:\Users\darir\Coding shi\libraryxxx\node_modules\app-builder-lib\templates\nsis
+Command line defined: "APP_ID=com.kyaxa.library"
+Command line defined: "APP_GUID=232b9923-f571-54a7-b686-70ef49b2deac"
+Command line defined: "UNINSTALL_APP_KEY=232b9923-f571-54a7-b686-70ef49b2deac"
+Command line defined: "PRODUCT_NAME=Kyaxa Library"
+Command line defined: "PRODUCT_FILENAME=Kyaxa Library"
+Command line defined: "APP_FILENAME=Kyaxa Library"
+Command line defined: "APP_DESCRIPTION=Personal video game library launcher"
+Command line defined: "VERSION=1.0.0"
+Command line defined: "PROJECT_DIR=C:\Users\darir\Coding shi\libraryxxx"
+Command line defined: "BUILD_RESOURCES_DIR=C:\Users\darir\Coding shi\libraryxxx\build"
+Command line defined: "APP_PACKAGE_NAME=libraryxxx"
+Command line defined: "MUI_ICON=C:\Users\darir\Coding shi\libraryxxx\build\icon.ico"
+Command line defined: "MUI_UNICON=C:\Users\darir\Coding shi\libraryxxx\build\icon.ico"
+Command line defined: "APP_64=C:\Users\darir\Coding shi\libraryxxx\build-dist\libraryxxx-1.0.0-x64.nsis.7z"
+Command line defined: "APP_64_NAME=libraryxxx-1.0.0-x64.nsis.7z"
+Command line defined: "APP_64_HASH=78BE8053BE5DB62489B631F5E15E378DD9E10F6972C62D067CD1A3BE4D00EBEE545FB7AA24492D4A17F2903842E7828E2A315ADCBD9774457722D4EB3783404E"
+Command line defined: "APP_64_UNPACKED_SIZE=389346"
+Command line defined: "COMPANY_NAME=Kyaxa"
+Command line defined: "APP_INSTALLER_STORE_FILE=libraryxxx-updater\installer.exe"
+Command line defined: "COMPRESSION_METHOD=7z"
+Command line defined: "MULTIUSER_INSTALLMODE_ALLOW_ELEVATION"
+Command line defined: "INSTALL_MODE_PER_ALL_USERS_REQUIRED"
+Command line defined: "allowToChangeInstallationDirectory"
+Command line defined: "SHORTCUT_NAME=Kyaxa Library"
+Command line defined: "UNINSTALL_DISPLAY_NAME=Kyaxa Library"
+Command line defined: "DO_NOT_CREATE_DESKTOP_SHORTCUT"
+Command line defined: "DO_NOT_CREATE_START_MENU_SHORTCUT"
+Command line defined: "MUI_HEADERIMAGE"
+Command line defined: "MUI_HEADERIMAGE_RIGHT"
+Command line defined: "MUI_HEADERIMAGE_BITMAP=C:\Users\darir\Coding shi\libraryxxx\build\installerHeader.bmp"
+Command line defined: "MUI_WELCOMEFINISHPAGE_BITMAP=C:\Users\darir\Coding shi\libraryxxx\build\installerSidebar.bmp"
+Command line defined: "UNINSTALLER_ICON=C:\Users\darir\Coding shi\libraryxxx\build\icon.ico"
+Command line defined: "MUI_UNWELCOMEFINISHPAGE_BITMAP=C:\Users\darir\Coding shi\libraryxxx\build\installerSidebar.bmp"
+Command line defined: "ESTIMATED_SIZE=389345"
+Command line defined: "COMPRESS=auto"
+Command line defined: "BUILD_UNINSTALLER"
+Command line defined: "UNINSTALLER_OUT_FILE=C:\Users\darir\Coding shi\libraryxxx\build-dist\KyaxaLibrarySetup-1.0.0.__uninstaller.exe"
+Processing config: C:\Users\darir\AppData\Local\electron-builder\Cache\nsis\nsis-3.0.4.1-nsis-3.0.4.1\nsisconf.nsh
+Processing script file: "<stdin>" (UTF8)
+
+Processed 1 file, 10 command line commands, writing output (x86-unicode):
+warning 6010: install function "optionsPageLeave" not referenced - zeroing code (304-308) out
+
+Error: warning treated as error
+
+Note: you may have one or two (large) stale temporary file(s) left in your temporary directory (Generally this only happens on Windows 9x).
+  • exited          command=makensis.exe code=1 pid=21292
+  • async task error  error=C:\Users\darir\AppData\Local\electron-builder\Cache\nsis\nsis-3.0.4.1-nsis-3.0.4.1\Bin\makensis.exe process failed ERR_ELECTRON_BUILDER_CANNOT_EXECUTE
+Exit code:
+1
+  ⨯ C:\Users\darir\AppData\Local\electron-builder\Cache\nsis\nsis-3.0.4.1-nsis-3.0.4.1\Bin\makensis.exe process failed ERR_ELECTRON_BUILDER_CANNOT_EXECUTE
+Exit code:
+1  failedTask=build stackTrace=Error: C:\Users\darir\AppData\Local\electron-builder\Cache\nsis\nsis-3.0.4.1-nsis-3.0.4.1\Bin\makensis.exe process failed ERR_ELECTRON_BUILDER_CANNOT_EXECUTE
+Exit code:
+1
+    at ChildProcess.<anonymous> (C:\Users\darir\Coding shi\libraryxxx\node_modules\builder-util\src\util.ts:272:14)
+    at Object.onceWrapper (node:events:623:26)
+    at ChildProcess.emit (node:events:508:28)
+    at ChildProcess.cp.emit (C:\Users\darir\Coding shi\libraryxxx\node_modules\cross-spawn\lib\enoent.js:34:29)
+    at maybeClose (node:internal/child_process:1101:16)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:305:5)
