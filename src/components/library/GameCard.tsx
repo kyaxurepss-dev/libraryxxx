@@ -38,7 +38,7 @@ export function GameCard({ game, gamepadFocused = false }: GameCardProps) {
     return (
         <div
             ref={cardRef}
-            className={`game-card aspect-[2/3] group rounded-xl transition-all duration-200 ${gamepadFocused ? 'ring-2 ring-cyan-400 ring-offset-2 ring-offset-bg-primary scale-105 z-10' : ''
+            className={`game-card aspect-2/3 group rounded-xl transition-all duration-200 ${gamepadFocused ? 'ring-2 ring-cyan-400 ring-offset-2 ring-offset-bg-primary scale-105 z-10' : ''
                 }`}
             onClick={() => navigate(`/game/${game.id}`)}
         >
@@ -59,7 +59,7 @@ export function GameCard({ game, gamepadFocused = false }: GameCardProps) {
                             />
                         </>
                     ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-bg-surface-hover via-bg-surface to-bg-surface-active flex items-center justify-center">
+                        <div className="w-full h-full bg-linear-to-br from-bg-surface-hover via-bg-surface to-bg-surface-active flex items-center justify-center">
                             <span className="text-5xl font-black text-white/10">{game.title.charAt(0).toUpperCase()}</span>
                         </div>
                     )}
@@ -77,7 +77,7 @@ export function GameCard({ game, gamepadFocused = false }: GameCardProps) {
                         </div>
                     )}
 
-                    <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/80 via-black/35 to-transparent pl-5 pr-3 py-3.5 transition-opacity duration-300 group-hover:opacity-0">
+                    <div className="absolute inset-x-0 bottom-0 z-10 bg-linear-to-t from-black/80 via-black/35 to-transparent pl-5 pr-3 py-3.5 transition-opacity duration-300 group-hover:opacity-0">
                         <h3 className="font-bold text-sm text-white line-clamp-2">{game.title}</h3>
                     </div>
 

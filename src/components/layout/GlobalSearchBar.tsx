@@ -306,7 +306,7 @@ export function GlobalSearchBar() {
                                 )}
                             </div>
                         ) : (
-                            <div className="p-4 text-center text-sm text-text-muted break-words">
+                            <div className="p-4 text-center text-sm text-text-muted wrap-break-word">
                                 No results found for "{query}"
                             </div>
                         )}

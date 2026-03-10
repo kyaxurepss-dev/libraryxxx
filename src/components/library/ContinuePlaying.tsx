@@ -25,16 +25,16 @@ export function ContinuePlaying({ games }: ContinuePlayingProps) {
                         <button
                             key={game.id}
                             onClick={() => navigate(`/game/${game.id}`)}
-                            className="group relative flex-shrink-0 w-[140px] rounded-xl overflow-hidden border border-white/5 hover:border-accent/40 transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_25px_rgba(59,130,246,0.25)]"
+                            className="group relative shrink-0 w-[140px] rounded-xl overflow-hidden border border-white/5 hover:border-accent/40 transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_25px_rgba(59,130,246,0.25)]"
                         >
                             {coverSrc ? (
-                                <img src={coverSrc} alt={game.title} className="w-full aspect-[3/4] object-cover" />
+                                <img src={coverSrc} alt={game.title} className="w-full aspect-3/4 object-cover" />
                             ) : (
-                                <div className="w-full aspect-[3/4] bg-bg-surface flex items-center justify-center">
+                                <div className="w-full aspect-3/4 bg-bg-surface flex items-center justify-center">
                                     <Gamepad2 className="w-10 h-10 text-text-muted/30" />
                                 </div>
                             )}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+                            <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent" />
 
                             {/* Play button on hover */}
                             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">

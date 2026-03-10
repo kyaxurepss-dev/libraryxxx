@@ -82,9 +82,9 @@ export function Sidebar() {
 
                 <div className="my-5 px-3">
                     <div className="flex items-center gap-2.5">
-                        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/20 to-white/6" />
+                        <div className="h-px flex-1 bg-linear-to-r from-transparent via-white/20 to-white/6" />
                         <span className="text-[10px] tracking-[0.22em] uppercase text-text-muted font-bold">System</span>
-                        <div className="h-px flex-1 bg-gradient-to-l from-transparent via-white/20 to-white/6" />
+                        <div className="h-px flex-1 bg-linear-to-l from-transparent via-white/20 to-white/6" />
                     </div>
                 </div>
 

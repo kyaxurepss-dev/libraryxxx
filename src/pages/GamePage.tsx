@@ -255,10 +255,10 @@ export function GamePage() {
                         }}
                     />
                 ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-accent/20 to-bg-surface" />
+                    <div className="absolute inset-0 bg-linear-to-br from-accent/20 to-bg-surface" />
                 )}
                 <div
-                    className="absolute inset-0 bg-gradient-to-t from-bg-primary via-bg-primary/80 to-transparent"
+                    className="absolute inset-0 bg-linear-to-t from-bg-primary via-bg-primary/80 to-transparent"
                     style={{ opacity: 0.8 + (1 - opacityFade) * 0.2 }}
                 />
 
@@ -266,7 +266,7 @@ export function GamePage() {
                 <button
                     onClick={() => navigate('/')}
                     style={{ WebkitAppRegion: 'no-drag' } as any}
-                    className="absolute top-10 left-6 z-[60] flex items-center gap-2 px-4 py-2.5 rounded-2xl glass-panel text-sm font-semibold text-white/80 hover:text-white hover:scale-105 transition-all cursor-pointer shadow-lg"
+                    className="absolute top-10 left-6 z-60 flex items-center gap-2 px-4 py-2.5 rounded-2xl glass-panel text-sm font-semibold text-white/80 hover:text-white hover:scale-105 transition-all cursor-pointer shadow-lg"
                 >
                     <ArrowLeft className="w-4 h-4" />
                     Back
@@ -283,10 +283,10 @@ export function GamePage() {
                             <img
                                 src={coverSrc}
                                 alt={game.title}
-                                className="w-40 md:w-48 aspect-[3/4] rounded-xl object-cover shadow-2xl border border-white/10 group-hover:border-accent/50 transition-all duration-500 will-change-transform"
+                                className="w-40 md:w-48 aspect-3/4 rounded-xl object-cover shadow-2xl border border-white/10 group-hover:border-accent/50 transition-all duration-500 will-change-transform"
                                 style={{ transformStyle: 'preserve-3d' }}
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+                            <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
                         </div>
                     )}
 
@@ -327,7 +327,7 @@ export function GamePage() {
                   ${isRunning
                                         ? 'bg-green-600/20 text-green-400 border border-green-500/30 cursor-default'
                                         : game.exe_path
-                                            ? 'bg-gradient-to-r from-accent to-accent-hover text-white hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] border border-white/10'
+                                            ? 'bg-linear-to-r from-accent to-accent-hover text-white hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] border border-white/10'
                                             : 'glass-panel text-text-primary hover:border-accent/50'
                                     }`}
                             >
@@ -864,7 +864,7 @@ export function GamePage() {
         {
             activeVideoId && (
                 <div
-                    className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm animate-fade-in"
+                    className="fixed inset-0 z-200 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-fade-in"
                     onClick={() => setActiveVideoId(null)}
                 >
                     <div

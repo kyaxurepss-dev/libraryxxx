@@ -29,7 +29,7 @@ function HorizBar({ label, value, max, rank }: { label: string; value: number; m
             <span className="w-36 text-xs text-text-secondary truncate text-right shrink-0">{label}</span>
             <div className="flex-1 h-2.5 bg-white/5 rounded-full overflow-hidden">
                 <div
-                    className={`h-full bg-gradient-to-r ${barColor} rounded-full transition-all duration-700`}
+                    className={`h-full bg-linear-to-r ${barColor} rounded-full transition-all duration-700`}
                     style={{ width: `${pct}%` }}
                 />
             </div>
@@ -58,7 +58,7 @@ function WeeklyChart({ data }: { data: WeekData[] }) {
                             <div className="w-full flex items-end" style={{ height: '120px' }}>
                                 <div
                                     className={`w-full rounded-t-md transition-all duration-500 ${week.minutes > 0
-                                        ? 'bg-gradient-to-t from-accent to-accent-hover hover:from-accent-hover hover:to-blue-400'
+                                        ? 'bg-linear-to-t from-accent to-accent-hover hover:from-accent-hover hover:to-blue-400'
                                         : 'bg-white/5'
                                         }`}
                                     style={{ height: `${Math.max(height, 2)}%` }}
@@ -285,7 +285,7 @@ export function StatsPage() {
                     </h2>
                     <div className="grid gap-2">
                         {stats.recentSessions.map(session => (
-                            <div key={session.id} className="flex items-center gap-3 p-2.5 rounded-xl bg-white/[0.02] hover:bg-white/5 transition-colors">
+                            <div key={session.id} className="flex items-center gap-3 p-2.5 rounded-xl bg-white/2 hover:bg-white/5 transition-colors">
                                 {session.cover_url ? (
                                     <img src={toMediaSrc(session.cover_url) ?? undefined} alt="" className="w-8 h-10 object-cover rounded shrink-0" />
                                 ) : (
