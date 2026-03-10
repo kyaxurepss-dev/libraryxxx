@@ -59,6 +59,12 @@ export function cleanGameName(folderName: string): string {
     // Remove trailing dash/hyphen if any
     name = name.replace(/[-–—]+$/, '').trim();
 
+    // Title Case: Capitalize the first letter of each word
+    name = name.replace(
+        /\w\S*/g,
+        (txt) => txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase()
+    );
+
     return name;
 }
 

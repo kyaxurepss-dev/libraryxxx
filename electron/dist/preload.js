@@ -80,6 +80,7 @@ const electronAPI = {
     importBackup: () => ipcRenderer.invoke('backup:import'),
     // Settings
     getSettings: () => ipcRenderer.invoke('settings:get'),
+    getSetting: (key) => ipcRenderer.invoke('settings:getOne', key),
     setSetting: (key, value) => ipcRenderer.invoke('settings:set', key, value),
     // Window
     minimize: () => ipcRenderer.invoke('window:minimize'),

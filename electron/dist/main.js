@@ -445,6 +445,10 @@ function registerIpcHandlers() {
             settings[row.key] = row.value;
         return settings;
     });
+    ipcMain.handle('settings:getOne', (_e, key) => {
+        const row = getDb().prepare('SELECT value FROM settings WHERE key = ?').get(key);
+        return row ? row.value : null;
+    });
     ipcMain.handle('settings:set', (_e, key, value) => getDb().prepare('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)').run(key, value));
     // ── Disk Management ──
     ipcMain.handle('disk:getGameSize', (_e, gameId) => {
