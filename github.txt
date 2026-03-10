@@ -1,0 +1,6 @@
+1. Abre package.json y cambia el "version" a "1.0.X" (Acuérdate de esto, o el autoupdater no funcionará)
+2. git add . (prepara todos tus cambios)
+3. git commit -m "Aquí explicas lo que has cambiado" (guarda los cambios)
+4. git push origin main (los sube a GitHub)
+5. git tag v1.0.X (le pones la misma etiqueta a la que le subiste la versión)
+6. git push origin v1.0.X (subes la etiqueta a GitHub para que sus servidores arranquen a compilar)
