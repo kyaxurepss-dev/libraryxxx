@@ -1,9 +1,8 @@
-import electronUpdater from 'electron-updater';
+import electronUpdaterPkg from 'electron-updater';
 import { ipcMain, BrowserWindow } from 'electron';
 import log from 'electron-log';
 
-const { autoUpdater } = electronUpdater;
-
+const { autoUpdater } = electronUpdaterPkg;
 
 // Configure logger for updater
 autoUpdater.logger = log;
