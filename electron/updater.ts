@@ -11,7 +11,7 @@ autoUpdater.logger = log;
 export function initUpdater(mainWindow: BrowserWindow) {
     // Enable fully automatic background updates
     autoUpdater.autoDownload = true;
-    autoUpdater.autoInstallOnAppQuit = true;
+    autoUpdater.autoInstallOnAppQuit = false;
 
     // Trigger the initial background check silently
     autoUpdater.checkForUpdatesAndNotify().catch(err => {

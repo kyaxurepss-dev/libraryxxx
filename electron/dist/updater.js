@@ -8,7 +8,7 @@ autoUpdater.logger.transports.file.level = 'info';
 export function initUpdater(mainWindow) {
     // Enable fully automatic background updates
     autoUpdater.autoDownload = true;
-    autoUpdater.autoInstallOnAppQuit = true;
+    autoUpdater.autoInstallOnAppQuit = false;
     // Trigger the initial background check silently
     autoUpdater.checkForUpdatesAndNotify().catch(err => {
         log.error('Error checking for updates on startup:', err);

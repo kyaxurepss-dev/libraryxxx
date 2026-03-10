@@ -815,6 +815,14 @@ export function SettingsPage() {
                         <p className="text-sm text-text-secondary mt-1">Automatic background updates are enabled</p>
                     </div>
                     <div className="flex items-center gap-3">
+                        {isUpdateDownloaded && (
+                            <button
+                                onClick={() => window.electron.installUpdate()}
+                                className="text-xs font-semibold text-white bg-accent px-3 py-1.5 rounded-lg border border-accent/20 hover:brightness-110 active:scale-95 transition-all"
+                            >
+                                Restart & Install
+                            </button>
+                        )}
                         <span className="text-xs font-semibold text-accent bg-accent/10 px-3 py-1.5 rounded-lg border border-accent/20">
                             {updateStatus || 'Up-to-date'}
                         </span>

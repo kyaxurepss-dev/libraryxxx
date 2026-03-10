@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import { initDatabase, getDb } from './database.js';
 import { scanFolders } from './scanner.js';
 import { startWatcher, stopWatcher } from './watcher.js';
-import { launchGame, getRunningGame } from './launcher.js';
+import { launchGame, getRunningGame, killAllGames } from './launcher.js';
 import { searchIGDB, fetchGameDetails, authenticateIGDB } from './igdb.js';
 import { exportLibrary, importLibrary } from './backup.js';
 import { getFolderSize, formatBytes, deleteGameFolder } from './diskinfo.js';
@@ -223,7 +223,12 @@ app.whenReady().then(async () => {
 
 app.on('window-all-closed', () => {
     stopWatcher();
+    killAllGames(getDb());
     app.quit();
+});
+
+app.on('before-quit', () => {
+    killAllGames(getDb());
 });
 
 // ─── IPC Handlers ────────────────────────────────────────────────────────────

@@ -1,5 +1,34 @@
 import { spawn } from 'child_process';
 const runningGames = new Map();
+export function killAllGames(db) {
+    const nowMs = Date.now();
+    for (const [gameId, { process: gameProcess, startTime, sessionId }] of runningGames.entries()) {
+        try {
+            if (gameProcess.pid) {
+                spawn('taskkill', ['/pid', String(gameProcess.pid), '/f', '/t']);
+            }
+            else {
+                gameProcess.kill();
+            }
+            const elapsed = Math.max(0, Math.floor((nowMs - startTime) / 60000));
+            db.prepare(`
+              UPDATE games
+              SET playtime_minutes = playtime_minutes + ?,
+                  last_played = datetime('now')
+              WHERE id = ?
+            `).run(elapsed, gameId);
+            db.prepare(`
+              UPDATE play_sessions
+              SET ended_at = datetime('now'), duration_minutes = ?
+              WHERE id = ?
+            `).run(elapsed, sessionId);
+        }
+        catch (error) {
+            console.error(`Failed to kill game ${gameId}:`, error);
+        }
+    }
+    runningGames.clear();
+}
 export function launchGame(gameId, exePath, db, launchOptions = '') {
     if (runningGames.has(gameId))
         return false;
@@ -37,8 +66,10 @@ export function launchGame(gameId, exePath, db, launchOptions = '') {
     INSERT INTO play_sessions (game_id, started_at) VALUES (?, datetime('now'))
   `).run(gameId);
     const sessionId = Number(sessionResult.lastInsertRowid);
-    runningGames.set(gameId, { process: gameProcess, startTime });
+    runningGames.set(gameId, { process: gameProcess, startTime, sessionId });
     gameProcess.on('exit', () => {
+        if (!runningGames.has(gameId))
+            return; // Already cleaned up e.g. on quit
         const elapsed = Math.max(0, Math.floor((Date.now() - startTime) / 60000));
         db.prepare(`
       UPDATE games
@@ -54,6 +85,8 @@ export function launchGame(gameId, exePath, db, launchOptions = '') {
         runningGames.delete(gameId);
     });
     gameProcess.on('error', () => {
+        if (!runningGames.has(gameId))
+            return;
         db.prepare(`
       UPDATE play_sessions SET ended_at = datetime('now'), duration_minutes = 0 WHERE id = ?
     `).run(sessionId);
