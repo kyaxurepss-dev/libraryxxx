@@ -48,13 +48,7 @@ export function SettingsPage() {
         
         // Fetch app version
         if (window.electron.getAppVersion) {
-             window.electron.getAppVersion()
-                 .then(version => {
-                     setAppVersion(version);
-                 })
-                 .catch(err => {
-                     console.error(err);
-                 });
+             window.electron.getAppVersion().then(setAppVersion).catch(console.error);
         }
 
         // Listen to updater messages
