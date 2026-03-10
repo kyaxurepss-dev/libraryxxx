@@ -892,7 +892,7 @@ export function SettingsPage() {
 
             <section className="pt-2 text-center">
                 <h2 className="text-lg font-bold text-text-primary">libraryxxx</h2>
-                <p className="text-xs text-text-muted mt-1">Version 1.0.0</p>
+                <p className="text-xs text-text-muted mt-1">Version {appVersion || 'Unknown'}</p>
             </section>
         </div >
     );
