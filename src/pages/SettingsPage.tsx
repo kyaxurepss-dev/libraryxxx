@@ -373,13 +373,13 @@ export function SettingsPage() {
                     <div>
                         <label className="text-xs font-semibold text-text-muted block mb-1.5 uppercase tracking-[0.2em]">Client ID</label>
                         <div className="relative group/input">
-                            <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted group-focus-within/input:text-accent" />
+                            <Key className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted group-focus-within/input:text-accent" />
                             <input
                                 type="text"
                                 value={clientId}
                                 onChange={(e) => setClientId(e.target.value)}
                                 placeholder="Your Twitch Client ID"
-                                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/30 border border-white/10 text-sm font-medium text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent/50 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.18)]"
+                                className="w-full pl-11 pr-4 py-2.5 rounded-xl bg-black/30 border border-white/10 text-sm font-medium text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent/50 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.18)]"
                             />
                         </div>
                     </div>
@@ -387,13 +387,13 @@ export function SettingsPage() {
                     <div>
                         <label className="text-xs font-semibold text-text-muted block mb-1.5 uppercase tracking-[0.2em]">Client Secret</label>
                         <div className="relative group/input">
-                            <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted group-focus-within/input:text-accent" />
+                            <Key className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted group-focus-within/input:text-accent" />
                             <input
                                 type="password"
                                 value={clientSecret}
                                 onChange={(e) => setClientSecret(e.target.value)}
                                 placeholder="Your Twitch Client Secret"
-                                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/30 border border-white/10 text-sm font-medium text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent/50 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.18)]"
+                                className="w-full pl-11 pr-4 py-2.5 rounded-xl bg-black/30 border border-white/10 text-sm font-medium text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent/50 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.18)]"
                             />
                         </div>
                     </div>
