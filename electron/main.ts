@@ -586,6 +586,11 @@ function registerIpcHandlers() {
         return settings;
     });
 
+    ipcMain.handle('settings:getOne', (_e, key: string) => {
+        const row = getDb().prepare('SELECT value FROM settings WHERE key = ?').get(key) as { value: string } | undefined;
+        return row ? row.value : null;
+    });
+
     ipcMain.handle('settings:set', (_e, key: string, value: string) =>
         getDb().prepare('INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)').run(key, value)
     );

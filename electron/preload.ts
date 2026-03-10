@@ -101,6 +101,7 @@ const electronAPI = {
 
     // Settings
     getSettings: () => ipcRenderer.invoke('settings:get'),
+    getSetting: (key: string) => ipcRenderer.invoke('settings:getOne', key),
     setSetting: (key: string, value: string) => ipcRenderer.invoke('settings:set', key, value),
 
     // Window

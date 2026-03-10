@@ -1,0 +1,58 @@
+[2026-03-10 20:01:55.521] [info]  Checking for update
+[2026-03-10 20:01:55.537] [info]  Generated new staging user ID: 0135257e-5862-5a75-b7ab-cfd1d6ae9cb8
+[2026-03-10 20:01:55.864] [error] Error: HttpError: 404 
+"method: GET url: https://github.com/kyaxurepss-dev/libraryxxx/releases.atom\n\nPlease double check that your authentication token is correct. Due to security reasons, actual status maybe not reported, but 404.\n"
+Headers: {
+  "cache-control": "no-cache",
+  "content-length": "9",
+  "content-security-policy": "default-src 'none'; base-uri 'self'; connect-src 'self'; form-action 'self'; img-src 'self' data:; script-src 'self'; style-src 'unsafe-inline'",
+  "content-type": "text/plain; charset=utf-8",
+  "date": "Tue, 10 Mar 2026 19:01:56 GMT",
+  "referrer-policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+  "server": "github.com",
+  "strict-transport-security": "max-age=31536000; includeSubdomains; preload",
+  "vary": "X-PJAX, X-PJAX-Container, Turbo-Visit, Turbo-Frame, X-Requested-With,Accept-Encoding, Accept, X-Requested-With",
+  "x-content-type-options": "nosniff",
+  "x-frame-options": "deny",
+  "x-github-request-id": "D710:1E3254:5021BA6:3E626A7:69B06AA4",
+  "x-xss-protection": "0",
+  "set-cookie": [
+    "_gh_sess=ziEM8EvAx%2BdsAKEM6dSJIApGMyXG7hqn8U276MPVfzmqKpiNS3kqkTRPLV7V22%2BsGtG%2BiLD7YOt%2F1XHjF%2BRbs7T3EuWIHCzYRVp8ClzsZKxQ4iKkhCFDJ0%2FlEDDV5fPQAovyQQq0BIoVtGPWn3kr5SmHjuIlDecOD6YfW26PuAtd7DWsbjT69%2Bpk6ykE2eOJc9uIl%2BBm7CMnW3%2Bjjk6kNdkPSBe9qH%2FUqdyoh40jV1vI00B4Ho%2F8rZUlSqNn%2FuezB4lgR%2B1OO9bSHdvMkxyjmw%3D%3D--W%2FJiglMe7tYVDHvJ--WCy4i10zc6%2FR%2BqPeDP8q0Q%3D%3D; path=/; HttpOnly; secure; SameSite=Lax",
+    "_octo=GH1.1.1548537874.1773169316; expires=Wed, 10 Mar 2027 20:01:56 GMT; domain=.github.com; path=/; secure; SameSite=Lax",
+    "logged_in=no; expires=Wed, 10 Mar 2027 20:01:56 GMT; domain=.github.com; path=/; HttpOnly; secure; SameSite=Lax"
+  ]
+}
+    at createHttpError (C:\Users\darir\AppData\Local\Programs\kyaxulibrary\Libraryxxx\resources\app.asar\node_modules\builder-util-runtime\out\httpExecutor.js:21:12)
+    at ElectronHttpExecutor.handleResponse (C:\Users\darir\AppData\Local\Programs\kyaxulibrary\Libraryxxx\resources\app.asar\node_modules\builder-util-runtime\out\httpExecutor.js:121:20)
+    at ClientRequest.<anonymous> (C:\Users\darir\AppData\Local\Programs\kyaxulibrary\Libraryxxx\resources\app.asar\node_modules\builder-util-runtime\out\httpExecutor.js:87:26)
+    at ClientRequest.emit (node:events:508:28)
+    at SimpleURLLoaderWrapper.<anonymous> (node:electron/js2c/browser_init:2:134213)
+    at SimpleURLLoaderWrapper.emit (node:events:508:28)
+[2026-03-10 20:01:55.865] [error] Error checking for updates on startup: HttpError: 404 
+"method: GET url: https://github.com/kyaxurepss-dev/libraryxxx/releases.atom\n\nPlease double check that your authentication token is correct. Due to security reasons, actual status maybe not reported, but 404.\n"
+Headers: {
+  "cache-control": "no-cache",
+  "content-length": "9",
+  "content-security-policy": "default-src 'none'; base-uri 'self'; connect-src 'self'; form-action 'self'; img-src 'self' data:; script-src 'self'; style-src 'unsafe-inline'",
+  "content-type": "text/plain; charset=utf-8",
+  "date": "Tue, 10 Mar 2026 19:01:56 GMT",
+  "referrer-policy": "origin-when-cross-origin, strict-origin-when-cross-origin",
+  "server": "github.com",
+  "strict-transport-security": "max-age=31536000; includeSubdomains; preload",
+  "vary": "X-PJAX, X-PJAX-Container, Turbo-Visit, Turbo-Frame, X-Requested-With,Accept-Encoding, Accept, X-Requested-With",
+  "x-content-type-options": "nosniff",
+  "x-frame-options": "deny",
+  "x-github-request-id": "D710:1E3254:5021BA6:3E626A7:69B06AA4",
+  "x-xss-protection": "0",
+  "set-cookie": [
+    "_gh_sess=ziEM8EvAx%2BdsAKEM6dSJIApGMyXG7hqn8U276MPVfzmqKpiNS3kqkTRPLV7V22%2BsGtG%2BiLD7YOt%2F1XHjF%2BRbs7T3EuWIHCzYRVp8ClzsZKxQ4iKkhCFDJ0%2FlEDDV5fPQAovyQQq0BIoVtGPWn3kr5SmHjuIlDecOD6YfW26PuAtd7DWsbjT69%2Bpk6ykE2eOJc9uIl%2BBm7CMnW3%2Bjjk6kNdkPSBe9qH%2FUqdyoh40jV1vI00B4Ho%2F8rZUlSqNn%2FuezB4lgR%2B1OO9bSHdvMkxyjmw%3D%3D--W%2FJiglMe7tYVDHvJ--WCy4i10zc6%2FR%2BqPeDP8q0Q%3D%3D; path=/; HttpOnly; secure; SameSite=Lax",
+    "_octo=GH1.1.1548537874.1773169316; expires=Wed, 10 Mar 2027 20:01:56 GMT; domain=.github.com; path=/; secure; SameSite=Lax",
+    "logged_in=no; expires=Wed, 10 Mar 2027 20:01:56 GMT; domain=.github.com; path=/; HttpOnly; secure; SameSite=Lax"
+  ]
+}
+    at createHttpError (C:\Users\darir\AppData\Local\Programs\kyaxulibrary\Libraryxxx\resources\app.asar\node_modules\builder-util-runtime\out\httpExecutor.js:21:12)
+    at ElectronHttpExecutor.handleResponse (C:\Users\darir\AppData\Local\Programs\kyaxulibrary\Libraryxxx\resources\app.asar\node_modules\builder-util-runtime\out\httpExecutor.js:121:20)
+    at ClientRequest.<anonymous> (C:\Users\darir\AppData\Local\Programs\kyaxulibrary\Libraryxxx\resources\app.asar\node_modules\builder-util-runtime\out\httpExecutor.js:87:26)
+    at ClientRequest.emit (node:events:508:28)
+    at SimpleURLLoaderWrapper.<anonymous> (node:electron/js2c/browser_init:2:134213)
+    at SimpleURLLoaderWrapper.emit (node:events:508:28)
