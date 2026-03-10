@@ -66,7 +66,7 @@ export function BigPicturePage() {
                 {loading ? (
                     <div className="grid grid-cols-5 gap-5">
                         {[...Array(20)].map((_, i) => (
-                            <div key={i} className="skeleton aspect-[3/4] rounded-2xl" />
+                            <div key={i} className="skeleton aspect-3/4 rounded-2xl" />
                         ))}
                     </div>
                 ) : (
@@ -80,7 +80,7 @@ export function BigPicturePage() {
                                     data-idx={i}
                                     onClick={() => navigate(`/game/${game.id}`)}
                                     onMouseEnter={() => setFocusIdx(i)}
-                                    className={`relative aspect-[3/4] rounded-2xl overflow-hidden group transition-all duration-300 outline-none
+                                    className={`relative aspect-3/4 rounded-2xl overflow-hidden group transition-all duration-300 outline-none
                                         ${isFocused
                                             ? 'ring-4 ring-accent shadow-[0_0_40px_rgba(59,130,246,0.5)] scale-105 z-10'
                                             : 'opacity-75 hover:opacity-100'
@@ -94,7 +94,7 @@ export function BigPicturePage() {
                                             <Gamepad2 className="w-12 h-12 text-text-muted/30" />
                                         </div>
                                     )}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                                    <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                                     <div className={`absolute bottom-0 left-0 right-0 p-3 transition-all duration-200
                                         ${isFocused ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0'}`}>
                                         <p className="text-sm font-bold text-white leading-tight line-clamp-2">{game.title}</p>
