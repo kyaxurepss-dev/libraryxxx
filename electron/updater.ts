@@ -1,76 +1,110 @@
 import electronUpdaterPkg from 'electron-updater';
-import { ipcMain, BrowserWindow } from 'electron';
+import { ipcMain, BrowserWindow, app } from 'electron';
 import log from 'electron-log';
+import path from 'path';
 
 const { autoUpdater } = electronUpdaterPkg;
 
-// Configure logger for updater
-autoUpdater.logger = log;
-(autoUpdater.logger as any).transports.file.level = 'info';
+export function initUpdater(mainWindow: BrowserWindow, db: any) {
+    // 1. Configure logging to userData/logs/updater.log
+    const logPath = path.join(app.getPath('userData'), 'logs', 'updater.log');
+    log.transports.file.resolvePath = () => logPath;
+    log.transports.file.level = 'info';
+    autoUpdater.logger = log;
 
-export function initUpdater(mainWindow: BrowserWindow) {
-    // Enable fully automatic background updates
-    autoUpdater.autoDownload = true;
-    autoUpdater.autoInstallOnAppQuit = false;
+    log.info('App starting. Initializing updater...');
 
-    // Trigger the initial background check silently
+    // Get "silent_updates" setting from DB
+    // Assuming '1' is true, '0' is false, defaulting to '0'
+    const getSilentUpdateSetting = () => {
+        try {
+            const row = db.prepare('SELECT value FROM settings WHERE key = ?').get('silent_updates');
+            return row?.value === '1';
+        } catch (e) {
+            log.error('Could not read silent_updates setting:', e);
+            return false;
+        }
+    };
+
+    const isSilent = getSilentUpdateSetting();
+    log.info(`Silent updates enabled: ${isSilent}`);
+
+    // 2. Configure electron-updater properties
+    autoUpdater.autoDownload = isSilent;
+    autoUpdater.autoInstallOnAppQuit = isSilent;
+    autoUpdater.allowDowngrade = false;
+
+    // Trigger the initial background check
     autoUpdater.checkForUpdatesAndNotify().catch(err => {
         log.error('Error checking for updates on startup:', err);
     });
 
     // Send messages to the renderer process
-    const sendStatus = (text: string, data?: any) => {
-        mainWindow.webContents.send('update-message', { text, data });
+    const sendUpdaterState = (status: string, data?: any) => {
+        if (!mainWindow.isDestroyed()) {
+            mainWindow.webContents.send('updater:state', { status, data });
+        }
     };
 
     autoUpdater.on('checking-for-update', () => {
-        sendStatus('Checking for updates...');
+        log.info('Checking for updates...');
+        sendUpdaterState('checking');
     });
 
     autoUpdater.on('update-available', (info) => {
-        sendStatus('Update available.', info);
+        log.info('Update available:', info.version);
+        sendUpdaterState('available', info);
     });
 
     autoUpdater.on('update-not-available', (info) => {
-        sendStatus('Update not available.', info);
+        log.info('Update not available. Current version:', app.getVersion());
+        sendUpdaterState('not-available', info);
     });
 
     autoUpdater.on('error', (err) => {
-        sendStatus('Error in auto-updater.', err);
+        log.error('Error in auto-updater:', err);
+        sendUpdaterState('error', { message: err.message || err.toString() });
     });
 
     autoUpdater.on('download-progress', (progressObj) => {
-        sendStatus('Downloading...', progressObj);
+        log.info(`Downloading... ${progressObj.percent.toFixed(2)}%`);
+        sendUpdaterState('downloading', progressObj);
     });
 
     autoUpdater.on('update-downloaded', (info) => {
-        sendStatus('Update downloaded.', info);
+        log.info('Update downloaded. Ready to install:', info.version);
+        sendUpdaterState('downloaded', info);
     });
 
-    // IPC Handlers
+    // ── IPC Handlers ──
     ipcMain.handle('updater:getVersion', () => {
-        return require('electron').app.getVersion();
+        return app.getVersion();
     });
 
     ipcMain.handle('updater:check', async () => {
         try {
+            log.info('Manual update check requested.');
             const result = await autoUpdater.checkForUpdates();
             return { success: true, result };
         } catch (error: any) {
+            log.error('Manual check failed:', error);
             return { success: false, error: error.message };
         }
     });
 
     ipcMain.handle('updater:download', async () => {
         try {
+            log.info('Manual download requested.');
             await autoUpdater.downloadUpdate();
             return { success: true };
         } catch (error: any) {
+            log.error('Manual download failed:', error);
             return { success: false, error: error.message };
         }
     });
 
     ipcMain.handle('updater:install', () => {
+        log.info('Applying update and restarting...');
         autoUpdater.quitAndInstall(false, true);
     });
 }

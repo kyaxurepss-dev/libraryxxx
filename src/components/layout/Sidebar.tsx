@@ -10,6 +10,7 @@ import {
     Monitor,
 } from 'lucide-react';
 import { useState } from 'react';
+import { UpdaterUI } from './UpdaterUI';
 
 const navItems = [
     { to: '/', icon: Library, label: 'Library' },
@@ -107,7 +108,8 @@ export function Sidebar() {
                 })}
             </nav>
 
-            <div className="p-4 mt-auto mb-1 no-drag">
+            <div className="p-4 mt-auto mb-1 no-drag flex flex-col gap-2">
+                <UpdaterUI />
                 <button
                     onClick={handleScan}
                     disabled={scanning}

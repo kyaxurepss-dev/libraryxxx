@@ -91,11 +91,11 @@ const electronAPI = {
     checkForUpdates: () => ipcRenderer.invoke('updater:check'),
     downloadUpdate: () => ipcRenderer.invoke('updater:download'),
     installUpdate: () => ipcRenderer.invoke('updater:install'),
-    onUpdateMessage: (callback) => {
-        ipcRenderer.on('update-message', (_event, data) => callback(data));
+    onUpdaterState: (callback) => {
+        ipcRenderer.on('updater:state', (_event, state) => callback(state));
     },
-    removeUpdateMessageListener: () => {
-        ipcRenderer.removeAllListeners('update-message');
+    removeUpdaterStateListener: () => {
+        ipcRenderer.removeAllListeners('updater:state');
     },
     // Plugins
     getPlugins: () => ipcRenderer.invoke('plugins:get'),

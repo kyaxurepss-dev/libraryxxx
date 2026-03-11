@@ -207,7 +207,7 @@ app.whenReady().then(async () => {
     createWindow();
 
     if (mainWindow) {
-        initUpdater(mainWindow);
+        initUpdater(mainWindow, db);
     }
 
     registerIpcHandlers();

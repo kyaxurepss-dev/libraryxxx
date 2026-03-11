@@ -183,7 +183,7 @@ app.whenReady().then(async () => {
     initPlugins(db);
     createWindow();
     if (mainWindow) {
-        initUpdater(mainWindow);
+        initUpdater(mainWindow, db);
     }
     registerIpcHandlers();
     try {

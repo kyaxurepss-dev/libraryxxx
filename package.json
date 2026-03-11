@@ -52,17 +52,15 @@
     "wait-on": "^9.0.4"
   },
   "build": {
-    "appId": "com.kyaxa.library",
-    "productName": "Libraryxxx",
+    "appId": "com.gamelibrary.launcher",
+    "productName": "Game Library Launcher",
     "npmRebuild": true,
     "directories": {
       "output": "build-dist"
     },
     "publish": [
       {
-        "provider": "github",
-        "owner": "kyaxurepss-dev",
-        "repo": "libraryxxx"
+        "provider": "github"
       }
     ],
     "files": [
@@ -89,9 +87,9 @@
       "include": "build/installer.nsh",
       "createDesktopShortcut": false,
       "createStartMenuShortcut": false,
-      "shortcutName": "Libraryxxx",
-      "artifactName": "LibraryxxxSetup-${version}.exe",
-      "uninstallDisplayName": "Libraryxxx",
+      "shortcutName": "Game Library Launcher",
+      "artifactName": "GameLibraryLauncher-Setup-${version}.exe",
+      "uninstallDisplayName": "Game Library Launcher",
       "deleteAppDataOnUninstall": false
     }
   }
