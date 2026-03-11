@@ -24,8 +24,8 @@ export function GameGrid({ games, loading, emptyTitle = 'No games found', emptyD
 
     if (games.length === 0) {
         return (
-            <div className="rounded-2xl glass-panel border border-white/10 p-12 text-center">
-                <div className="w-14 h-14 rounded-2xl bg-bg-surface-hover border border-white/10 flex items-center justify-center mx-auto mb-4">
+            <div className="w-full flex-1 min-h-[40vh] rounded-2xl p-12 flex flex-col items-center justify-center text-center mx-auto">
+                <div className="w-14 h-14 rounded-2xl bg-bg-surface-hover border border-white/10 flex items-center justify-center mb-4">
                     <Gamepad2 className="w-7 h-7 text-text-muted" />
                 </div>
                 <h3 className="text-lg font-bold text-text-primary mb-1">{emptyTitle}</h3>

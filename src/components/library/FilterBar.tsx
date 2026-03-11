@@ -25,7 +25,7 @@ export function FilterBar({ onSearch, onSortChange, count }: FilterBarProps) {
     }, [query, debouncedSearch]);
 
     return (
-        <div className="flex flex-col lg:flex-row lg:items-center gap-3 mb-2">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-end gap-3 mb-2">
             <div className="relative group w-full lg:w-[360px] xl:w-[420px] 2xl:w-[460px] shrink-0">
                 <input
                     type="text"

@@ -52,16 +52,16 @@ export function SettingsPage() {
         }
 
         // Listen to updater messages
-        window.electron.onUpdateMessage((msg: { text: string; data?: any }) => {
-            setUpdateStatus(msg.text);
-            if (msg.text === 'Update available.') setIsUpdateAvailable(true);
-            if (msg.text === 'Update downloaded.') {
+        window.electron.onUpdaterState((state: { status: string; data?: any }) => {
+            setUpdateStatus(state.status);
+            if (state.status === 'available') setIsUpdateAvailable(true);
+            if (state.status === 'downloaded') {
                 setIsUpdateDownloaded(true);
                 setIsUpdateAvailable(false);
             }
         });
 
-        return () => window.electron.removeUpdateMessageListener();
+        return () => window.electron.removeUpdaterStateListener();
     }, []);
 
     const loadSettings = async () => {
@@ -208,7 +208,7 @@ export function SettingsPage() {
     };
 
     return (
-        <div className="w-full max-w-6xl mx-auto pb-10 pt-2 animate-fade-in space-y-5">
+        <div className="w-full max-w-6xl mx-auto pb-14 pt-2 animate-fade-in flex flex-col" style={{ gap: '3.5rem' }}>
             {/* ── Game Libraries ── */}
             <section className="p-6 md:p-7 rounded-2xl glass-panel border border-white/10">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5 pb-5 border-b border-white/10">
@@ -385,7 +385,8 @@ export function SettingsPage() {
                                 value={clientId}
                                 onChange={(e) => setClientId(e.target.value)}
                                 placeholder="Your Twitch Client ID"
-                                className="w-full pl-11 pr-4 py-2.5 rounded-xl bg-black/30 border border-white/10 text-sm font-medium text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent/50 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.18)]"
+                                className="w-full pr-4 py-2.5 rounded-xl bg-black/30 border border-white/10 text-sm font-medium text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent/50 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.18)]"
+                                style={{ paddingLeft: '2.75rem' }}
                             />
                         </div>
                     </div>
@@ -399,7 +400,8 @@ export function SettingsPage() {
                                 value={clientSecret}
                                 onChange={(e) => setClientSecret(e.target.value)}
                                 placeholder="Your Twitch Client Secret"
-                                className="w-full pl-11 pr-4 py-2.5 rounded-xl bg-black/30 border border-white/10 text-sm font-medium text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent/50 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.18)]"
+                                className="w-full pr-4 py-2.5 rounded-xl bg-black/30 border border-white/10 text-sm font-medium text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent/50 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.18)]"
+                                style={{ paddingLeft: '2.75rem' }}
                             />
                         </div>
                     </div>

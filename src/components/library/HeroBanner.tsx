@@ -13,7 +13,7 @@ export function HeroBanner({ game }: HeroBannerProps) {
     if (!game) {
         return (
             <div className="hero-banner mb-2 glass-panel relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-br from-accent/20 via-black/40 to-black/80" />
+                <div className="absolute inset-0 bg-linear-to-br from-accent/20 via-black/40 to-black/80" />
                 <div className="absolute inset-0 flex items-center justify-center z-10 backdrop-blur-sm px-6">
                     <div className="text-center transform transition-transform duration-500 group-hover:scale-[1.02]">
                         <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-accent/18 border border-accent/30 flex items-center justify-center">
@@ -38,28 +38,30 @@ export function HeroBanner({ game }: HeroBannerProps) {
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
             ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-accent/30 via-bg-surface to-bg-surface/80" />
+                <div className="absolute inset-0 bg-linear-to-br from-accent/30 via-bg-surface to-bg-surface/80" />
             )}
 
-            <div className="absolute inset-0 z-10 flex items-end p-6 md:p-10 lg:pl-16 xl:pl-20">
-                <div className="max-w-3xl transition-transform duration-300 group-hover:translate-y-[-4px]">
-                    <p className="text-[11px] uppercase tracking-[0.32em] text-accent font-bold mb-3">Featured Title</p>
-                    <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-3">{game.title}</h2>
+            <div className="absolute inset-0 z-10 flex items-end p-6 md:p-10 lg:pl-16 xl:pl-20 transition-all duration-700 bg-linear-to-t from-[#040812] via-transparent to-transparent">
+                <div className="max-w-3xl transition-all duration-500 group-hover:translate-x-3">
+                    <p className="text-[11px] uppercase tracking-[0.32em] text-accent font-bold mb-3 drop-shadow-lg">Featured Title</p>
+                    <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-3 drop-shadow-2xl">{game.title}</h2>
                     {game.description && (
-                        <p className="text-sm md:text-base text-white/88 line-clamp-2 mb-5 max-w-2xl leading-relaxed">
+                        <p className="text-sm md:text-base text-white/80 line-clamp-2 mb-6 max-w-2xl leading-relaxed drop-shadow-lg">
                             {game.description}
                         </p>
                     )}
-                    <div className="flex items-center gap-3 flex-wrap">
+                    <div className="flex items-center gap-4 flex-wrap">
                         {game.exe_path && (
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     window.electron.launchGame(game.id);
                                 }}
-                                className="flex items-center gap-2.5 px-5 py-2.5 rounded-xl bg-gradient-to-r from-accent to-accent-hover text-white font-bold text-sm border border-white/15 shadow-[0_10px_25px_rgba(59,130,246,0.35)] hover:scale-[1.03] transition-all"
+                                className="flex items-center gap-3 px-6 py-3 rounded-xl bg-accent text-white font-bold text-sm border border-white/20 shadow-[0_15px_35px_rgba(59,130,246,0.4)] hover:shadow-[0_20px_45px_rgba(59,130,246,0.6)] hover:scale-[1.05] hover:bg-accent-hover transition-all active:scale-95 group/btn"
                             >
-                                <Play className="w-4 h-4 fill-white" />
+                                <div className="w-5 h-5 flex items-center justify-center bg-white/20 rounded-lg animate-pulse">
+                                    <Play className="w-3.5 h-3.5 fill-white" />
+                                </div>
                                 Play Now
                             </button>
                         )}

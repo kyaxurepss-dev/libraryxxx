@@ -43,7 +43,7 @@ export function Sidebar() {
 
     return (
         <aside className="w-[250px] min-w-[250px] bg-[#08162d]/75 backdrop-blur-2xl border-r border-white/8 flex flex-col pt-11 z-40 relative">
-            <div className="px-6 pb-7 no-drag">
+            <div className="px-6 no-drag" style={{ marginBottom: '40px' }}>
                 <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center shadow-[0_0_20px_rgba(59,130,246,0.25)] border border-accent/25">
                     <Gamepad2 className="w-5 h-5 text-accent" />
                 </div>
@@ -60,13 +60,13 @@ export function Sidebar() {
                         <NavLink
                             key={item.to}
                             to={item.to}
-                            className={`no-drag flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-semibold transition-all duration-200 relative
+                            className={`no-drag flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-semibold transition-all duration-300 relative group/nav
                 ${isActive
-                                    ? 'bg-accent/16 text-white border border-accent/35 shadow-[0_10px_25px_rgba(59,130,246,0.2)]'
-                                    : 'text-text-secondary hover:text-white hover:bg-white/6 border border-transparent'
+                                    ? 'bg-accent/16 text-white border border-accent/35 shadow-[0_10px_25px_rgba(59,130,246,0.2)] scale-[1.02]'
+                                    : 'text-text-secondary hover:text-white hover:bg-white/6 border border-transparent hover:translate-x-1'
                                 }`}
                         >
-                            <item.icon className="w-[18px] h-[18px]" />
+                            <item.icon className={`w-[18px] h-[18px] transition-transform duration-300 group-hover/nav:scale-110 ${isActive ? 'text-accent' : ''}`} />
                             {item.label}
                         </NavLink>
                     );

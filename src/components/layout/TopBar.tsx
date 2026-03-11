@@ -18,7 +18,7 @@ export function TopBar() {
                     <h1 className="text-[30px] leading-none font-extrabold tracking-tight text-white">{title}</h1>
                     <p className="text-xs text-text-muted mt-1">Your game universe, organized</p>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 mr-28 md:mr-32" style={{ marginTop: '36px' }}>
                     <GlobalSearchBar />
                 </div>
             </div>
