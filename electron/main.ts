@@ -1,7 +1,7 @@
 import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { initDatabase, getDb } from './database.js';
+import { initDatabase, getDb, closeDb } from './database.js';
 import { scanFolders } from './scanner.js';
 import { startWatcher, stopWatcher } from './watcher.js';
 import { launchGame, getRunningGame, killAllGames } from './launcher.js';
@@ -16,6 +16,23 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 let mainWindow: BrowserWindow | null = null;
+let ipcRegistered = false;
+
+// ─── Single Instance Lock ────────────────────────────────────────────────────
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+    // Another instance is already running — quit immediately
+    app.quit();
+} else {
+    app.on('second-instance', () => {
+        // Someone tried to open a second instance — focus the existing window
+        if (mainWindow) {
+            if (mainWindow.isMinimized()) mainWindow.restore();
+            mainWindow.focus();
+        }
+    });
+}
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -199,37 +216,49 @@ function advancedSearch(query: string): unknown[] {
 
 // ─── app lifecycle ───────────────────────────────────────────────────────────
 
-app.whenReady().then(async () => {
-    const db = initDatabase();
+if (gotTheLock) {
+    app.whenReady().then(async () => {
+        const db = initDatabase();
 
-    initPlugins(db);
+        initPlugins(db);
 
-    createWindow();
+        createWindow();
 
-    if (mainWindow) {
-        initUpdater(mainWindow, db);
-    }
+        if (mainWindow) {
+            initUpdater(mainWindow, db);
+        }
 
-    registerIpcHandlers();
+        if (!ipcRegistered) {
+            registerIpcHandlers();
+            ipcRegistered = true;
+        }
 
-    try {
-        const igdbReady = await authenticateIGDBFromSettings();
-        await scanFolders(db, { enrichWithIgdb: igdbReady });
-        startWatcher(db, igdbReady);
-    } catch (e) {
-        console.error('Auto-scan/watcher failed on startup:', e);
-    }
-});
+        try {
+            const igdbReady = await authenticateIGDBFromSettings();
+            await scanFolders(db, { enrichWithIgdb: igdbReady });
+            startWatcher(db, igdbReady);
+        } catch (e) {
+            console.error('Auto-scan/watcher failed on startup:', e);
+        }
+    });
 
-app.on('window-all-closed', () => {
-    stopWatcher();
-    killAllGames(getDb());
-    app.quit();
-});
+    app.on('window-all-closed', () => {
+        stopWatcher();
+        killAllGames(getDb());
+        app.quit();
+    });
 
-app.on('before-quit', () => {
-    killAllGames(getDb());
-});
+    app.on('before-quit', () => {
+        stopWatcher();
+        killAllGames(getDb());
+    });
+
+    app.on('will-quit', () => {
+        stopWatcher();
+        killAllGames(getDb());
+        closeDb();
+    });
+}
 
 // ─── IPC Handlers ────────────────────────────────────────────────────────────
 

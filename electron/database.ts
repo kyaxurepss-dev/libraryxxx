@@ -156,3 +156,13 @@ export function getDb(): Database.Database {
   if (!db) throw new Error('Database not initialized');
   return db;
 }
+
+export function closeDb(): void {
+  try {
+    if (db) {
+      db.close();
+    }
+  } catch (e) {
+    console.error('Error closing database:', e);
+  }
+}
