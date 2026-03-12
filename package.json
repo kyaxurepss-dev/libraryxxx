@@ -53,7 +53,7 @@
   },
   "build": {
     "appId": "com.gamelibrary.launcher",
-    "productName": "Game Library Launcher",
+    "productName": "libraryxxx",
     "npmRebuild": true,
     "directories": {
       "output": "build-dist"
@@ -89,9 +89,9 @@
       "include": "build/installer.nsh",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Game Library Launcher",
-      "artifactName": "GameLibraryLauncher-Setup-${version}.exe",
-      "uninstallDisplayName": "Game Library Launcher",
+      "shortcutName": "libraryxxx",
+      "artifactName": "libraryxxx-Setup-${version}.exe",
+      "uninstallDisplayName": "libraryxxx",
       "deleteAppDataOnUninstall": false
     }
   }
