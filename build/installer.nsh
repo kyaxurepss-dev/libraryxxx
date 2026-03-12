@@ -87,14 +87,6 @@
   ; Remove Start Menu folder
   RMDir /r "$SMPROGRAMS\Libraryxxx"
   
-  ; Ask if user wants to remove app data
-  MessageBox MB_YESNO|MB_ICONQUESTION "Do you want to remove Libraryxxx configuration and data?$\r$\n$\r$\nThis will delete your settings and database." IDYES removeData IDNO skipRemoveData
-  
-  removeData:
-    RMDir /r "$APPDATA\Libraryxxx"
-    RMDir /r "$LOCALAPPDATA\Libraryxxx"
-    Goto doneRemoveData
-    
-  skipRemoveData:
-  doneRemoveData:
+  ; In a silent auto-update scenario, we NEVER want to delete user data
+  ; or block the uninstaller with a prompt.
 !macroend
