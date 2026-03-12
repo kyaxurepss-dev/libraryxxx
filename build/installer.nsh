@@ -11,16 +11,7 @@
 !include "nsDialogs.nsh"
 !include "FileFunc.nsh"
 
-; ---------------------------------------------------------------------------
-; Variables for custom options
-; ---------------------------------------------------------------------------
-!ifndef BUILD_UNINSTALLER
-Var DesktopShortcut
-Var StartMenuShortcut
-Var LaunchAfterInstall
-!endif
-
-; ---------------------------------------------------------------------------
+; Variables removed since oneClick: true skips the options page
 ; MUI Settings — Colors & Branding
 ; ---------------------------------------------------------------------------
 
@@ -73,22 +64,7 @@ Var LaunchAfterInstall
   !insertmacro MUI_PAGE_FINISH
 !macroend
 
-; ---------------------------------------------------------------------------
-; Post-installation: create shortcuts based on user choices
-; ---------------------------------------------------------------------------
-!macro customInstall
-  ; Create desktop shortcut if selected
-  ${If} $DesktopShortcut == ${BST_CHECKED}
-    CreateShortCut "$DESKTOP\Libraryxxx.lnk" "$INSTDIR\${APP_EXECUTABLE_FILENAME}" "" "$INSTDIR\${APP_EXECUTABLE_FILENAME}" 0
-  ${EndIf}
-  
-  ; Create Start Menu shortcut if selected
-  ${If} $StartMenuShortcut == ${BST_CHECKED}
-    CreateDirectory "$SMPROGRAMS\Libraryxxx"
-    CreateShortCut "$SMPROGRAMS\Libraryxxx\Libraryxxx.lnk" "$INSTDIR\${APP_EXECUTABLE_FILENAME}" "" "$INSTDIR\${APP_EXECUTABLE_FILENAME}" 0
-    CreateShortCut "$SMPROGRAMS\Libraryxxx\Uninstall.lnk" "$INSTDIR\${UNINSTALL_FILENAME}" "" "$INSTDIR\${UNINSTALL_FILENAME}" 0
-  ${EndIf}
-!macroend
+
 
 ; ---------------------------------------------------------------------------
 ; Custom uninstaller pages (electron-builder hooks)
