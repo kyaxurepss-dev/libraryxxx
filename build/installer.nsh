@@ -57,52 +57,13 @@ Var LaunchAfterInstall
 ; Custom page shown after directory selection (electron-builder hook)
 ; ---------------------------------------------------------------------------
 !macro customPageAfterChangeDir
-  Page custom optionsPageCreate optionsPageLeave
+  ; Removed Page custom optionsPageCreate optionsPageLeave
 !macroend
 
 !ifndef BUILD_UNINSTALLER
-Function optionsPageCreate
-  !insertmacro MUI_HEADER_TEXT "Installation Options" "Choose additional options for the installation."
-  
-  nsDialogs::Create 1018
-  Pop $0
-  ${If} $0 == error
-    Abort
-  ${EndIf}
-  
-  ; Desktop shortcut checkbox
-  ${NSD_CreateCheckBox} 20u 20u 280u 12u "Create desktop shortcut"
-  Pop $DesktopShortcut
-  ${NSD_SetState} $DesktopShortcut ${BST_CHECKED}
-  
-  ; Start menu shortcut checkbox
-  ${NSD_CreateCheckBox} 20u 40u 280u 12u "Create Start Menu shortcut"
-  Pop $StartMenuShortcut
-  ${NSD_SetState} $StartMenuShortcut ${BST_CHECKED}
-  
-  ; Launch after install checkbox
-  ${NSD_CreateCheckBox} 20u 60u 280u 12u "Launch Libraryxxx after installation"
-  Pop $LaunchAfterInstall
-  ${NSD_SetState} $LaunchAfterInstall ${BST_CHECKED}
-  
-  ; Info label
-  ${NSD_CreateLabel} 20u 90u 280u 24u "The application will be installed in:$\r$\n$INSTDIR"
-  Pop $0
-  
-  ; Disk space info
-  ${GetSize} "$INSTDIR" "/M=*.*" $1 $2 $3
-  ${NSD_CreateLabel} 20u 120u 280u 12u "Estimated space required: ~200 MB"
-  Pop $0
-  
-  nsDialogs::Show
-FunctionEnd
-
-Function optionsPageLeave
-  ; Read checkbox states - we store results in variables
-  ${NSD_GetState} $DesktopShortcut $DesktopShortcut
-  ${NSD_GetState} $StartMenuShortcut $StartMenuShortcut
-  ${NSD_GetState} $LaunchAfterInstall $LaunchAfterInstall
-FunctionEnd
+; Function optionsPageCreate and optionsPageLeave removed
+; because oneClick: true skips custom pages and
+; causes warning 6010 (treated as error by electron-builder).
 !endif
 
 ; ---------------------------------------------------------------------------
