@@ -814,19 +814,33 @@ export function SettingsPage() {
                                 </span>
                             )}
                         </h2>
-                        <p className="text-sm text-text-secondary mt-1">Automatic background updates are enabled</p>
+                        <p className="text-sm text-text-secondary mt-1">Updates are downloaded and installed automatically in the background</p>
                     </div>
                     <div className="flex items-center gap-3">
-                        {isUpdateDownloaded && (
-                            <button
-                                onClick={() => window.electron.installUpdate()}
-                                className="text-xs font-semibold text-white bg-accent px-3 py-1.5 rounded-lg border border-accent/20 hover:brightness-110 active:scale-95 transition-all"
-                            >
-                                Restart & Install
-                            </button>
-                        )}
-                        <span className="text-xs font-semibold text-accent bg-accent/10 px-3 py-1.5 rounded-lg border border-accent/20">
-                            {updateStatus || 'Up-to-date'}
+                        <button
+                            onClick={() => {
+                                setIsCheckingUpdate(true);
+                                setUpdateStatus('checking');
+                                window.electron.checkForUpdates().finally(() => setIsCheckingUpdate(false));
+                            }}
+                            disabled={isCheckingUpdate}
+                            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-accent/12 border border-accent/30 text-accent text-sm font-bold hover:bg-accent/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <RefreshCcw className={`w-4 h-4 ${isCheckingUpdate ? 'animate-spin' : ''}`} />
+                            {isCheckingUpdate ? 'Checking...' : 'Check Now'}
+                        </button>
+                        <span className={`text-xs font-semibold px-3 py-1.5 rounded-lg border ${
+                            updateStatus === 'error' ? 'text-red-400 bg-red-500/10 border-red-500/20' :
+                            updateStatus === 'downloading' ? 'text-blue-400 bg-blue-500/10 border-blue-500/20' :
+                            updateStatus === 'installing' ? 'text-amber-400 bg-amber-500/10 border-amber-500/20' :
+                            'text-accent bg-accent/10 border-accent/20'
+                        }`}>
+                            {updateStatus === 'checking' && 'Checking...'}
+                            {updateStatus === 'available' && 'Downloading update...'}
+                            {updateStatus === 'downloading' && 'Downloading...'}
+                            {updateStatus === 'installing' && 'Installing & restarting...'}
+                            {updateStatus === 'error' && 'Update error'}
+                            {(!updateStatus || updateStatus === 'not-available' || updateStatus === 'idle') && 'Up to date'}
                         </span>
                     </div>
                 </div>

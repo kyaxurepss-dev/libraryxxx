@@ -225,7 +225,7 @@ if (gotTheLock) {
         createWindow();
 
         if (mainWindow) {
-            initUpdater(mainWindow, db);
+            initUpdater(mainWindow);
         }
 
         if (!ipcRegistered) {

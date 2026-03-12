@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { DownloadCloud, RefreshCw, CheckCircle2, AlertCircle, X } from 'lucide-react';
+import { DownloadCloud, RefreshCw, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+
+type UpdaterStatus = 'idle' | 'checking' | 'available' | 'downloading' | 'downloaded' | 'installing' | 'error' | 'not-available';
 
 export function UpdaterUI() {
-    const [state, setState] = useState<'idle' | 'checking' | 'available' | 'downloading' | 'downloaded' | 'error' | 'not-available'>('idle');
+    const [state, setState] = useState<UpdaterStatus>('idle');
     const [progress, setProgress] = useState(0);
     const [errorMsg, setErrorMsg] = useState('');
     const [version, setVersion] = useState('');
@@ -11,33 +13,42 @@ export function UpdaterUI() {
     useEffect(() => {
         const handleUpdaterState = (eventState: { status: string; data?: any }) => {
             const { status, data } = eventState;
-            
-            if (status !== 'idle' && status !== 'not-available') {
-                setIsVisible(true);
-            }
 
             switch (status) {
                 case 'checking':
                     setState('checking');
+                    setIsVisible(true);
                     break;
                 case 'available':
                     setState('available');
                     if (data?.version) setVersion(data.version);
+                    setIsVisible(true);
                     break;
                 case 'downloading':
                     setState('downloading');
                     if (data?.percent) setProgress(data.percent);
+                    setIsVisible(true);
                     break;
                 case 'downloaded':
                     setState('downloaded');
                     if (data?.version) setVersion(data.version);
+                    setIsVisible(true);
+                    break;
+                case 'installing':
+                    setState('installing');
+                    if (data?.version) setVersion(data.version);
+                    setIsVisible(true);
                     break;
                 case 'error':
                     setState('error');
                     setErrorMsg(data?.message || 'Unknown error');
+                    setIsVisible(true);
                     break;
                 case 'not-available':
                     setState('not-available');
+                    setIsVisible(true);
+                    // Auto-hide after 3 seconds
+                    setTimeout(() => setIsVisible(false), 3000);
                     break;
                 default:
                     setState('idle');
@@ -51,27 +62,19 @@ export function UpdaterUI() {
         };
     }, []);
 
-    const handleDownload = () => {
-        window.electron.downloadUpdate();
-    };
-
-    const handleInstall = () => {
-        window.electron.installUpdate();
-    };
-
     const handleCheck = () => {
         setIsVisible(true);
         setState('checking');
         window.electron.checkForUpdates();
     };
 
-    const handleDismiss = () => {
-        setIsVisible(false);
-        if (state === 'error' || state === 'not-available' || state === 'downloaded') {
-            setState('idle');
-        }
+    const handleRetry = () => {
+        setState('checking');
+        setErrorMsg('');
+        window.electron.checkForUpdates();
     };
 
+    // ── Idle: just a check button ──
     if (!isVisible) {
         return (
             <button
@@ -86,76 +89,70 @@ export function UpdaterUI() {
     }
 
     return (
-        <div className="w-full bg-[#0d1b2a]/80 backdrop-blur-md border border-white/10 rounded-xl p-3 shadow-lg relative overflow-hidden flex flex-col gap-2">
-            <button onClick={handleDismiss} className="absolute top-2 right-2 text-white/50 hover:text-white transition-colors">
-                <X className="w-4 h-4" />
-            </button>
-
-            <div className="flex flex-col gap-1 pr-6">
+        <div className="w-full bg-[#0d1b2a]/80 backdrop-blur-md border border-white/10 rounded-xl p-3 shadow-lg relative overflow-hidden flex flex-col gap-2 animate-fade-in">
+            <div className="flex flex-col gap-1">
+                {/* Checking */}
                 {state === 'checking' && (
-                    <>
-                        <div className="flex items-center gap-2 text-blue-400">
-                            <RefreshCw className="w-4 h-4 animate-spin shrink-0" />
-                            <span className="text-sm font-semibold">Checking for updates...</span>
-                        </div>
-                    </>
+                    <div className="flex items-center gap-2 text-blue-400">
+                        <RefreshCw className="w-4 h-4 animate-spin shrink-0" />
+                        <span className="text-sm font-semibold">Checking for updates...</span>
+                    </div>
                 )}
 
+                {/* Up to date */}
                 {state === 'not-available' && (
-                    <>
-                        <div className="flex items-center gap-2 text-text-secondary">
-                            <CheckCircle2 className="w-4 h-4 shrink-0" />
-                            <span className="text-sm font-semibold">App is up to date</span>
-                        </div>
-                    </>
+                    <div className="flex items-center gap-2 text-text-secondary">
+                        <CheckCircle2 className="w-4 h-4 shrink-0" />
+                        <span className="text-sm font-semibold">App is up to date</span>
+                    </div>
                 )}
 
+                {/* Update found — auto downloading */}
                 {state === 'available' && (
-                    <>
-                        <div className="flex items-center gap-2 text-blue-400">
-                            <DownloadCloud className="w-4 h-4 shrink-0 animate-pulse" />
-                            <span className="text-sm font-semibold">Update {version} available!</span>
-                        </div>
-                        <button
-                            onClick={handleDownload}
-                            className="mt-2 w-full py-2 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white text-xs font-bold rounded-lg transition-colors"
-                        >
-                            Download Now
-                        </button>
-                    </>
+                    <div className="flex items-center gap-2 text-blue-400">
+                        <DownloadCloud className="w-4 h-4 shrink-0 animate-pulse" />
+                        <span className="text-sm font-semibold">Update {version} found, downloading...</span>
+                    </div>
                 )}
 
+                {/* Downloading with progress */}
                 {state === 'downloading' && (
                     <>
                         <div className="flex items-center justify-between text-blue-400 text-xs font-semibold mb-1">
-                            <span>Downloading...</span>
+                            <span>Downloading update...</span>
                             <span>{Math.round(progress)}%</span>
                         </div>
                         <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                             <div
-                                className="h-full bg-blue-500 rounded-full transition-all duration-300 ease-out"
+                                className="h-full bg-linear-to-r from-blue-500 to-cyan-400 rounded-full transition-all duration-300 ease-out"
                                 style={{ width: `${progress}%` }}
                             />
                         </div>
                     </>
                 )}
 
+                {/* Downloaded — about to install */}
                 {state === 'downloaded' && (
-                    <>
-                        <div className="flex items-center gap-2 text-green-400">
-                            <CheckCircle2 className="w-4 h-4 shrink-0" />
-                            <span className="text-sm font-semibold text-green-400">Ready to Install</span>
-                        </div>
-                        <p className="text-xs text-text-muted mt-0.5">Version {version} is ready.</p>
-                        <button
-                            onClick={handleInstall}
-                            className="mt-2 w-full py-2 bg-green-500 hover:bg-green-600 active:bg-green-700 text-white text-xs font-bold rounded-lg transition-colors"
-                        >
-                            Restart & Install
-                        </button>
-                    </>
+                    <div className="flex items-center gap-2 text-green-400">
+                        <Loader2 className="w-4 h-4 shrink-0 animate-spin" />
+                        <span className="text-sm font-semibold">Preparing to install...</span>
+                    </div>
                 )}
 
+                {/* Installing — app will restart */}
+                {state === 'installing' && (
+                    <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2 text-amber-400">
+                            <Loader2 className="w-4 h-4 shrink-0 animate-spin" />
+                            <span className="text-sm font-semibold">Updating… restarting app</span>
+                        </div>
+                        <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                            <div className="h-full bg-linear-to-r from-amber-400 to-orange-500 rounded-full animate-pulse w-full" />
+                        </div>
+                    </div>
+                )}
+
+                {/* Error */}
                 {state === 'error' && (
                     <>
                         <div className="flex items-center gap-2 text-red-400">
@@ -165,6 +162,12 @@ export function UpdaterUI() {
                         <p className="text-xs text-red-400/80 mt-1 line-clamp-2" title={errorMsg}>
                             {errorMsg}
                         </p>
+                        <button
+                            onClick={handleRetry}
+                            className="mt-2 w-full py-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 text-xs font-bold rounded-lg transition-colors border border-red-500/30"
+                        >
+                            Retry
+                        </button>
                     </>
                 )}
             </div>
