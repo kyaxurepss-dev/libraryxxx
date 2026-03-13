@@ -1,6 +1,25 @@
-1. Abre package.json y cambia el "version" a "1.0.X" (Acuérdate de esto, o el autoupdater no funcionará)
-2. git add . (prepara todos tus cambios)
-3. git commit -m "Aquí explicas lo que has cambiado" (guarda los cambios)
-4. git push origin main (los sube a GitHub)
-5. git tag v1.0.X (le pones la misma etiqueta a la que le subiste la versión)
-6. git push origin v1.0.X (subes la etiqueta a GitHub para que sus servidores arranquen a compilar)
+PASOS PARA ACTUALIZAR LA APP (GITHUB ACTIONS)
+
+Es MUY importante seguir este orden exacto para que el autoupdater detecte la versión:
+
+1. MODIFICAR VERSIÓN
+   Abre 'package.json' y cambia el campo "version" (ej. de "1.1.19" a "1.1.20").
+   ¡Acuérdate de guardar el archivo!
+
+2. SUBIR CAMBIO DE VERSIÓN A GITHUB
+   Asegúrate de que GitHub ya tiene el package.json actualizado ANTES de poner el tag.
+   > git add package.json
+   > git commit -m "chore: bump version to 1.1.20"
+   > git push origin main
+
+3. CREAR Y SUBIR EL TAG (DISPARAR EL BUILD)
+   El tag debe ser igual a la versión que pusiste en el paso 1.
+   > git tag v1.1.20
+   > git push origin v1.1.20
+
+4. VERIFICAR
+   Ve a la pestaña "Actions" en GitHub para ver cómo se compila. Cuando termine, 
+   la release aparecerá en la sección "Releases" y la app la detectará sola.
+
+NOTA: Si subes el tag antes que el push de main, el autoupdater NO funcionará 
+porque compilará la versión vieja. ¡Sigue siempre el orden 1 -> 2 -> 3!

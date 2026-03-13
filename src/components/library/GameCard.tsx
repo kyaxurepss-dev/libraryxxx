@@ -38,8 +38,16 @@ export function GameCard({ game, gamepadFocused = false }: GameCardProps) {
     return (
         <div
             ref={cardRef}
-            className={`game-card aspect-2/3 group rounded-xl transition-all duration-200 ${gamepadFocused ? 'ring-2 ring-cyan-400 ring-offset-2 ring-offset-bg-primary scale-105 z-10' : ''
+            role="button"
+            tabIndex={0}
+            className={`game-card aspect-2/3 group rounded-xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${gamepadFocused ? 'ring-2 ring-cyan-400 ring-offset-2 ring-offset-bg-primary scale-105 z-10' : ''
                 }`}
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    navigate(`/game/${game.id}`);
+                }
+            }}
             onClick={() => navigate(`/game/${game.id}`)}
         >
             {!isVisible ? (
@@ -115,4 +123,3 @@ export function GameCard({ game, gamepadFocused = false }: GameCardProps) {
         </div>
     );
 }
-

@@ -2,6 +2,7 @@ import { HashRouter, Routes, Route } from 'react-router-dom';
 import { Sidebar } from './components/layout/Sidebar';
 import { TopBar } from './components/layout/TopBar';
 import { ControllerHUD } from './components/layout/ControllerHUD';
+import { ControllerContentNavigator } from './components/layout/ControllerContentNavigator';
 import { LibraryPage } from './pages/LibraryPage';
 import { GamePage } from './pages/GamePage';
 import { FavoritesPage } from './pages/FavoritesPage';
@@ -26,6 +27,7 @@ function App() {
 
             <div className="drag-region fixed top-0 left-0 right-0 h-9 z-50" />
             <ControllerHUD />
+            <ControllerContentNavigator />
 
             {/* Big Picture is a full-screen overlay, rendered outside the normal layout */}
             <Routes>
@@ -60,3 +62,4 @@ function App() {
 }
 
 export default App;
+
