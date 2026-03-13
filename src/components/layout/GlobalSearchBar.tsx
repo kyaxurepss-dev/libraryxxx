@@ -93,6 +93,20 @@ export function GlobalSearchBar() {
             document.removeEventListener('keydown', handleKeydown);
         };
     }, [isOpen, close]);
+    useEffect(() => {
+        const handleControllerToggle = () => {
+            if (isOpen) {
+                close();
+                return;
+            }
+            setIsOpen(true);
+            setTimeout(() => inputRef.current?.focus(), 0);
+            window.dispatchEvent(new CustomEvent('controller-search-opened'));
+        };
+
+        window.addEventListener('controller-search-toggle', handleControllerToggle);
+        return () => window.removeEventListener('controller-search-toggle', handleControllerToggle);
+    }, [isOpen, close]);
 
     useEffect(() => {
         const search = async () => {
@@ -316,3 +330,4 @@ export function GlobalSearchBar() {
         </div>
     );
 }
+

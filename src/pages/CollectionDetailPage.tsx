@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus } from 'lucide-react';
 import type { Game } from '@/types';
 import { GameGrid } from '@/components/library/GameGrid';
+import { useControllerActions, useControllerState } from '@/hooks/useController';
 
 export function CollectionDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -14,6 +15,9 @@ export function CollectionDetailPage() {
     const [collectionName, setCollectionName] = useState('');
     const [loading, setLoading] = useState(true);
     const [showAddGame, setShowAddGame] = useState(false);
+    const [focusedGameIndex, setFocusedGameIndex] = useState(-1);
+    const [focusedAddIndex, setFocusedAddIndex] = useState(-1);
+    const { navScope } = useControllerState();
 
     useEffect(() => {
         loadData();
@@ -41,9 +45,74 @@ export function CollectionDetailPage() {
         await window.electron.addGameToCollection(collectionId, gameId);
         loadData();
         setShowAddGame(false);
+        setFocusedAddIndex(-1);
     };
 
-    const availableGames = allGames.filter(g => !games.find(cg => cg.id === g.id));
+    const availableGames = useMemo(() => allGames.filter(g => !games.find(cg => cg.id === g.id)), [allGames, games]);
+
+    const handleControllerAction = useCallback((action: string) => {
+        if (loading) return;
+
+        if (showAddGame) {
+            if (action === 'ui_cancel') {
+                setShowAddGame(false);
+                setFocusedAddIndex(-1);
+                return;
+            }
+
+            if (action === 'ui_up') {
+                setFocusedAddIndex(prev => Math.max(0, prev - 1));
+                return;
+            }
+
+            if (action === 'ui_down') {
+                setFocusedAddIndex(prev => Math.min(availableGames.length - 1, Math.max(0, prev + 1)));
+                return;
+            }
+
+            if (action === 'ui_confirm') {
+                const idx = focusedAddIndex < 0 ? 0 : focusedAddIndex;
+                const game = availableGames[idx];
+                if (game) handleAddGame(game.id);
+                return;
+            }
+
+            return;
+        }
+
+        const COLS = 6;
+        if (action === 'ui_up') {
+            setFocusedGameIndex(prev => Math.max(0, (prev < 0 ? 0 : prev) - COLS));
+            return;
+        }
+        if (action === 'ui_down') {
+            setFocusedGameIndex(prev => Math.min(games.length - 1, (prev < 0 ? 0 : prev) + COLS));
+            return;
+        }
+        if (action === 'ui_left') {
+            setFocusedGameIndex(prev => Math.max(0, (prev < 0 ? 0 : prev) - 1));
+            return;
+        }
+        if (action === 'ui_right') {
+            setFocusedGameIndex(prev => Math.min(games.length - 1, (prev < 0 ? 0 : prev) + 1));
+            return;
+        }
+        if (action === 'ui_confirm') {
+            if (focusedGameIndex >= 0 && games[focusedGameIndex]) {
+                navigate(`/game/${games[focusedGameIndex].id}`);
+                return;
+            }
+            setShowAddGame(true);
+            return;
+        }
+        if (action === 'ui_cancel') {
+            navigate('/collections');
+        }
+    }, [loading, showAddGame, availableGames, focusedAddIndex, games, focusedGameIndex, navigate]);
+
+    useControllerActions(({ action }) => {
+        handleControllerAction(action);
+    }, navScope === 'content');
 
     return (
         <div className="animate-fade-in space-y-5">
@@ -74,11 +143,11 @@ export function CollectionDetailPage() {
                         <p className="text-xs text-text-muted">All games are already in this collection</p>
                     ) : (
                         <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto">
-                            {availableGames.map(game => (
+                            {availableGames.map((game, idx) => (
                                 <button
                                     key={game.id}
                                     onClick={() => handleAddGame(game.id)}
-                                    className="px-3 py-1.5 rounded-lg bg-bg-surface-hover text-text-secondary text-xs hover:text-accent hover:bg-accent/10 transition-colors"
+                                    className={`px-3 py-1.5 rounded-lg bg-bg-surface-hover text-text-secondary text-xs hover:text-accent hover:bg-accent/10 transition-colors ${focusedAddIndex === idx ? 'ring-2 ring-accent/70 text-accent' : ''}`}
                                 >
                                     {game.title}
                                 </button>
@@ -91,9 +160,14 @@ export function CollectionDetailPage() {
             <GameGrid
                 games={games}
                 loading={loading}
+                focusedIndex={focusedGameIndex}
                 emptyTitle="This collection is empty"
                 emptyDescription="Use Add Game to include titles in this collection."
             />
         </div>
     );
 }
+
+
+
+

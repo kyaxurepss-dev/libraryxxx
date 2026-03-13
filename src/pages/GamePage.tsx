@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
     Play, Heart, FolderOpen, Clock, Star, ArrowLeft,
@@ -6,11 +6,13 @@ import {
 } from 'lucide-react';
 import type { Game, Screenshot, DLC, Tag as TagType, Extra, Emulator, PlaySession, Video } from '@/types';
 import { formatPlaytime, getScoreBgColor, getScoreColor, toMediaSrc } from '@/lib/utils';
+import { useControllerActions, useControllerState } from '@/hooks/useController';
 
 export function GamePage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const gameId = Number(id);
+    const { navScope } = useControllerState();
 
     const [game, setGame] = useState<Game | null>(null);
     const [screenshots, setScreenshots] = useState<Screenshot[]>([]);
@@ -201,7 +203,45 @@ export function GamePage() {
             console.error(e);
         }
     };
+    const handleControllerAction = useCallback((action: string) => {
+        const activeTag = document.activeElement?.tagName?.toLowerCase();
+        const isTyping = activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select';
+        if (isTyping) return;
 
+        if (showGallery) {
+            if (action === 'ui_left') setScreenshotIndex(i => (i - 1 + screenshots.length) % screenshots.length);
+            if (action === 'ui_right') setScreenshotIndex(i => (i + 1) % screenshots.length);
+            if (action === 'ui_cancel' || action === 'ui_confirm') setShowGallery(false);
+            return;
+        }
+
+        if (activeVideoId) {
+            if (action === 'ui_cancel' || action === 'ui_confirm') {
+                setActiveVideoId(null);
+            }
+            return;
+        }
+
+        if (showIgdbSearch) {
+            if (action === 'ui_cancel') {
+                setShowIgdbSearch(false);
+            }
+            return;
+        }
+
+        if (action === 'ui_cancel') {
+            navigate('/');
+            return;
+        }
+
+        if (action === 'ui_confirm') {
+            handlePlay();
+        }
+    }, [showGallery, screenshots.length, activeVideoId, showIgdbSearch, navigate, handlePlay]);
+
+    useControllerActions(({ action }) => {
+        handleControllerAction(action);
+    }, navScope === 'content');
     if (loading) {
         return (
             <div className="p-6">
@@ -890,6 +930,12 @@ export function GamePage() {
         }
     </>);
 }
+
+
+
+
+
+
 
 
 

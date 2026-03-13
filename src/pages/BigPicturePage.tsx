@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Play, Gamepad2 } from 'lucide-react';
 import type { Game } from '@/types';
+import { getControllerGlyphs, useControllerActions, useControllerState } from '@/hooks/useController';
 import { toMediaSrc } from '@/lib/utils';
 
 export function BigPicturePage() {
@@ -11,6 +12,10 @@ export function BigPicturePage() {
     const [loading, setLoading] = useState(true);
     const gridRef = useRef<HTMLDivElement>(null);
     const COLS = 5;
+
+    const { controllers, activeControllerId, navScope } = useControllerState();
+    const activeController = controllers.find(ctrl => ctrl.id === activeControllerId) ?? controllers[0];
+    const glyphs = getControllerGlyphs(activeController?.family);
 
     useEffect(() => {
         window.electron.getGames()
@@ -38,6 +43,29 @@ export function BigPicturePage() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [handleKeyDown]);
 
+    useControllerActions(({ action }) => {
+        setFocusIdx(prev => {
+            const count = games.length;
+            if (count === 0) return -1;
+            const idx = prev < 0 ? 0 : prev;
+
+            if (action === 'ui_right') return Math.min(idx + 1, count - 1);
+            if (action === 'ui_left') return Math.max(idx - 1, 0);
+            if (action === 'ui_down') return Math.min(idx + COLS, count - 1);
+            if (action === 'ui_up') return Math.max(idx - COLS, 0);
+            if (action === 'ui_confirm' && games[idx]) {
+                navigate(`/game/${games[idx].id}`);
+                return prev;
+            }
+            if (action === 'ui_cancel') {
+                navigate('/');
+                return prev;
+            }
+
+            return prev;
+        });
+    }, navScope === 'content');
+
     // Scroll focused card into view
     useEffect(() => {
         const el = gridRef.current?.querySelector(`[data-idx="${focusIdx}"]`) as HTMLElement | null;
@@ -51,7 +79,7 @@ export function BigPicturePage() {
                 <div className="flex items-center gap-3">
                     <Gamepad2 className="w-6 h-6 text-accent" />
                     <span className="text-xl font-bold text-text-primary">Big Picture</span>
-                    <span className="text-xs text-text-muted ml-2">Use arrow keys to navigate · Enter to open · Esc to exit</span>
+                    <span className="text-xs text-text-muted ml-2">Arrows / D-Pad to navigate - {glyphs.confirm} or Enter to open - {glyphs.cancel} or Esc to exit</span>
                 </div>
                 <button
                     onClick={() => navigate('/')}
@@ -100,7 +128,7 @@ export function BigPicturePage() {
                                         <p className="text-sm font-bold text-white leading-tight line-clamp-2">{game.title}</p>
                                         {isFocused && (
                                             <div className="mt-2 flex items-center gap-1.5 text-xs text-accent font-semibold">
-                                                <Play className="w-3 h-3 fill-current" /> Press Enter to open
+                                                <Play className="w-3 h-3 fill-current" /> Press {glyphs.confirm} or Enter
                                             </div>
                                         )}
                                     </div>

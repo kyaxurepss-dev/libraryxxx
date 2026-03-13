@@ -1,11 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import type { Game } from '@/types';
 import { GameGrid } from '@/components/library/GameGrid';
+import { useControllerActions, useControllerState } from '@/hooks/useController';
 
 export function FavoritesPage() {
+    const navigate = useNavigate();
     const [games, setGames] = useState<Game[]>([]);
     const [loading, setLoading] = useState(true);
+    const [focusedIndex, setFocusedIndex] = useState(-1);
+    const { navScope } = useControllerState();
 
     useEffect(() => {
         loadFavorites();
@@ -22,6 +27,30 @@ export function FavoritesPage() {
         }
     };
 
+    const handleControllerAction = useCallback((action: string) => {
+        const COLS = 6;
+        setFocusedIndex(prev => {
+            const count = games.length;
+            if (count === 0) return -1;
+            const idx = prev < 0 ? 0 : prev;
+
+            if (action === 'ui_right') return Math.min(idx + 1, count - 1);
+            if (action === 'ui_left') return Math.max(idx - 1, 0);
+            if (action === 'ui_down') return Math.min(idx + COLS, count - 1);
+            if (action === 'ui_up') return Math.max(idx - COLS, 0);
+            if (action === 'ui_confirm' && games[idx]) {
+                navigate(`/game/${games[idx].id}`);
+                return prev;
+            }
+
+            return prev;
+        });
+    }, [games, navigate]);
+
+    useControllerActions(({ action }) => {
+        handleControllerAction(action);
+    }, navScope === 'content');
+
     return (
         <div className="animate-fade-in space-y-5">
             <div className="flex items-center gap-4">
@@ -37,9 +66,15 @@ export function FavoritesPage() {
             <GameGrid
                 games={games}
                 loading={loading}
+                focusedIndex={focusedIndex}
                 emptyTitle="No favorites yet"
                 emptyDescription="Mark games with the heart icon to keep them here."
             />
         </div>
     );
 }
+
+
+
+
+

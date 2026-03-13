@@ -4,7 +4,7 @@ import { GameGrid } from '@/components/library/GameGrid';
 import { HeroBanner } from '@/components/library/HeroBanner';
 import { FilterBar } from '@/components/library/FilterBar';
 import { ContinuePlaying } from '@/components/library/ContinuePlaying';
-import { useGamepad } from '@/hooks/useGamepad';
+import { useControllerActions, useControllerState } from '@/hooks/useController';
 import { useNavigate } from 'react-router-dom';
 
 const FILTER_PREFIXES = /^(genre:|tag:|metacritic[><=]|year[><=]|playtime[><=])/i;
@@ -21,6 +21,7 @@ export function LibraryPage() {
     const [sort, setSort] = useState('title');
     const [advancedResults, setAdvancedResults] = useState<Game[] | null>(null);
     const [focusedIndex, setFocusedIndex] = useState(-1);
+    const { navScope } = useControllerState();
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => { loadGames(); }, []);
@@ -119,11 +120,11 @@ export function LibraryPage() {
             if (count === 0) return -1;
             const idx = prev < 0 ? 0 : prev;
             switch (action) {
-                case 'up': return Math.max(0, idx - COLS);
-                case 'down': return Math.min(count - 1, idx + COLS);
-                case 'left': return Math.max(0, idx - 1);
-                case 'right': return Math.min(count - 1, idx + 1);
-                case 'confirm': {
+                case 'ui_up': return Math.max(0, idx - COLS);
+                case 'ui_down': return Math.min(count - 1, idx + COLS);
+                case 'ui_left': return Math.max(0, idx - 1);
+                case 'ui_right': return Math.min(count - 1, idx + 1);
+                case 'ui_confirm': {
                     const game = filteredGames[idx];
                     if (game) navigate(`/game/${game.id}`);
                     return prev;
@@ -133,7 +134,9 @@ export function LibraryPage() {
         });
     }, [filteredGames, navigate]);
 
-    useGamepad(handleGamepadAction);
+    useControllerActions(({ action }) => {
+        handleGamepadAction(action);
+    }, navScope === 'content');
 
 
     return (
@@ -177,3 +180,5 @@ export function LibraryPage() {
         </div>
     );
 }
+
+
