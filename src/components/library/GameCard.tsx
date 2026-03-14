@@ -40,8 +40,11 @@ export function GameCard({ game, gamepadFocused = false }: GameCardProps) {
             ref={cardRef}
             role="button"
             tabIndex={0}
-            className={`game-card aspect-2/3 group rounded-xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${gamepadFocused ? 'ring-2 ring-cyan-400 ring-offset-2 ring-offset-bg-primary scale-105 z-10' : ''
-                }`}
+            className={`game-card aspect-2/3 group rounded-2xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/80 ${
+                gamepadFocused
+                    ? 'ring-2 ring-cyan-400/90 ring-offset-0 scale-[1.04] shadow-[0_0_42px_rgba(34,211,238,0.6)] z-20'
+                    : ''
+            }`}
             onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
@@ -51,13 +54,12 @@ export function GameCard({ game, gamepadFocused = false }: GameCardProps) {
             onClick={() => navigate(`/game/${game.id}`)}
         >
             {!isVisible ? (
-                // Skeleton skeleton replacement while out of viewport
-                <div className="w-full h-full skeleton opacity-50" />
+                <div className="w-full h-full skeleton opacity-70 rounded-2xl" />
             ) : (
                 <>
                     {coverSrc ? (
                         <>
-                            {!imageLoaded && <div className="absolute inset-0 skeleton opacity-50 z-0" />}
+                            {!imageLoaded && <div className="absolute inset-0 skeleton opacity-70 z-0 rounded-2xl" />}
                             <img
                                 src={coverSrc}
                                 alt={game.title}
@@ -85,38 +87,48 @@ export function GameCard({ game, gamepadFocused = false }: GameCardProps) {
                         </div>
                     )}
 
-                    <div className="absolute inset-x-0 bottom-0 z-10 bg-linear-to-t from-black/80 via-black/35 to-transparent pl-5 pr-3 py-3.5 transition-opacity duration-300 group-hover:opacity-0">
+                    <div className="absolute inset-x-0 bottom-0 z-10 bg-linear-to-t from-black/80 via-black/35 to-transparent transition-opacity duration-300 group-hover:opacity-0" style={{ paddingLeft: '40px', paddingRight: '16px', paddingTop: '16px', paddingBottom: '20px' }}>
                         <h3 className="font-bold text-sm text-white line-clamp-2">{game.title}</h3>
                     </div>
 
                     <div className="card-overlay" />
 
                     <div className="card-content z-20">
-                        <h3 className="font-bold text-lg text-white line-clamp-2 mb-2" style={{ textShadow: '0 4px 12px rgba(0,0,0,0.9)' }}>
-                            {game.title}
-                        </h3>
+                        <div className="rounded-2xl bg-black/55 backdrop-blur-xl border border-white/12 px-3.5 py-3 shadow-[0_18px_40px_rgba(15,23,42,0.9)]">
+                            <h3
+                                className="font-semibold text-sm md:text-[15px] text-white line-clamp-2 mb-2 tracking-tight"
+                                style={{ textShadow: '0 4px 12px rgba(0,0,0,0.9)' }}
+                            >
+                                {game.title}
+                            </h3>
 
-                        <div className="flex items-center gap-2 text-xs font-semibold text-white/90 mb-3">
-                            {game.playtime_minutes > 0 && (
-                                <span className="flex items-center gap-1.5 bg-black/50 px-2.5 py-1 rounded-md backdrop-blur-md border border-white/10">
-                                    <Clock className="w-3.5 h-3.5 text-accent" />
-                                    {formatPlaytime(game.playtime_minutes)}
-                                </span>
+                            <div className="flex items-center justify-between gap-2 text-[11px] font-semibold text-white/90 mb-1.5">
+                                {game.playtime_minutes > 0 && (
+                                    <span className="inline-flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-md border border-white/12">
+                                        <Clock className="w-3.5 h-3.5 text-accent" />
+                                        {formatPlaytime(game.playtime_minutes)}
+                                    </span>
+                                )}
+                                {game.release_year && (
+                                    <span className="ml-auto text-[10px] text-white/60 uppercase tracking-[0.16em]">
+                                        {game.release_year}
+                                    </span>
+                                )}
+                            </div>
+
+                            {game.exe_path && (
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        window.electron.launchGame(game.id);
+                                    }}
+                                    className="mt-1 w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-accent/80 hover:bg-accent-hover text-white text-[11px] font-bold border border-white/15 hover:border-accent transition-all duration-300 group/play shadow-[0_12px_32px_rgba(59,130,246,0.45)]"
+                                >
+                                    <Play className="w-3.5 h-3.5 fill-white transition-transform group-hover/play:scale-125" />
+                                    Play
+                                </button>
                             )}
                         </div>
-
-                        {game.exe_path && (
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    window.electron.launchGame(game.id);
-                                }}
-                                className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-white/10 hover:bg-accent text-white text-xs font-bold backdrop-blur-md border border-white/20 hover:border-accent transition-all duration-300 group/play"
-                            >
-                                <Play className="w-3.5 h-3.5 fill-white transition-transform group-hover/play:scale-125" />
-                                Play
-                            </button>
-                        )}
                     </div>
                 </>
             )}

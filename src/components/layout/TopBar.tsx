@@ -10,12 +10,32 @@ export function TopBar() {
     const activeController = controllers.find(ctrl => ctrl.id === activeControllerId) ?? controllers[0];
     const glyphs = getControllerGlyphs(activeController?.family);
 
-    let title = 'Library';
     const isLibraryView = location.pathname === '/';
-    if (location.pathname.startsWith('/favorites')) title = 'Favorites';
-    else if (location.pathname.startsWith('/collections')) title = 'Collections';
-    else if (location.pathname.startsWith('/settings')) title = 'Settings';
-    else if (location.pathname.startsWith('/game/')) title = 'Game Details';
+    let title = 'Library';
+    let sectionLabel = 'LIBRARY';
+    let subtitle = 'Your game universe, organized';
+
+    if (location.pathname.startsWith('/favorites')) {
+        title = 'Favorites';
+        sectionLabel = 'FAVORITES';
+        subtitle = 'Pinned games you love playing';
+    } else if (location.pathname.startsWith('/collections')) {
+        title = 'Collections';
+        sectionLabel = 'COLLECTIONS';
+        subtitle = 'Curated sets, playlists and smart rules';
+    } else if (location.pathname.startsWith('/stats')) {
+        title = 'Statistics';
+        sectionLabel = 'STATISTICS';
+        subtitle = 'Playtime, trends and library health';
+    } else if (location.pathname.startsWith('/settings')) {
+        title = 'Settings';
+        sectionLabel = 'SETTINGS';
+        subtitle = 'Libraries, themes, emulators and more';
+    } else if (location.pathname.startsWith('/game/')) {
+        title = 'Game Details';
+        sectionLabel = 'DETAILS';
+        subtitle = 'Overview, playtime and metadata';
+    }
 
     useControllerActions(({ action }) => {
         if (navScope !== 'topbar') return;
@@ -45,17 +65,31 @@ export function TopBar() {
     }, [navScope, setNavScope]);
 
     return (
-        <header className={`h-[76px] min-h-[76px] border-b border-white/8 bg-[#08152b]/75 backdrop-blur-xl z-30 sticky top-0 no-drag ${navScope === 'topbar' ? 'ring-2 ring-accent/60' : ''}`}>
-            <div className="w-full max-w-[1700px] mx-auto h-full px-8 md:px-10 lg:px-12 flex items-center justify-between">
-                <div className={isLibraryView ? 'lg:pl-10 xl:pl-14' : ''}>
-                    <h1 className="text-[30px] leading-none font-extrabold tracking-tight text-white">{title}</h1>
-                    <p className="text-xs text-text-muted mt-1">Your game universe, organized</p>
+        <header
+            className={`h-[72px] min-h-[72px] border-b border-white/10 bg-bg-surface/70 backdrop-blur-2xl shadow-[0_18px_45px_rgba(3,7,18,0.8)] sticky top-0 z-30 no-drag transition-all ${
+                navScope === 'topbar' ? 'ring-2 ring-accent/60 ring-offset-0' : ''
+            }`}
+        >
+            <div className="w-full max-w-[1700px] mx-auto h-full px-6 md:px-8 lg:px-10 flex items-center justify-between gap-6">
+                <div className={`flex flex-col ${isLibraryView ? 'lg:pl-6 xl:pl-10' : ''}`}>
+                    <span className="text-[10px] font-semibold tracking-[0.26em] text-text-muted/80 uppercase mb-1">
+                        {sectionLabel}
+                    </span>
+                    <div className="flex items-baseline gap-3">
+                        <h1 className="text-[24px] md:text-[26px] leading-none font-extrabold tracking-tight text-white drop-shadow-[0_0_16px_rgba(15,23,42,0.9)]">
+                            {title}
+                        </h1>
+                    </div>
+                    <p className="text-[11px] md:text-xs text-text-muted mt-1 max-w-md">
+                        {subtitle}
+                    </p>
                 </div>
-                <div className="flex items-center gap-4 mr-28 md:mr-32" style={{ marginTop: '36px' }}>
+                <div className="flex items-center gap-3 md:gap-4 ml-auto">
                     <GlobalSearchBar />
                     {navScope === 'topbar' && (
-                        <span className="text-[10px] uppercase tracking-wider text-text-muted border border-white/10 rounded-md px-2 py-1">
-                            {glyphs.confirm} search
+                        <span className="hidden md:inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-text-muted border border-white/10 rounded-md px-2 py-1 bg-black/20 backdrop-blur-sm">
+                            <span className="text-xs">{glyphs.confirm}</span>
+                            <span className="font-semibold">Search</span>
                         </span>
                     )}
                 </div>

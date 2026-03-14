@@ -106,9 +106,13 @@ export function Sidebar() {
     }, true);
 
     return (
-        <aside className={`w-[250px] min-w-[250px] bg-[#08162d]/75 backdrop-blur-2xl border-r border-white/8 flex flex-col pt-11 z-40 relative ${navScope === 'sidebar' ? 'ring-2 ring-accent/60' : ''}`}>
-            <div className="px-6 no-drag" style={{ marginBottom: '40px' }}>
-                <div className="w-10 h-10 rounded-xl bg-accent/20 flex items-center justify-center shadow-[0_0_20px_rgba(59,130,246,0.25)] border border-accent/25">
+        <aside
+            className={`w-[250px] min-w-[250px] bg-gradient-to-b from-[#050816]/95 via-[#050816]/92 to-[#020617]/98 backdrop-blur-2xl border-r border-white/10 shadow-[0_0_55px_rgba(3,7,18,0.95)] flex flex-col pt-11 z-40 relative transition-all ${
+                navScope === 'sidebar' ? 'ring-2 ring-accent/60 ring-offset-0' : ''
+            }`}
+        >
+            <div className="px-6 no-drag mb-10">
+                <div className="w-11 h-11 rounded-2xl bg-accent/20 flex items-center justify-center shadow-[0_0_26px_rgba(59,130,246,0.35)] border border-accent/30">
                     <Gamepad2 className="w-5 h-5 text-accent" />
                 </div>
             </div>
@@ -127,15 +131,23 @@ export function Sidebar() {
                             key={item.to}
                             to={item.to}
                             onMouseEnter={() => setFocusedIndex(idx)}
-                            className={`no-drag flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-semibold transition-all duration-300 relative group/nav
-                ${isActive
-                                    ? 'bg-accent/16 text-white border border-accent/35 shadow-[0_10px_25px_rgba(59,130,246,0.2)] scale-[1.02]'
-                                    : 'text-text-secondary hover:text-white hover:bg-white/6 border border-transparent hover:translate-x-1'
-                                }
-                ${isControllerFocused ? 'ring-2 ring-cyan-300/80' : ''}`}
+                            className={`no-drag flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-semibold transition-all duration-300 relative group/nav overflow-hidden
+                ${
+                    isActive
+                        ? 'text-white'
+                        : 'text-text-secondary hover:text-white hover:bg-white/5'
+                }
+                ${isControllerFocused ? 'ring-2 ring-cyan-300/80 ring-offset-0' : ''}`}
                         >
-                            <item.icon className={`w-[18px] h-[18px] transition-transform duration-300 group-hover/nav:scale-110 ${isActive ? 'text-accent' : ''}`} />
-                            {item.label}
+                            {isActive && (
+                                <span className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_0%_0%,rgba(59,130,246,0.45),transparent_60%),linear-gradient(90deg,rgba(15,23,42,0.9),rgba(15,23,42,0.6))] border border-accent/40 shadow-[0_18px_40px_rgba(59,130,246,0.4)]" />
+                            )}
+                            <item.icon
+                                className={`w-[18px] h-[18px] transition-transform duration-300 group-hover/nav:scale-110 ${
+                                    isActive ? 'text-accent' : ''
+                                }`}
+                            />
+                            <span className="truncate">{item.label}</span>
                         </NavLink>
                     );
                 })}
@@ -144,10 +156,14 @@ export function Sidebar() {
                 <button
                     onClick={() => navigate('/bigpicture')}
                     onMouseEnter={() => setFocusedIndex(navItems.length)}
-                    className={`no-drag w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-semibold transition-all duration-200 text-text-secondary hover:text-white hover:bg-white/6 border border-transparent ${navScope === 'sidebar' && focusedIndex === navItems.length ? 'ring-2 ring-cyan-300/80' : ''}`}
+                    className={`no-drag w-full flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-semibold transition-all duration-200 text-text-secondary hover:text-white hover:bg-white/5 ${
+                        navScope === 'sidebar' && focusedIndex === navItems.length
+                            ? 'ring-2 ring-cyan-300/80 ring-offset-0'
+                            : ''
+                    }`}
                 >
                     <Monitor className="w-[18px] h-[18px]" />
-                    Big Picture
+                    <span className="truncate">Big Picture</span>
                 </button>
 
                 <div className="my-5 px-3">
@@ -168,15 +184,19 @@ export function Sidebar() {
                             key={item.to}
                             to={item.to}
                             onMouseEnter={() => setFocusedIndex(index)}
-                            className={`no-drag flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-semibold transition-all duration-200 relative
-                ${isActive
-                                    ? 'bg-accent/16 text-white border border-accent/35 shadow-[0_10px_25px_rgba(59,130,246,0.2)]'
-                                    : 'text-text-secondary hover:text-white hover:bg-white/6 border border-transparent'
-                                }
-                ${isControllerFocused ? 'ring-2 ring-cyan-300/80' : ''}`}
+                            className={`no-drag flex items-center gap-3 px-4 py-3 rounded-xl text-[15px] font-semibold transition-all duration-200 relative overflow-hidden
+                ${
+                    isActive
+                        ? 'text-white'
+                        : 'text-text-secondary hover:text-white hover:bg-white/5'
+                }
+                ${isControllerFocused ? 'ring-2 ring-cyan-300/80 ring-offset-0' : ''}`}
                         >
+                            {isActive && (
+                                <span className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_0%_0%,rgba(59,130,246,0.35),transparent_60%),linear-gradient(90deg,rgba(15,23,42,0.9),rgba(15,23,42,0.65))] border border-accent/35 shadow-[0_16px_38px_rgba(59,130,246,0.35)]" />
+                            )}
                             <item.icon className="w-[18px] h-[18px]" />
-                            {item.label}
+                            <span className="truncate">{item.label}</span>
                         </NavLink>
                     );
                 })}
@@ -188,7 +208,11 @@ export function Sidebar() {
                     onClick={handleScan}
                     onMouseEnter={() => setFocusedIndex(actionItems.length - 1)}
                     disabled={scanning}
-                    className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-accent/18 text-white hover:bg-accent/28 disabled:opacity-55 disabled:cursor-not-allowed transition-all duration-200 text-sm font-bold border border-accent/30 ${navScope === 'sidebar' && focusedIndex === actionItems.length - 1 ? 'ring-2 ring-cyan-300/80' : ''}`}
+                    className={`w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-accent/18 text-white hover:bg-accent/28 disabled:opacity-55 disabled:cursor-not-allowed transition-all duration-200 text-sm font-bold border border-accent/30 ${
+                        navScope === 'sidebar' && focusedIndex === actionItems.length - 1
+                            ? 'ring-2 ring-cyan-300/80 ring-offset-0'
+                            : ''
+                    }`}
                 >
                     <RefreshCw className={`w-4 h-4 ${scanning ? 'animate-spin' : ''}`} />
                     {scanning ? 'Scanning...' : 'Scan Library'}
@@ -196,9 +220,13 @@ export function Sidebar() {
             </div>
 
             <div className="px-6 pb-6 no-drag">
-                <div className="border-t border-white/8 pt-4">
-                    <h1 className="text-sm font-bold tracking-[0.16em] uppercase text-white/35">libraryxxx</h1>
-                    <p className="text-[10px] text-white/25 uppercase tracking-[0.2em] font-semibold mt-1">Advanced</p>
+                <div className="border-t border-white/10 pt-4">
+                    <h1 className="text-xs font-bold tracking-[0.2em] uppercase text-white/40">
+                        libraryxxx
+                    </h1>
+                    <p className="text-[10px] text-white/30 uppercase tracking-[0.24em] font-semibold mt-1">
+                        Game Library
+                    </p>
                 </div>
             </div>
         </aside>
