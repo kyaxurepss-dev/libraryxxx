@@ -58,8 +58,8 @@ export function launchGame(gameId, exePath, db, launchOptions = '') {
     }
     const cwd = targetExe.substring(0, targetExe.lastIndexOf('\\')) || targetExe.substring(0, targetExe.lastIndexOf('/'));
     const gameProcess = spawn(targetExe, args, {
-        detached: true,
         cwd,
+        stdio: 'ignore',
     });
     // Record session start
     const sessionResult = db.prepare(`

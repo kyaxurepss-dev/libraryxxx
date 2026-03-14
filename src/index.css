@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -17,6 +17,7 @@
   --color-success: #10b981;
   --color-danger: #ef4444;
   --glow-text: 0 0 20px var(--color-accent-glow);
+  --font-family-sans: system-ui, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
 }
 
 :root {
@@ -230,7 +231,7 @@ body,
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 14px;
+  padding: 20px;
   transform: translateY(8px);
   opacity: 0;
   transition: all 0.22s ease;

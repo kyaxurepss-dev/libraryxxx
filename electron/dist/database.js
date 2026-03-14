@@ -159,4 +159,14 @@ export function getDb() {
         throw new Error('Database not initialized');
     return db;
 }
+export function closeDb() {
+    try {
+        if (db) {
+            db.close();
+        }
+    }
+    catch (e) {
+        console.error('Error closing database:', e);
+    }
+}
 //# sourceMappingURL=database.js.map
