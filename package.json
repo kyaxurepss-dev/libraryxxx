@@ -1,7 +1,7 @@
 {
   "name": "libraryxxx",
   "private": true,
-  "version": "1.1.21",
+  "version": "1.2.0",
   "description": "Personal video game library launcher",
   "author": "Kyaxuu",
   "main": "electron/dist/main.js",
