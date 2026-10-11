@@ -64,7 +64,9 @@ function createWindow() {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
             nodeIntegration: false,
-            sandbox: true,
+            // The preload is an ESM bridge and needs the unsandboxed preload runtime.
+            // Renderer Node integration remains disabled and context isolation stays enabled.
+            sandbox: false,
         },
     });
     if (process.env.NODE_ENV === 'development') {
