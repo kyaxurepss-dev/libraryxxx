@@ -2,9 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import { cleanGameName, detectBestExe, enrichGameFromIgdb } from './scanner.js';
 const watchers = [];
-function toFileUrl(filePath) {
-    return `file://${filePath.replace(/\\/g, '/')}`;
-}
 export function startWatcher(db, enrichWithIgdb) {
     stopWatcher(); // clean up any previous watchers
     const folders = db.prepare('SELECT * FROM scan_folders').all();

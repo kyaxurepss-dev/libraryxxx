@@ -1,38 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-bg-primary: #071224;
-  --color-bg-surface: #0f1c33;
-  --color-bg-surface-hover: #172746;
-  --color-bg-surface-active: #1f3258;
-  --color-accent: #3b82f6;
-  --color-accent-hover: #60a5fa;
-  --color-accent-glow: #3b82f680;
-  --color-text-primary: #f4f8ff;
-  --color-text-secondary: #a9b6cb;
-  --color-text-muted: #6f809f;
-  --color-border: #ffffff14;
-  --color-border-hover: #ffffff2e;
+  --color-bg-primary: #101113;
+  --color-bg-surface: #181a1d;
+  --color-bg-surface-hover: #222529;
+  --color-bg-surface-active: #2a2e33;
+  --color-accent: #ff5a4f;
+  --color-accent-hover: #ff786f;
+  --color-accent-glow: #ff5a4f66;
+  --color-text-primary: #f5f1ea;
+  --color-text-secondary: #b7b2aa;
+  --color-text-muted: #777873;
+  --color-border: #ffffff12;
+  --color-border-hover: #ffffff2b;
   --color-success: #10b981;
   --color-danger: #ef4444;
   --glow-text: 0 0 20px var(--color-accent-glow);
-  --font-family-sans: system-ui, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  --font-family-sans: "DM Sans", system-ui, sans-serif;
 }
 
 :root {
-  --color-bg-primary: #071224;
-  --color-bg-surface: #0f1c33;
-  --color-bg-surface-hover: #172746;
-  --color-bg-surface-active: #1f3258;
-  --color-accent: #3b82f6;
-  --color-accent-hover: #60a5fa;
-  --color-accent-glow: #3b82f680;
-  --color-text-primary: #f4f8ff;
-  --color-text-secondary: #a9b6cb;
-  --color-text-muted: #6f809f;
-  --color-border: #ffffff14;
-  --color-border-hover: #ffffff2e;
+  --color-bg-primary: #101113;
+  --color-bg-surface: #181a1d;
+  --color-bg-surface-hover: #222529;
+  --color-bg-surface-active: #2a2e33;
+  --color-accent: #ff5a4f;
+  --color-accent-hover: #ff786f;
+  --color-accent-glow: #ff5a4f66;
+  --color-text-primary: #f5f1ea;
+  --color-text-secondary: #b7b2aa;
+  --color-text-muted: #777873;
+  --color-border: #ffffff12;
+  --color-border-hover: #ffffff2b;
 }
 
 :root.theme-minimal {
@@ -92,10 +92,7 @@ body,
 #root {
   height: 100%;
   overflow: hidden;
-  background:
-    radial-gradient(1000px 480px at 10% -20%, rgba(59, 130, 246, 0.2), transparent 60%),
-    radial-gradient(900px 420px at 100% 0%, rgba(14, 165, 233, 0.12), transparent 58%),
-    linear-gradient(180deg, #071224 0%, #061022 100%);
+  background: #101113;
   color: var(--color-text-primary);
   font-family: var(--font-family-sans);
   -webkit-font-smoothing: antialiased;
@@ -195,22 +192,22 @@ body,
 
 .game-card {
   position: relative;
-  border-radius: 18px;
+  border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
   background: var(--color-bg-surface);
   border: 1px solid var(--color-border);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
   transform-style: preserve-3d;
-  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
 .game-card:hover {
-  transform: translateY(-8px) scale(1.025);
-  border-color: rgba(59, 130, 246, 0.4);
+  transform: translateY(-6px);
+  border-color: rgba(255, 90, 79, 0.68);
   box-shadow: 
     0 22px 45px rgba(0, 0, 0, 0.5), 
-    0 0 25px rgba(59, 130, 246, 0.25);
+    0 0 24px rgba(255, 90, 79, 0.16);
   z-index: 20;
 }
 
@@ -246,11 +243,11 @@ body,
   position: relative;
   min-height: 300px;
   height: min(42vh, 380px);
-  border-radius: 22px;
+  border-radius: 14px;
   overflow: hidden;
   background: var(--color-bg-surface);
   border: 1px solid var(--color-border);
-  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.32);
 }
 
 .hero-banner::after {
@@ -258,7 +255,7 @@ body,
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 75% 8%, rgba(59, 130, 246, 0.16) 0%, transparent 40%),
+    radial-gradient(circle at 75% 8%, rgba(255, 90, 79, 0.18) 0%, transparent 40%),
     linear-gradient(to top, rgba(4, 8, 18, 0.98) 4%, rgba(4, 8, 18, 0.72) 36%, rgba(4, 8, 18, 0.14) 78%, transparent 100%);
 }
 
@@ -270,11 +267,19 @@ body,
 }
 
 .glass-panel {
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015));
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: rgba(24, 26, 29, 0.86);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--color-border);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+h1, h2, h3, h4, button, select { font-family: "Space Grotesk", "DM Sans", sans-serif; }
+
+.section-kicker { color: var(--color-accent); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
 
 .skeleton {

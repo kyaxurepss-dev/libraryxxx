@@ -66,12 +66,12 @@ export class PluginManager {
                         if (enabled) {
                             await this.initPlugin(manifest.id);
                         }
-                    } catch (e: any) {
+                    } catch (e: unknown) {
                         console.error(`Failed to load plugin manifest in ${dir}:`, e);
                     }
                 }
             }
-        } catch (e: any) {
+        } catch (e: unknown) {
             console.error('Failed to read plugins directory:', e);
         }
     }
@@ -91,9 +91,9 @@ export class PluginManager {
             // if (module.activate) await module.activate();
 
             console.log(`[PluginManager] Plugin activated: ${plugin.name}`);
-        } catch (e: any) {
+        } catch (e: unknown) {
             console.error(`Failed to init plugin ${id}:`, e);
-            plugin.error = e.message;
+            plugin.error = e instanceof Error ? e.message : String(e);
         }
     }
 

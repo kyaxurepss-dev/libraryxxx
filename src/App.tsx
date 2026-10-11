@@ -20,10 +20,7 @@ function App() {
       <ControllerProvider>
         <HashRouter>
           <div className="flex h-screen bg-bg-primary relative overflow-hidden text-text-primary font-sans">
-            <div className="fixed inset-0 pointer-events-none z-0">
-              <div className="absolute -top-[18%] -left-[6%] w-[46%] h-[42%] rounded-full bg-blue-500/16 blur-[110px] animate-orb-float" />
-              <div className="absolute top-[35%] -right-[8%] w-[38%] h-[56%] rounded-full bg-cyan-400/10 blur-[105px] animate-orb-float" style={{ animationDelay: '-5s' }} />
-            </div>
+            <div className="fixed inset-0 pointer-events-none z-0 opacity-60" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px)', backgroundSize: '48px 48px', maskImage: 'linear-gradient(to bottom, black, transparent 72%)' }} />
 
             <div className="drag-region fixed top-0 left-0 right-0 h-9 z-50" />
             <ControllerHUD />
@@ -38,7 +35,7 @@ function App() {
                   <div className="flex-1 flex flex-col min-w-0 bg-transparent">
                     <TopBar />
                     <main className="flex-1 overflow-y-auto relative">
-                      <div className="w-full max-w-[1700px] mx-auto px-8 py-6 md:px-10 md:py-7 lg:px-12">
+                      <div className="w-full max-w-[1800px] mx-auto px-5 py-6 md:px-8 md:py-8 lg:px-10">
                         <Routes>
                           <Route path="/" element={<LibraryPage />} />
                           <Route path="/game/:id" element={<GamePage />} />

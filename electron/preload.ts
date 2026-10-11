@@ -1,5 +1,8 @@
 import { contextBridge, ipcRenderer } from 'electron';
 
+type EmulatorInput = { name: string; exe_path: string; args_template: string; platforms?: string | null };
+type UpdaterState = { status: string; data?: unknown };
+
 const electronAPI = {
     // Database: Games
     getGames: () => ipcRenderer.invoke('db:getGames'),
@@ -87,8 +90,8 @@ const electronAPI = {
 
     // Emulators
     getEmulators: () => ipcRenderer.invoke('emulators:get'),
-    addEmulator: (data: any) => ipcRenderer.invoke('emulators:add', data),
-    updateEmulator: (id: number, data: any) => ipcRenderer.invoke('emulators:update', id, data),
+    addEmulator: (data: EmulatorInput) => ipcRenderer.invoke('emulators:add', data),
+    updateEmulator: (id: number, data: Partial<EmulatorInput>) => ipcRenderer.invoke('emulators:update', id, data),
     deleteEmulator: (id: number) => ipcRenderer.invoke('emulators:delete', id),
 
     // Disk Management
@@ -115,7 +118,7 @@ const electronAPI = {
     checkForUpdates: () => ipcRenderer.invoke('updater:check'),
     downloadUpdate: () => ipcRenderer.invoke('updater:download'),
     installUpdate: () => ipcRenderer.invoke('updater:install'),
-    onUpdaterState: (callback: (state: { status: string; data?: any }) => void) => {
+    onUpdaterState: (callback: (state: UpdaterState) => void) => {
         ipcRenderer.on('updater:state', (_event, state) => callback(state));
     },
     removeUpdaterStateListener: () => {

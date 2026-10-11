@@ -9,6 +9,7 @@ import { searchIGDB, fetchGameDetails, authenticateIGDB } from './igdb.js';
 import { exportLibrary, importLibrary } from './backup.js';
 import { getFolderSize, formatBytes, deleteGameFolder } from './diskinfo.js';
 import { getEmulators, addEmulator, updateEmulator, deleteEmulator } from './emulators.js';
+import type { Emulator } from './emulators.js';
 import { initUpdater } from './updater.js';
 import { initPlugins } from './plugins.js';
 
@@ -17,6 +18,22 @@ const __dirname = path.dirname(__filename);
 
 let mainWindow: BrowserWindow | null = null;
 let ipcRegistered = false;
+let scanInProgress = false;
+
+const GAME_UPDATE_FIELDS = new Set([
+    'title', 'folder_path', 'exe_path', 'cover_url', 'hero_url', 'logo_url', 'description',
+    'metacritic_score', 'favorite', 'release_year', 'launch_options', 'game_modes', 'emulator_id', 'rom_path'
+]);
+const SCAN_FOLDER_UPDATE_FIELDS = new Set(['name', 'icon', 'color']);
+
+function buildSafeUpdate(data: Record<string, unknown>, allowed: Set<string>) {
+    const entries = Object.entries(data).filter(([key]) => allowed.has(key));
+    if (entries.length === 0) throw new Error('No valid fields to update');
+    return {
+        fields: entries.map(([key]) => `${key} = @${key}`).join(', '),
+        values: Object.fromEntries(entries),
+    };
+}
 
 // ─── Single Instance Lock ────────────────────────────────────────────────────
 const gotTheLock = app.requestSingleInstanceLock();
@@ -51,7 +68,8 @@ function createWindow() {
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
-            nodeIntegration: true,
+            nodeIntegration: false,
+            sandbox: true,
         },
     });
 
@@ -211,7 +229,7 @@ function advancedSearch(query: string): unknown[] {
     const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
     const sql = `SELECT DISTINCT g.* FROM games g ${where} ORDER BY g.title ASC`;
 
-    return db.prepare(sql).all(...params) as any;
+    return db.prepare(sql).all(...params) as unknown[];
 }
 
 // ─── app lifecycle ───────────────────────────────────────────────────────────
@@ -273,8 +291,8 @@ function registerIpcHandlers() {
     );
 
     ipcMain.handle('db:updateGame', (_e, id: number, data: Record<string, unknown>) => {
-        const fields = Object.keys(data).map(k => `${k} = @${k}`).join(', ');
-        return getDb().prepare(`UPDATE games SET ${fields} WHERE id = @id`).run({ ...data, id });
+        const update = buildSafeUpdate(data, GAME_UPDATE_FIELDS);
+        return getDb().prepare(`UPDATE games SET ${update.fields} WHERE id = @id`).run({ ...update.values, id });
     });
 
     ipcMain.handle('db:deleteGame', (_e, id: number) =>
@@ -408,12 +426,14 @@ function registerIpcHandlers() {
 
     // ── Search ──
     ipcMain.handle('db:searchGames', (_e, query: string) => {
-        const like = `% ${query} % `;
+        const normalizedQuery = query.trim();
+        if (!normalizedQuery) return getDb().prepare('SELECT * FROM games ORDER BY title ASC').all();
+        const like = `%${normalizedQuery}%`;
         return getDb().prepare(`
           SELECT DISTINCT g.* FROM games g
           LEFT JOIN game_tags gt ON gt.game_id = g.id
           LEFT JOIN tags t ON t.id = gt.tag_id
-          WHERE g.title LIKE ? OR t.name LIKE ?
+          WHERE g.title LIKE ? COLLATE NOCASE OR t.name LIKE ? COLLATE NOCASE
             ORDER BY g.title ASC
             `).all(like, like);
     });
@@ -518,11 +538,17 @@ function registerIpcHandlers() {
 
     // ── Scanner ──
     ipcMain.handle('scanner:scan', async () => {
+        if (scanInProgress) throw new Error('A library scan is already in progress');
+        scanInProgress = true;
+        try {
         const igdbReady = await authenticateIGDBFromSettings();
         const result = await scanFolders(getDb(), { enrichWithIgdb: igdbReady });
         stopWatcher();
         startWatcher(getDb(), igdbReady);
         return result;
+        } finally {
+            scanInProgress = false;
+        }
     });
 
     ipcMain.handle('scanner:getScanFolders', () =>
@@ -547,8 +573,8 @@ function registerIpcHandlers() {
     });
 
     ipcMain.handle('scanner:updateScanFolder', (_e, id: number, data: { name?: string; icon?: string; color?: string }) => {
-        const fields = Object.keys(data).map(k => `${k} = @${k}`).join(', ');
-        return getDb().prepare(`UPDATE scan_folders SET ${fields} WHERE id = @id`).run({ ...data, id });
+        const update = buildSafeUpdate(data, SCAN_FOLDER_UPDATE_FIELDS);
+        return getDb().prepare(`UPDATE scan_folders SET ${update.fields} WHERE id = @id`).run({ ...update.values, id });
     });
 
     ipcMain.handle('scanner:removeScanFolder', (_e, id: number) =>
@@ -582,8 +608,8 @@ function registerIpcHandlers() {
 
     // ── Emulators ──
     ipcMain.handle('emulators:get', () => getEmulators(getDb()));
-    ipcMain.handle('emulators:add', (_e, data: any) => addEmulator(getDb(), data));
-    ipcMain.handle('emulators:update', (_e, id: number, data: any) => updateEmulator(getDb(), id, data));
+    ipcMain.handle('emulators:add', (_e, data: Omit<Emulator, 'id'>) => addEmulator(getDb(), data));
+    ipcMain.handle('emulators:update', (_e, id: number, data: Partial<Omit<Emulator, 'id'>>) => updateEmulator(getDb(), id, data));
     ipcMain.handle('emulators:delete', (_e, id: number) => deleteEmulator(getDb(), id));
 
     // ── Launcher ──

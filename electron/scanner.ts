@@ -221,7 +221,13 @@ export async function scanFolders(
     for (const folder of folders) {
         if (!fs.existsSync(folder.path)) continue;
 
-        const entries = fs.readdirSync(folder.path, { withFileTypes: true });
+        let entries: fs.Dirent[];
+        try {
+            entries = fs.readdirSync(folder.path, { withFileTypes: true });
+        } catch (error) {
+            console.error(`[Scanner] Cannot read folder ${folder.path}:`, error);
+            continue;
+        }
 
         for (const entry of entries) {
             if (!entry.isDirectory()) continue;
@@ -232,7 +238,13 @@ export async function scanFolders(
 
             // Normalize game title
             const cleanTitle = cleanGameName(entry.name);
-            const gameFiles = fs.readdirSync(gameFolderPath);
+            let gameFiles: string[];
+            try {
+                gameFiles = fs.readdirSync(gameFolderPath);
+            } catch (error) {
+                console.error(`[Scanner] Cannot read game folder ${gameFolderPath}:`, error);
+                continue;
+            }
 
             const coverFile = pickArtworkByNames(gameFiles, COVER_NAMES);
             const heroFile = pickArtworkByNames(gameFiles, HERO_NAMES);

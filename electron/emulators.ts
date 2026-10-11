@@ -27,7 +27,7 @@ export function addEmulator(db: Database.Database, data: Omit<Emulator, 'id'>): 
 
 export function updateEmulator(db: Database.Database, id: number, data: Partial<Omit<Emulator, 'id'>>) {
     const sets: string[] = [];
-    const values: any = { id };
+    const values: Record<string, string | number | null> = { id };
     for (const [k, v] of Object.entries(data)) {
         sets.push(`${k} = @${k}`);
         values[k] = v;

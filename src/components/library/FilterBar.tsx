@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 interface FilterBarProps {
     onSearch: (query: string) => void;
@@ -10,29 +10,20 @@ interface FilterBarProps {
 export function FilterBar({ onSearch, onSortChange, count }: FilterBarProps) {
     const [query, setQuery] = useState('');
 
-    const debounce = useCallback((fn: (v: string) => void, ms: number) => {
-        let timer: ReturnType<typeof setTimeout>;
-        return (val: string) => {
-            clearTimeout(timer);
-            timer = setTimeout(() => fn(val), ms);
-        };
-    }, []);
-
-    const debouncedSearch = useCallback(debounce(onSearch, 260), [onSearch]);
-
     useEffect(() => {
-        debouncedSearch(query);
-    }, [query, debouncedSearch]);
+        const timer = setTimeout(() => onSearch(query), 260);
+        return () => clearTimeout(timer);
+    }, [query, onSearch]);
 
     return (
-        <div className="flex flex-col lg:flex-row lg:items-center justify-end gap-3 mb-2">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
             <div className="relative group w-full lg:w-[360px] xl:w-[420px] 2xl:w-[460px] shrink-0">
                 <input
                     type="text"
-                    placeholder="Search... or use genre:rpg, year>2018, metacritic>80"
+                    placeholder="Search your library..."
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    className="w-full pl-4 pr-11 py-3 rounded-xl glass-panel border border-white/12 text-sm font-medium text-white placeholder:text-text-muted focus:outline-none focus:border-accent/45 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.2)] transition-all"
+                    className="w-full pl-4 pr-11 py-3 rounded-lg bg-black/20 border border-white/10 text-sm font-medium text-white placeholder:text-text-muted focus:outline-none focus:border-accent/70 focus:shadow-[0_0_0_3px_rgba(255,90,79,0.14)] transition-all"
                 />
                 {query.length > 0 && (
                     <button

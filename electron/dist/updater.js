@@ -70,7 +70,7 @@ export function initUpdater(mainWindow) {
         }
         catch (error) {
             log.error('Manual check failed:', error);
-            return { success: false, error: error.message };
+            return { success: false, error: error instanceof Error ? error.message : String(error) };
         }
     });
     // Keep download handler for manual trigger if autoDownload fails
@@ -82,7 +82,7 @@ export function initUpdater(mainWindow) {
         }
         catch (error) {
             log.error('Manual download failed:', error);
-            return { success: false, error: error.message };
+            return { success: false, error: error instanceof Error ? error.message : String(error) };
         }
     });
     ipcMain.handle('updater:install', () => {

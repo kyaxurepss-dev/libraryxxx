@@ -7,10 +7,6 @@ type FSWatcher = ReturnType<typeof fs.watch>;
 
 const watchers: FSWatcher[] = [];
 
-function toFileUrl(filePath: string): string {
-    return `file://${filePath.replace(/\\/g, '/')}`;
-}
-
 export function startWatcher(db: Database.Database, enrichWithIgdb: boolean): void {
     stopWatcher(); // clean up any previous watchers
 

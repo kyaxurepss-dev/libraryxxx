@@ -140,8 +140,8 @@ export function LibraryPage() {
 
 
     return (
-        <div className="animate-fade-in flex flex-col gap-5">
-            <div className="px-4 pr-7 md:px-6 md:pr-10 lg:px-8 lg:pr-12 pt-1">
+        <div className="animate-fade-in flex flex-col gap-7">
+            <div className="pt-1">
                 <HeroBanner game={featuredGame} />
             </div>
 
@@ -153,7 +153,11 @@ export function LibraryPage() {
             )}
 
             <div className="pl-4 pr-7 md:pl-6 md:pr-10 lg:pl-8 lg:pr-12">
-                <div className="glass-panel rounded-2xl p-4 md:p-5 border-white/10">
+                <div className="flex items-end justify-between gap-4 mb-3">
+                    <div><p className="section-kicker">Your collection</p><h2 className="text-2xl font-bold text-white mt-1">All games</h2></div>
+                    <span className="text-xs text-text-muted hidden sm:block">Browse, filter and launch</span>
+                </div>
+                <div className="glass-panel rounded-xl p-3 md:p-4 border-white/10">
                     <FilterBar
                         onSearch={setSearch}
                         onSortChange={setSort}
@@ -162,8 +166,8 @@ export function LibraryPage() {
                 </div>
             </div>
 
-            <div className="pl-8 pr-7 md:pl-12 md:pr-10 lg:pl-16 lg:pr-12">
-                <div className="glass-panel rounded-2xl p-5 border border-white/10">
+            <div>
+                <div className="glass-panel rounded-xl p-4 md:p-5 border border-white/10">
                     <GameGrid
                         games={filteredGames}
                         loading={loading}

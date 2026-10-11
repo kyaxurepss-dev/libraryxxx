@@ -11,8 +11,9 @@ export function UpdaterUI() {
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
-        const handleUpdaterState = (eventState: { status: string; data?: any }) => {
+        const handleUpdaterState = (eventState: { status: string; data?: unknown }) => {
             const { status, data } = eventState;
+            const updateData = data as { version?: string; percent?: number; message?: string } | undefined;
 
             switch (status) {
                 case 'checking':
@@ -21,27 +22,27 @@ export function UpdaterUI() {
                     break;
                 case 'available':
                     setState('available');
-                    if (data?.version) setVersion(data.version);
+                    if (updateData?.version) setVersion(updateData.version);
                     setIsVisible(true);
                     break;
                 case 'downloading':
                     setState('downloading');
-                    if (data?.percent) setProgress(data.percent);
+                    if (updateData?.percent) setProgress(updateData.percent);
                     setIsVisible(true);
                     break;
                 case 'downloaded':
                     setState('downloaded');
-                    if (data?.version) setVersion(data.version);
+                    if (updateData?.version) setVersion(updateData.version);
                     setIsVisible(true);
                     break;
                 case 'installing':
                     setState('installing');
-                    if (data?.version) setVersion(data.version);
+                    if (updateData?.version) setVersion(updateData.version);
                     setIsVisible(true);
                     break;
                 case 'error':
                     setState('error');
-                    setErrorMsg(data?.message || 'Unknown error');
+                    setErrorMsg(updateData?.message || 'Unknown error');
                     setIsVisible(true);
                     break;
                 case 'not-available':

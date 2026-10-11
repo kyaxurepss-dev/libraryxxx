@@ -120,6 +120,12 @@ export function initDatabase() {
       name TEXT NOT NULL,
       FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE CASCADE
     );
+
+    CREATE INDEX IF NOT EXISTS idx_games_folder_path
+      ON games(folder_path);
+    CREATE INDEX IF NOT EXISTS idx_games_title ON games(title);
+    CREATE INDEX IF NOT EXISTS idx_play_sessions_game_started
+      ON play_sessions(game_id, started_at DESC);
   `);
     // Schema Migrations (adding missing columns to existing DBs)
     try {

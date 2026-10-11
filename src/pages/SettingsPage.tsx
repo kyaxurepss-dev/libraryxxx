@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import {
-    FolderPlus, Trash2, Key, Tag, Plus, X, RefreshCw, Pencil, Check, Download, Upload, Gamepad2, Settings2, Palette, ArrowDownToLine, RefreshCcw, Blocks, Power
+    FolderPlus, Trash2, Key, Tag, Plus, X, RefreshCw, Pencil, Check, Download, Upload, Gamepad2, Settings2, Palette, RefreshCcw, Blocks, Power
 } from 'lucide-react';
 import type { ScanFolder, Tag as TagType, Emulator, PluginData } from '@/types';
 import { useTheme } from '@/hooks/useTheme';
@@ -37,8 +37,6 @@ export function SettingsPage() {
 
     // Updater State
     const [updateStatus, setUpdateStatus] = useState<string>('');
-    const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
-    const [isUpdateDownloaded, setIsUpdateDownloaded] = useState(false);
     const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
 
     // Plugins State
@@ -54,13 +52,8 @@ export function SettingsPage() {
         }
 
         // Listen to updater messages
-        window.electron.onUpdaterState((state: { status: string; data?: any }) => {
+        window.electron.onUpdaterState((state: { status: string; data?: unknown }) => {
             setUpdateStatus(state.status);
-            if (state.status === 'available') setIsUpdateAvailable(true);
-            if (state.status === 'downloaded') {
-                setIsUpdateDownloaded(true);
-                setIsUpdateAvailable(false);
-            }
         });
 
         return () => window.electron.removeUpdaterStateListener();
@@ -128,9 +121,9 @@ export function SettingsPage() {
             const result = await window.electron.scan();
             const enrichedText = result.enriched ? ` | Enriched with IGDB: ${result.enriched}` : '';
             alert(`Scan complete. Added ${result.added} new games. Total library games: ${result.total}${enrichedText}`);
-        } catch (e: any) {
+        } catch (e: unknown) {
             console.error('Scan failed:', e);
-            alert(`Scan failed: ${e.message || String(e)}`);
+            alert(`Scan failed: ${e instanceof Error ? e.message : String(e)}`);
         } finally {
             setIsScanning(false);
         }
@@ -186,9 +179,9 @@ export function SettingsPage() {
             }
             setEditEmulatorForm({});
             loadSettings();
-        } catch (e: any) {
+        } catch (e: unknown) {
             console.error(e);
-            alert(`Failed to save emulator: ${e.message || e}`);
+            alert(`Failed to save emulator: ${e instanceof Error ? e.message : String(e)}`);
         }
     };
 
@@ -795,8 +788,8 @@ export function SettingsPage() {
                             try {
                                 const path = await window.electron.exportBackup();
                                 if (path) alert(`Backup saved to:\n${path}`);
-                            } catch (e: any) {
-                                alert(`Export failed: ${e.message || e}`);
+                            } catch (e: unknown) {
+                                alert(`Export failed: ${e instanceof Error ? e.message : String(e)}`);
                             }
                         }}
                         className="flex items-center gap-2 px-5 py-3 rounded-xl bg-accent/12 border border-accent/30 text-accent font-bold text-sm hover:bg-accent/20 transition-colors"
@@ -812,8 +805,8 @@ export function SettingsPage() {
                                     alert(`Import complete. ${result.imported} new games added.`);
                                     loadSettings();
                                 }
-                            } catch (e: any) {
-                                alert(`Import failed: ${e.message || e}`);
+                            } catch (e: unknown) {
+                                alert(`Import failed: ${e instanceof Error ? e.message : String(e)}`);
                             }
                         }}
                         className="flex items-center gap-2 px-5 py-3 rounded-xl bg-green-500/12 border border-green-500/30 text-green-400 font-bold text-sm hover:bg-green-500/20 transition-colors"

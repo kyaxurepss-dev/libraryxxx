@@ -12,6 +12,29 @@ interface GameGridProps {
 }
 
 export function GameGrid({ games, loading, emptyTitle = 'No games found', emptyDescription = 'Try scanning your library or adjusting your filters.', focusedIndex = -1 }: GameGridProps) {
+    const [visibleCount, setVisibleCount] = useState(40);
+    const observerTarget = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        // Reset the virtual window when filtering or sorting replaces the dataset.
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setVisibleCount(40);
+    }, [games]);
+
+    useEffect(() => {
+        if (loading || games.length <= visibleCount) return;
+        const observer = new IntersectionObserver(
+            entries => {
+                if (entries[0]?.isIntersecting) {
+                    setVisibleCount(prev => Math.min(prev + 40, games.length));
+                }
+            },
+            { rootMargin: '600px' }
+        );
+        if (observerTarget.current) observer.observe(observerTarget.current);
+        return () => observer.disconnect();
+    }, [games.length, loading, visibleCount]);
+
     if (loading) {
         return (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-5">
@@ -33,31 +56,6 @@ export function GameGrid({ games, loading, emptyTitle = 'No games found', emptyD
             </div>
         );
     }
-
-    const [visibleCount, setVisibleCount] = useState(40);
-    const observerTarget = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        // Reset when games array changes (e.g. new search or sort)
-        setVisibleCount(40);
-    }, [games]);
-
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            entries => {
-                if (entries[0].isIntersecting) {
-                    setVisibleCount(prev => Math.min(prev + 40, games.length));
-                }
-            },
-            { rootMargin: '600px' }
-        );
-
-        if (observerTarget.current) {
-            observer.observe(observerTarget.current);
-        }
-
-        return () => observer.disconnect();
-    }, [games.length]);
 
     const visibleGames = games.slice(0, visibleCount);
 

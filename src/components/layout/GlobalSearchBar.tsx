@@ -256,7 +256,7 @@ export function GlobalSearchBar() {
                                         <div className="px-3 pb-1.5 pt-1 text-[10px] font-bold text-text-muted uppercase tracking-widest">
                                             Games ({groupedResults.games.length})
                                         </div>
-                                        {groupedResults.games.map((result, _i) => {
+                                         {groupedResults.games.map((result) => {
                                             const globalIdx = results.indexOf(result);
                                             return (
                                                 <button
@@ -297,7 +297,7 @@ export function GlobalSearchBar() {
                                         <div className="px-3 pb-1.5 pt-1 text-[10px] font-bold text-text-muted uppercase tracking-widest">
                                             Collections ({groupedResults.collections.length})
                                         </div>
-                                        {groupedResults.collections.map((result, _i) => {
+                                         {groupedResults.collections.map((result) => {
                                             const globalIdx = results.indexOf(result);
                                             return (
                                                 <button

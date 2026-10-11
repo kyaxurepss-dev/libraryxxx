@@ -15,6 +15,21 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 let mainWindow = null;
 let ipcRegistered = false;
+let scanInProgress = false;
+const GAME_UPDATE_FIELDS = new Set([
+    'title', 'folder_path', 'exe_path', 'cover_url', 'hero_url', 'logo_url', 'description',
+    'metacritic_score', 'favorite', 'release_year', 'launch_options', 'game_modes', 'emulator_id', 'rom_path'
+]);
+const SCAN_FOLDER_UPDATE_FIELDS = new Set(['name', 'icon', 'color']);
+function buildSafeUpdate(data, allowed) {
+    const entries = Object.entries(data).filter(([key]) => allowed.has(key));
+    if (entries.length === 0)
+        throw new Error('No valid fields to update');
+    return {
+        fields: entries.map(([key]) => `${key} = @${key}`).join(', '),
+        values: Object.fromEntries(entries),
+    };
+}
 // ─── Single Instance Lock ────────────────────────────────────────────────────
 const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
@@ -48,7 +63,8 @@ function createWindow() {
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
             contextIsolation: true,
-            nodeIntegration: true,
+            nodeIntegration: false,
+            sandbox: true,
         },
     });
     if (process.env.NODE_ENV === 'development') {
@@ -237,8 +253,8 @@ function registerIpcHandlers() {
     ipcMain.handle('db:getGames', () => getDb().prepare('SELECT * FROM games ORDER BY title ASC').all());
     ipcMain.handle('db:getGame', (_e, id) => getDb().prepare('SELECT * FROM games WHERE id = ?').get(id));
     ipcMain.handle('db:updateGame', (_e, id, data) => {
-        const fields = Object.keys(data).map(k => `${k} = @${k}`).join(', ');
-        return getDb().prepare(`UPDATE games SET ${fields} WHERE id = @id`).run({ ...data, id });
+        const update = buildSafeUpdate(data, GAME_UPDATE_FIELDS);
+        return getDb().prepare(`UPDATE games SET ${update.fields} WHERE id = @id`).run({ ...update.values, id });
     });
     ipcMain.handle('db:deleteGame', (_e, id) => getDb().prepare('DELETE FROM games WHERE id = ?').run(id));
     ipcMain.handle('db:toggleFavorite', (_e, id) => getDb().prepare('UPDATE games SET favorite = NOT favorite WHERE id = ?').run(id));
@@ -310,12 +326,15 @@ function registerIpcHandlers() {
     ipcMain.handle('db:deleteExtra', (_e, id) => getDb().prepare('DELETE FROM extras WHERE id = ?').run(id));
     // ── Search ──
     ipcMain.handle('db:searchGames', (_e, query) => {
-        const like = `% ${query} % `;
+        const normalizedQuery = query.trim();
+        if (!normalizedQuery)
+            return getDb().prepare('SELECT * FROM games ORDER BY title ASC').all();
+        const like = `%${normalizedQuery}%`;
         return getDb().prepare(`
           SELECT DISTINCT g.* FROM games g
           LEFT JOIN game_tags gt ON gt.game_id = g.id
           LEFT JOIN tags t ON t.id = gt.tag_id
-          WHERE g.title LIKE ? OR t.name LIKE ?
+          WHERE g.title LIKE ? COLLATE NOCASE OR t.name LIKE ? COLLATE NOCASE
             ORDER BY g.title ASC
             `).all(like, like);
     });
@@ -393,11 +412,19 @@ function registerIpcHandlers() {
     });
     // ── Scanner ──
     ipcMain.handle('scanner:scan', async () => {
-        const igdbReady = await authenticateIGDBFromSettings();
-        const result = await scanFolders(getDb(), { enrichWithIgdb: igdbReady });
-        stopWatcher();
-        startWatcher(getDb(), igdbReady);
-        return result;
+        if (scanInProgress)
+            throw new Error('A library scan is already in progress');
+        scanInProgress = true;
+        try {
+            const igdbReady = await authenticateIGDBFromSettings();
+            const result = await scanFolders(getDb(), { enrichWithIgdb: igdbReady });
+            stopWatcher();
+            startWatcher(getDb(), igdbReady);
+            return result;
+        }
+        finally {
+            scanInProgress = false;
+        }
     });
     ipcMain.handle('scanner:getScanFolders', () => getDb().prepare('SELECT * FROM scan_folders ORDER BY path ASC').all());
     ipcMain.handle('scanner:addScanFolder', async () => {
@@ -419,8 +446,8 @@ function registerIpcHandlers() {
         }
     });
     ipcMain.handle('scanner:updateScanFolder', (_e, id, data) => {
-        const fields = Object.keys(data).map(k => `${k} = @${k}`).join(', ');
-        return getDb().prepare(`UPDATE scan_folders SET ${fields} WHERE id = @id`).run({ ...data, id });
+        const update = buildSafeUpdate(data, SCAN_FOLDER_UPDATE_FIELDS);
+        return getDb().prepare(`UPDATE scan_folders SET ${update.fields} WHERE id = @id`).run({ ...update.values, id });
     });
     ipcMain.handle('scanner:removeScanFolder', (_e, id) => getDb().prepare('DELETE FROM scan_folders WHERE id = ?').run(id));
     // ── Watcher ──

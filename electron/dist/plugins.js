@@ -68,7 +68,7 @@ export class PluginManager {
         }
         catch (e) {
             console.error(`Failed to init plugin ${id}:`, e);
-            plugin.error = e.message;
+            plugin.error = e instanceof Error ? e.message : String(e);
         }
     }
     getPlugins() {

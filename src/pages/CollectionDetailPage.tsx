@@ -21,6 +21,8 @@ export function CollectionDetailPage() {
 
     useEffect(() => {
         loadData();
+        // loadData is an intentionally mount-and-id-change operation.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [collectionId]);
 
     const loadData = async () => {
@@ -108,6 +110,8 @@ export function CollectionDetailPage() {
         if (action === 'ui_cancel') {
             navigate('/collections');
         }
+        // The controller handler reads the latest page state through its explicit dependency list.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loading, showAddGame, availableGames, focusedAddIndex, games, focusedGameIndex, navigate]);
 
     useControllerActions(({ action }) => {

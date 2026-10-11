@@ -40,7 +40,7 @@ export function GameCard({ game, gamepadFocused = false }: GameCardProps) {
             ref={cardRef}
             role="button"
             tabIndex={0}
-            className={`game-card aspect-2/3 group rounded-2xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/80 ${
+            className={`game-card aspect-2/3 group rounded-xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/80 ${
                 gamepadFocused
                     ? 'ring-2 ring-cyan-400/90 ring-offset-0 scale-[1.04] shadow-[0_0_42px_rgba(34,211,238,0.6)] z-20'
                     : ''
@@ -87,14 +87,14 @@ export function GameCard({ game, gamepadFocused = false }: GameCardProps) {
                         </div>
                     )}
 
-                    <div className="absolute inset-x-0 bottom-0 z-10 bg-linear-to-t from-black/80 via-black/35 to-transparent transition-opacity duration-300 group-hover:opacity-0" style={{ paddingLeft: '40px', paddingRight: '16px', paddingTop: '16px', paddingBottom: '20px' }}>
+                    <div className="absolute inset-x-0 bottom-0 z-10 bg-linear-to-t from-black/85 via-black/35 to-transparent" style={{ paddingLeft: '16px', paddingRight: '16px', paddingTop: '28px', paddingBottom: '16px' }}>
                         <h3 className="font-bold text-sm text-white line-clamp-2">{game.title}</h3>
                     </div>
 
                     <div className="card-overlay" />
 
                     <div className="card-content z-20">
-                        <div className="rounded-2xl bg-black/55 backdrop-blur-xl border border-white/12 px-3.5 py-3 shadow-[0_18px_40px_rgba(15,23,42,0.9)]">
+                        <div className="rounded-xl bg-[#17181a]/90 backdrop-blur-xl border border-white/12 px-3.5 py-3 shadow-[0_18px_40px_rgba(0,0,0,0.55)]">
                             <h3
                                 className="font-semibold text-sm md:text-[15px] text-white line-clamp-2 mb-2 tracking-tight"
                                 style={{ textShadow: '0 4px 12px rgba(0,0,0,0.9)' }}

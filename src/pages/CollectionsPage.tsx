@@ -96,6 +96,8 @@ export function CollectionsPage() {
         if (action === 'ui_cancel') {
             navigate('/');
         }
+        // Controller navigation intentionally owns this complete state snapshot.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [loading, showCreate, mergedItems, focusedIndex, navigate, newName]);
 
     useControllerActions(({ action }) => {

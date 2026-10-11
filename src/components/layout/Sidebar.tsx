@@ -107,17 +107,23 @@ export function Sidebar() {
 
     return (
         <aside
-            className={`w-[250px] min-w-[250px] bg-gradient-to-b from-[#050816]/95 via-[#050816]/92 to-[#020617]/98 backdrop-blur-2xl border-r border-white/10 shadow-[0_0_55px_rgba(3,7,18,0.95)] flex flex-col pt-11 z-40 relative transition-all ${
+            className={`w-[224px] min-w-[224px] bg-[#141517]/96 backdrop-blur-2xl border-r border-white/8 flex flex-col pt-11 z-40 relative transition-all ${
                 navScope === 'sidebar' ? 'ring-2 ring-accent/60 ring-offset-0' : ''
             }`}
         >
-            <div className="px-6 no-drag mb-10">
-                <div className="w-11 h-11 rounded-2xl bg-accent/20 flex items-center justify-center shadow-[0_0_26px_rgba(59,130,246,0.35)] border border-accent/30">
-                    <Gamepad2 className="w-5 h-5 text-accent" />
+            <div className="px-6 no-drag mb-12">
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shadow-[0_10px_30px_rgba(255,90,79,0.28)]">
+                        <Gamepad2 className="w-5 h-5 text-[#171719]" />
+                    </div>
+                    <div>
+                        <p className="font-bold tracking-tight text-white leading-none">libraryxxx</p>
+                        <p className="text-[9px] uppercase tracking-[0.2em] text-text-muted mt-1">Game archive</p>
+                    </div>
                 </div>
             </div>
 
-            <nav className="flex-1 px-3.5 space-y-1.5">
+            <nav className="flex-1 px-3.5 space-y-1">
                 {navItems.map((item, idx) => {
                     const isActive =
                         item.to === '/'
@@ -166,7 +172,7 @@ export function Sidebar() {
                     <span className="truncate">Big Picture</span>
                 </button>
 
-                <div className="my-5 px-3">
+                <div className="my-6 px-3">
                     <div className="flex items-center gap-2.5">
                         <div className="h-px flex-1 bg-linear-to-r from-transparent via-white/20 to-white/6" />
                         <span className="text-[10px] tracking-[0.22em] uppercase text-text-muted font-bold">System</span>
@@ -219,16 +225,7 @@ export function Sidebar() {
                 </button>
             </div>
 
-            <div className="px-6 pb-6 no-drag">
-                <div className="border-t border-white/10 pt-4">
-                    <h1 className="text-xs font-bold tracking-[0.2em] uppercase text-white/40">
-                        libraryxxx
-                    </h1>
-                    <p className="text-[10px] text-white/30 uppercase tracking-[0.24em] font-semibold mt-1">
-                        Game Library
-                    </p>
-                </div>
-            </div>
+            <div className="px-6 pb-6 no-drag"><p className="text-[10px] text-text-muted leading-relaxed">A quieter way to keep<br />your games close.</p></div>
         </aside>
     );
 }

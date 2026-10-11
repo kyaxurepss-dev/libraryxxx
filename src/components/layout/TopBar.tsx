@@ -66,21 +66,21 @@ export function TopBar() {
 
     return (
         <header
-            className={`h-[72px] min-h-[72px] border-b border-white/10 bg-bg-surface/70 backdrop-blur-2xl shadow-[0_18px_45px_rgba(3,7,18,0.8)] sticky top-0 z-30 no-drag transition-all ${
+            className={`h-[88px] min-h-[88px] border-b border-white/8 bg-[#101113]/88 backdrop-blur-2xl sticky top-0 z-30 no-drag transition-all ${
                 navScope === 'topbar' ? 'ring-2 ring-accent/60 ring-offset-0' : ''
             }`}
         >
-            <div className="w-full max-w-[1700px] mx-auto h-full px-6 md:px-8 lg:px-10 flex items-center justify-between gap-6">
+            <div className="w-full max-w-[1800px] mx-auto h-full px-5 md:px-8 lg:px-10 flex items-center justify-between gap-6">
                 <div className={`flex flex-col ${isLibraryView ? 'lg:pl-6 xl:pl-10' : ''}`}>
-                    <span className="text-[10px] font-semibold tracking-[0.26em] text-text-muted/80 uppercase mb-1">
+                    <span className="section-kicker mb-1">
                         {sectionLabel}
                     </span>
                     <div className="flex items-baseline gap-3">
-                        <h1 className="text-[24px] md:text-[26px] leading-none font-extrabold tracking-tight text-white drop-shadow-[0_0_16px_rgba(15,23,42,0.9)]">
+                        <h1 className="text-[26px] md:text-[30px] leading-none font-bold tracking-tight text-white">
                             {title}
                         </h1>
                     </div>
-                    <p className="text-[11px] md:text-xs text-text-muted mt-1 max-w-md">
+                    <p className="text-[11px] md:text-xs text-text-muted mt-2 max-w-md">
                         {subtitle}
                     </p>
                 </div>

@@ -12,7 +12,7 @@ export function HeroBanner({ game }: HeroBannerProps) {
 
     if (!game) {
         return (
-            <div className="hero-banner mb-2 relative overflow-hidden group">
+        <div className="hero-banner mb-2 relative overflow-hidden group">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(59,130,246,0.35),transparent_55%),radial-gradient(circle_at_80%_10%,rgba(14,165,233,0.28),transparent_60%),linear-gradient(130deg,#020617,#020617)]" />
                 <div className="absolute inset-0 flex items-center justify-center z-10 backdrop-blur-sm px-6">
                     <div className="text-center transform transition-transform duration-500 group-hover:scale-[1.02]">
@@ -20,7 +20,7 @@ export function HeroBanner({ game }: HeroBannerProps) {
                             <Play className="w-7 h-7 text-white fill-white/90" />
                         </div>
                         <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-2 tracking-tight">
-                            Welcome to libraryxxx
+                            Your library, on your terms.
                         </h2>
                         <p className="text-sm md:text-base text-white/75 max-w-xl mx-auto">
                             Scan your game folders, enrich them with IGDB metadata and enjoy a unified game launcher.
@@ -53,7 +53,7 @@ export function HeroBanner({ game }: HeroBannerProps) {
                     <p className="text-[11px] uppercase tracking-[0.32em] text-accent font-bold mb-3 drop-shadow-lg">
                         Featured Title
                     </p>
-                    <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-3 drop-shadow-2xl tracking-tight">
+                        <h2 className="text-4xl md:text-6xl font-bold text-white mb-3 drop-shadow-2xl tracking-tight">
                         {game.title}
                     </h2>
                     {game.description && (

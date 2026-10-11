@@ -4,7 +4,7 @@ import {
     Play, Heart, FolderOpen, Clock, Star, ArrowLeft,
     Tag, Plus, X, ChevronLeft, ChevronRight, Crosshair, Download, RefreshCw, Search, HardDrive, Trash2, Cpu, History, Film
 } from 'lucide-react';
-import type { Game, Screenshot, DLC, Tag as TagType, Extra, Emulator, PlaySession, Video } from '@/types';
+import type { Game, Screenshot, DLC, Tag as TagType, Extra, Emulator, PlaySession, Video, IGDBSearchResult } from '@/types';
 import { formatPlaytime, getScoreBgColor, getScoreColor, toMediaSrc } from '@/lib/utils';
 import { useControllerActions, useControllerState } from '@/hooks/useController';
 
@@ -36,7 +36,7 @@ export function GamePage() {
     // IGDB Search State
     const [showIgdbSearch, setShowIgdbSearch] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState<any[]>([]);
+    const [searchResults, setSearchResults] = useState<IGDBSearchResult[]>([]);
     const [isSearching, setIsSearching] = useState(false);
 
     // Disk info state
@@ -64,6 +64,8 @@ export function GamePage() {
         }
 
         return () => clearInterval(interval);
+        // The data load and polling functions are stable for the current route id.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [gameId]);
 
     const loadGameData = async () => {
@@ -108,6 +110,8 @@ export function GamePage() {
         setIsRunning(running);
     };
 
+    // This action intentionally captures the current game record for the play flow.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const handlePlay = async () => {
         if (!game) return;
         if (!game.exe_path) {
@@ -305,7 +309,6 @@ export function GamePage() {
                 {/* Back button */}
                 <button
                     onClick={() => navigate('/')}
-                    style={{ WebkitAppRegion: 'no-drag' } as any}
                     className="absolute top-10 left-6 z-60 flex items-center gap-2 px-4 py-2.5 rounded-2xl glass-panel text-sm font-semibold text-white/80 hover:text-white hover:scale-105 transition-all cursor-pointer shadow-lg"
                 >
                     <ArrowLeft className="w-4 h-4" />
@@ -717,8 +720,8 @@ export function GamePage() {
                                     try {
                                         await window.electron.deleteGameFiles(gameId);
                                         navigate('/');
-                                    } catch (e: any) {
-                                        alert(`Delete failed: ${e.message || e}`);
+                                    } catch (e: unknown) {
+                                        alert(`Delete failed: ${e instanceof Error ? e.message : String(e)}`);
                                     }
                                 }}
                                 className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500/10 border border-red-500/20 text-sm font-medium text-red-400 hover:bg-red-500/20 hover:border-red-500/30 transition-colors"

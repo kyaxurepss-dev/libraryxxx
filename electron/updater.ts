@@ -9,7 +9,7 @@ type UpdaterStatus = 'idle' | 'checking' | 'available' | 'downloading' | 'downlo
 
 interface UpdaterState {
     status: UpdaterStatus;
-    data?: any;
+    data?: unknown;
 }
 
 let currentState: UpdaterState = { status: 'idle' };
@@ -29,7 +29,7 @@ export function initUpdater(mainWindow: BrowserWindow) {
     autoUpdater.allowDowngrade = false;
 
     // Send state to renderer
-    const sendState = (status: UpdaterStatus, data?: any) => {
+    const sendState = (status: UpdaterStatus, data?: unknown) => {
         currentState = { status, data };
         if (!mainWindow.isDestroyed()) {
             mainWindow.webContents.send('updater:state', currentState);
@@ -90,9 +90,9 @@ export function initUpdater(mainWindow: BrowserWindow) {
             log.info('Manual update check requested.');
             const result = await autoUpdater.checkForUpdates();
             return { success: true, result };
-        } catch (error: any) {
+        } catch (error: unknown) {
             log.error('Manual check failed:', error);
-            return { success: false, error: error.message };
+            return { success: false, error: error instanceof Error ? error.message : String(error) };
         }
     });
 
@@ -102,9 +102,9 @@ export function initUpdater(mainWindow: BrowserWindow) {
             log.info('Manual download requested.');
             await autoUpdater.downloadUpdate();
             return { success: true };
-        } catch (error: any) {
+        } catch (error: unknown) {
             log.error('Manual download failed:', error);
-            return { success: false, error: error.message };
+            return { success: false, error: error instanceof Error ? error.message : String(error) };
         }
     });
 
