@@ -1,7 +1,7 @@
 {
   "name": "libraryxxx",
   "private": true,
-  "version": "1.2.2",
+  "version": "1.3.0",
   "description": "Personal video game library launcher",
   "author": "Kyaxuu",
   "main": "electron/dist/main.js",
@@ -60,7 +60,9 @@
     },
     "publish": [
       {
-        "provider": "github"
+        "provider": "github",
+        "owner": "kyaxurepss-dev",
+        "repo": "libraryxxx"
       }
     ],
     "files": [
