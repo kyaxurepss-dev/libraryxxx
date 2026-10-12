@@ -1,83 +1,120 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Grotesk:wght@500;600;700&display=swap');
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────────────────────
+   libraryxxx — "Darkroom Archive" design system
+   Materials: ink (page) → plate (surface) → raised (overlay).
+   Structure: hairline rules, not floating glass panels.
+   Color: one accent reserved for action & state; artwork carries
+   the rest of the color.
+   ───────────────────────────────────────────────────────────── */
+
 @theme {
-  --color-bg-primary: #101113;
-  --color-bg-surface: #181a1d;
-  --color-bg-surface-hover: #222529;
-  --color-bg-surface-active: #2a2e33;
+  /* Surface materials */
+  --color-ink: #0a0b0d;
+  --color-ink-raise: #0f1114;
+  --color-plate: #15171b;
+  --color-plate-raised: #1b1e23;
+  --color-plate-hover: #232730;
+
+  /* Structure */
+  --color-rule: #f2efe914;
+  --color-rule-strong: #f2efe92e;
+
+  /* Type */
+  --color-paper: #f2efe9;
+  --color-paper-dim: #aba79e;
+  --color-muted: #6f6c65;
+
+  /* Intent — accent is action, never decoration */
   --color-accent: #ff5a4f;
-  --color-accent-hover: #ff786f;
-  --color-accent-glow: #ff5a4f66;
-  --color-text-primary: #f5f1ea;
-  --color-text-secondary: #b7b2aa;
-  --color-text-muted: #777873;
-  --color-border: #ffffff12;
-  --color-border-hover: #ffffff2b;
-  --color-success: #10b981;
-  --color-danger: #ef4444;
-  --glow-text: 0 0 20px var(--color-accent-glow);
-  --font-family-sans: "DM Sans", system-ui, sans-serif;
+  --color-accent-hover: #ff7b6b;
+  --color-accent-ink: #170a08;
+  --color-success: #4cb782;
+  --color-warning: #e2a63b;
+  --color-danger: #e5484d;
+
+  --font-display: "Space Grotesk", "DM Sans", system-ui, sans-serif;
+  --font-sans: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --radius-control: 8px;
+  --radius-plate: 12px;
+  --radius-sheet: 16px;
+
+  --shadow-plate: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-lift: 0 12px 32px rgba(0, 0, 0, 0.45);
+  --shadow-overlay: 0 24px 64px rgba(0, 0, 0, 0.6);
+
+  /* ── Compatibility aliases ──
+     Legacy pages still reference the old token names during migration.
+     They resolve to the new materials so themes stay coherent. */
+  --color-bg-primary: var(--color-ink);
+  --color-bg-surface: var(--color-plate);
+  --color-bg-surface-hover: var(--color-plate-hover);
+  --color-bg-surface-active: var(--color-plate-raised);
+  --color-text-primary: var(--color-paper);
+  --color-text-secondary: var(--color-paper-dim);
+  --color-text-muted: var(--color-muted);
+  --color-border: var(--color-rule);
+  --color-border-hover: var(--color-rule-strong);
+  --color-accent-glow: color-mix(in srgb, var(--color-accent) 40%, transparent);
+  --font-family-sans: var(--font-sans);
 }
 
-:root {
-  --color-bg-primary: #101113;
-  --color-bg-surface: #181a1d;
-  --color-bg-surface-hover: #222529;
-  --color-bg-surface-active: #2a2e33;
-  --color-accent: #ff5a4f;
-  --color-accent-hover: #ff786f;
-  --color-accent-glow: #ff5a4f66;
-  --color-text-primary: #f5f1ea;
-  --color-text-secondary: #b7b2aa;
-  --color-text-muted: #777873;
-  --color-border: #ffffff12;
-  --color-border-hover: #ffffff2b;
-}
+/* ── Theme overrides — same variable set, different material ── */
 
 :root.theme-minimal {
-  --color-bg-primary: #000000;
-  --color-bg-surface: #0a0a0a;
-  --color-bg-surface-hover: #141414;
-  --color-bg-surface-active: #1f1f1f;
-  --color-accent: #ffffff;
-  --color-accent-hover: #e5e5e5;
-  --color-accent-glow: #ffffff40;
-  --color-text-primary: #ffffff;
-  --color-text-secondary: #a3a3a3;
-  --color-text-muted: #737373;
+  /* OLED: pure black, white action */
+  --color-ink: #000000;
+  --color-ink-raise: #060606;
+  --color-plate: #0d0d0d;
+  --color-plate-raised: #151515;
+  --color-plate-hover: #1e1e1e;
+  --color-rule: #ffffff12;
+  --color-rule-strong: #ffffff2e;
+  --color-paper: #ffffff;
+  --color-paper-dim: #9a9a9a;
+  --color-muted: #6a6a6a;
+  --color-accent: #f5f5f5;
+  --color-accent-hover: #ffffff;
+  --color-accent-ink: #0a0a0a;
 }
 
 :root.theme-neon {
-  --color-bg-primary: #090914;
-  --color-bg-surface: #101026;
-  --color-bg-surface-hover: #181836;
-  --color-bg-surface-active: #202047;
-  --color-accent: #f43f5e;
-  --color-accent-hover: #fb7185;
-  --color-accent-glow: #f43f5e80;
-  --color-text-primary: #fff1f2;
-  --color-text-secondary: #fda4af;
-  --color-text-muted: #f43f5e99;
-  --color-border: #f43f5e22;
-  --color-border-hover: #f43f5e44;
+  /* Signal: deep indigo ink, rose action */
+  --color-ink: #0b0a14;
+  --color-ink-raise: #100e1d;
+  --color-plate: #161427;
+  --color-plate-raised: #1d1a33;
+  --color-plate-hover: #262242;
+  --color-rule: #d9c8ff14;
+  --color-rule-strong: #d9c8ff30;
+  --color-paper: #f4efff;
+  --color-paper-dim: #a49bc0;
+  --color-muted: #6c648a;
+  --color-accent: #ff2d78;
+  --color-accent-hover: #ff5c96;
+  --color-accent-ink: #1c0512;
 }
 
 :root.theme-steamdeck {
-  --color-bg-primary: #1a1b1c;
-  --color-bg-surface: #26282d;
-  --color-bg-surface-hover: #31343a;
-  --color-bg-surface-active: #3e4148;
-  --color-accent: #1a9fff;
-  --color-accent-hover: #4db3ff;
-  --color-accent-glow: #1a9fff80;
-  --color-text-primary: #e6e7e8;
-  --color-text-secondary: #8b929a;
-  --color-text-muted: #616870;
-  --color-border: #ffffff0a;
-  --color-border-hover: #ffffff1a;
+  /* Handheld: steel greys, cool blue action */
+  --color-ink: #131518;
+  --color-ink-raise: #191c20;
+  --color-plate: #202429;
+  --color-plate-raised: #272c32;
+  --color-plate-hover: #30363d;
+  --color-rule: #e8edf214;
+  --color-rule-strong: #e8edf22e;
+  --color-paper: #eef1f4;
+  --color-paper-dim: #a4adb6;
+  --color-muted: #69717a;
+  --color-accent: #4da3ff;
+  --color-accent-hover: #74b8ff;
+  --color-accent-ink: #06121f;
 }
 
+/* ── Base ── */
 
 *,
 *::before,
@@ -92,16 +129,30 @@ body,
 #root {
   height: 100%;
   overflow: hidden;
-  background: #101113;
-  color: var(--color-text-primary);
-  font-family: var(--font-family-sans);
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+button,
+a,
+input,
+select,
+textarea,
+[tabindex] {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -109,15 +160,20 @@ body,
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--color-rule-strong);
   border-radius: 999px;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--color-muted);
+  background-clip: padding-box;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
 }
 
 .drag-region {
@@ -128,20 +184,70 @@ body,
   -webkit-app-region: no-drag;
 }
 
-::selection {
-  background: var(--color-accent);
-  color: white;
+/* ── Typography roles ── */
+
+.kicker {
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.kicker-dim {
+  color: var(--color-muted);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Legacy alias */
+.section-kicker {
+  composes: kicker;
+  color: var(--color-accent);
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ── Motion ── */
+
+:root {
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 150ms;
+  --dur-med: 220ms;
+  --dur-slow: 340ms;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
   }
 
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes sheetIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -167,124 +273,64 @@ body,
   }
 }
 
-@keyframes orb-float {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  50% {
-    transform: translate(15px, -20px) scale(1.05);
-  }
+.animate-fade-in {
+  animation: fadeIn var(--dur-slow) var(--ease-out-expo) both;
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.animate-sheet {
+  animation: sheetIn var(--dur-med) var(--ease-out-expo) both;
 }
 
 .animate-slide-in {
-  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: slideIn var(--dur-med) var(--ease-out-expo) both;
 }
 
-.animate-orb-float {
-  animation: orb-float 18s ease-in-out infinite;
-}
-
-.game-card {
-  position: relative;
-  border-radius: 10px;
-  overflow: hidden;
-  cursor: pointer;
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
-  transform-style: preserve-3d;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-}
-
-.game-card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(255, 90, 79, 0.68);
-  box-shadow: 
-    0 22px 45px rgba(0, 0, 0, 0.5), 
-    0 0 24px rgba(255, 90, 79, 0.16);
-  z-index: 20;
-}
-
-.game-card .card-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(5, 10, 20, 0.95) 8%, rgba(8, 15, 31, 0.58) 45%, transparent 100%);
-  opacity: 0;
-  transition: opacity 0.35s ease;
-}
-
-.game-card:hover .card-overlay {
-  opacity: 1;
-}
-
-.game-card .card-content {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 20px;
-  transform: translateY(8px);
-  opacity: 0;
-  transition: all 0.22s ease;
-}
-
-.game-card:hover .card-content {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-.hero-banner {
-  position: relative;
-  min-height: 300px;
-  height: min(42vh, 380px);
-  border-radius: 14px;
-  overflow: hidden;
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border);
-  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.32);
-}
-
-.hero-banner::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 75% 8%, rgba(255, 90, 79, 0.18) 0%, transparent 40%),
-    linear-gradient(to top, rgba(4, 8, 18, 0.98) 4%, rgba(4, 8, 18, 0.72) 36%, rgba(4, 8, 18, 0.14) 78%, transparent 100%);
-}
-
-.glass {
-  background: rgba(15, 23, 42, 0.5);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid var(--color-border);
-}
-
-.glass-panel {
-  background: rgba(24, 26, 29, 0.86);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid var(--color-border);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-h1, h2, h3, h4, button, select { font-family: "Space Grotesk", "DM Sans", sans-serif; }
-
-.section-kicker { color: var(--color-accent); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-}
+/* ── Skeleton ── */
 
 .skeleton {
-  background: linear-gradient(90deg, var(--color-bg-surface) 25%, var(--color-bg-surface-hover) 50%, var(--color-bg-surface) 75%);
+  background: linear-gradient(90deg,
+      var(--color-plate) 25%,
+      var(--color-plate-hover) 50%,
+      var(--color-plate) 75%);
   background-size: 200% 100%;
-  animation: shimmer 1.4s linear infinite;
-  border-radius: 10px;
+  animation: shimmer 1.6s linear infinite;
+  border-radius: var(--radius-plate);
+}
+
+/* ── Legacy surfaces — kept so unmigrated pages stay coherent ── */
+
+.glass,
+.glass-panel {
+  background: var(--color-plate);
+  border: 1px solid var(--color-rule);
+  box-shadow: var(--shadow-plate);
+}
+
+/* ── Adaptive game grid — scales to any width, thousands of titles ── */
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
+  gap: 18px;
+}
+
+@media (min-width: 1920px) {
+  .game-grid {
+    grid-template-columns: repeat(auto-fill, minmax(176px, 1fr));
+    gap: 20px;
+  }
+}
+
+/* ── Reduced motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -7,7 +7,6 @@ import { useTheme } from '@/hooks/useTheme';
 import { themes } from '@/lib/themes';
 import type { ThemeId } from '@/lib/themes';
 import { ControllerSettingsCard } from '@/components/layout/ControllerSettingsCard';
-import { useControllerActions, useControllerState } from '@/hooks/useController';
 
 const LIBRARY_COLORS = [
     '#3b82f6', '#8b5cf6', '#ec4899', '#ef4444', '#f97316',
@@ -202,27 +201,16 @@ export function SettingsPage() {
         }
     };
 
-    const { navScope } = useControllerState();
-
-    useControllerActions(({ action }) => {
-        if (navScope !== 'content') return;
-        const main = document.querySelector('main');
-        if (!main) return;
-
-        if (action === 'ui_down') {
-            main.scrollBy({ top: 220, behavior: 'smooth' });
-            return;
-        }
-
-        if (action === 'ui_up') {
-            main.scrollBy({ top: -220, behavior: 'smooth' });
-            return;
-        }
-
-        if (action === 'ui_cancel') {
-            window.history.back();
-        }
-    });
+    /* Arrows and confirm belong to ControllerContentNavigator, which already
+       scrolls the main surface when no focus candidate lies in that direction —
+       a second scrollBy here would double-step. This page keeps only Escape. */
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') window.history.back();
+        };
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+    }, []);
 
     return (
         <div className="w-full max-w-6xl mx-auto pb-14 pt-2 animate-fade-in flex flex-col" style={{ gap: '3.5rem' }}>

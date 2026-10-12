@@ -73,7 +73,10 @@ export function BigPicturePage() {
     }, [focusIdx]);
 
     return (
-        <div className="fixed inset-0 z-50 overflow-hidden flex flex-col bg-[radial-gradient(1200px_520px_at_0%_0%,rgba(59,130,246,0.28),transparent_65%),radial-gradient(1100px_520px_at_100%_0%,rgba(14,165,233,0.22),transparent_62%),linear-gradient(180deg,#020617,#020617)]">
+        <div
+            data-takeover="true"
+            className="fixed inset-0 z-50 overflow-hidden flex flex-col bg-[radial-gradient(1200px_520px_at_0%_0%,rgba(59,130,246,0.28),transparent_65%),radial-gradient(1100px_520px_at_100%_0%,rgba(14,165,233,0.22),transparent_62%),linear-gradient(180deg,#020617,#020617)]"
+        >
             {/* Header bar */}
             <div className="flex items-center justify-between px-10 py-4 border-b border-white/10 bg-black/40 backdrop-blur-2xl shadow-[0_20px_60px_rgba(3,7,18,0.95)]">
                 <div className="flex items-center gap-3">

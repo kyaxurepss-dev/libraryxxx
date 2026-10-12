@@ -110,8 +110,6 @@ export function GamePage() {
         setIsRunning(running);
     };
 
-    // This action intentionally captures the current game record for the play flow.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const handlePlay = async () => {
         if (!game) return;
         if (!game.exe_path) {
@@ -207,6 +205,10 @@ export function GamePage() {
             console.error(e);
         }
     };
+    /* Modals are marked data-modal, so ControllerContentNavigator yields while
+       one is open — this handler owns the carousel and closing keys there, and
+       nothing else. Outside modals the spatial navigator owns arrows/confirm,
+       so ui_confirm no longer double-fires handlePlay() here. */
     const handleControllerAction = useCallback((action: string) => {
         const activeTag = document.activeElement?.tagName?.toLowerCase();
         const isTyping = activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select';
@@ -230,22 +232,35 @@ export function GamePage() {
             if (action === 'ui_cancel') {
                 setShowIgdbSearch(false);
             }
-            return;
         }
-
-        if (action === 'ui_cancel') {
-            navigate('/');
-            return;
-        }
-
-        if (action === 'ui_confirm') {
-            handlePlay();
-        }
-    }, [showGallery, screenshots.length, activeVideoId, showIgdbSearch, navigate, handlePlay]);
+    }, [showGallery, screenshots.length, activeVideoId, showIgdbSearch]);
 
     useControllerActions(({ action }) => {
         handleControllerAction(action);
     }, navScope === 'content');
+
+    /* Escape is the single back contract: the navigator dispatches it for
+       ui_cancel, so gamepad B and keyboard B share this precedence chain. */
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key !== 'Escape') return;
+            if (showGallery) {
+                setShowGallery(false);
+                return;
+            }
+            if (activeVideoId) {
+                setActiveVideoId(null);
+                return;
+            }
+            if (showIgdbSearch) {
+                setShowIgdbSearch(false);
+                return;
+            }
+            navigate('/');
+        };
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+    }, [showGallery, activeVideoId, showIgdbSearch, navigate]);
     if (loading) {
         return (
             <div className="p-6">
@@ -768,9 +783,10 @@ export function GamePage() {
 
             {/* Screenshot lightbox */}
             {showGallery && screenshots.length > 0 && (
-                <div
-                    className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
-                    onClick={() => setShowGallery(false)}
+                            <div
+                                data-modal="true"
+                                className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center"
+                                onClick={() => setShowGallery(false)}
                 >
                     <button
                         onClick={(e) => {
@@ -814,9 +830,10 @@ export function GamePage() {
 
             {/* IGDB Search Modal */}
             {showIgdbSearch && (
-                <div
-                    className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in"
-                    onClick={() => setShowIgdbSearch(false)}
+                            <div
+                                data-modal="true"
+                                className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 backdrop-blur-sm animate-fade-in"
+                                onClick={() => setShowIgdbSearch(false)}
                 >
                     <div
                         className="bg-bg-primary border border-border rounded-2xl w-full max-w-2xl max-h-[80vh] flex flex-col shadow-2xl overflow-hidden"
@@ -906,9 +923,10 @@ export function GamePage() {
         {/* YouTube Trailer Modal */}
         {
             activeVideoId && (
-                <div
-                    className="fixed inset-0 z-200 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-fade-in"
-                    onClick={() => setActiveVideoId(null)}
+                            <div
+                                data-modal="true"
+                                className="fixed inset-0 z-200 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-fade-in"
+                                onClick={() => setActiveVideoId(null)}
                 >
                     <div
                         className="relative w-full max-w-4xl aspect-video rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 mx-4"

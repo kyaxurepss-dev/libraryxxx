@@ -37,7 +37,7 @@ export type ControllerInputCode =
   | 'right_shoulder';
 
 export type ControllerFamily = 'xbox' | 'playstation' | 'nintendo' | 'generic';
-export type ControllerNavScope = 'content' | 'sidebar' | 'topbar';
+export type ControllerNavScope = 'content' | 'rail';
 
 export interface ControllerDevice {
   id: string;
@@ -204,9 +204,7 @@ function normalizeInputs(gp: Gamepad): Set<ControllerInputCode> {
 }
 
 function cycleNavScope(scope: ControllerNavScope): ControllerNavScope {
-  if (scope === 'content') return 'sidebar';
-  if (scope === 'sidebar') return 'topbar';
-  return 'content';
+  return scope === 'content' ? 'rail' : 'content';
 }
 export function ControllerProvider({ children }: PropsWithChildren) {
   const [controllers, setControllers] = useState<ControllerDevice[]>([]);

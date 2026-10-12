@@ -13,38 +13,38 @@ export interface ThemeConfig {
 export const themes: Record<ThemeId, ThemeConfig> = {
     default: {
         id: 'default',
-        name: 'Dark Classic',
-        description: 'The default modern dark blue aesthetic.',
+        name: 'Archive',
+        description: 'Ink-dark editorial baseline. Vermilion for action only.',
         colors: {
-            primary: '#071224',
-            accent: '#3b82f6',
+            primary: '#0a0b0d',
+            accent: '#ff5a4f',
+        }
+    },
+    minimal: {
+        id: 'minimal',
+        name: 'OLED',
+        description: 'Pure black material, white action. For OLED screens.',
+        colors: {
+            primary: '#000000',
+            accent: '#f5f5f5',
+        }
+    },
+    neon: {
+        id: 'neon',
+        name: 'Signal',
+        description: 'Deep indigo ink with a rose signal accent.',
+        colors: {
+            primary: '#0b0a14',
+            accent: '#ff2d78',
         }
     },
     steamdeck: {
         id: 'steamdeck',
         name: 'Handheld',
-        description: 'Inspired by the Steam Deck interface.',
+        description: 'Steel grey material with a cool blue action color.',
         colors: {
-            primary: '#1a1b1c',
-            accent: '#1a9fff',
-        }
-    },
-    minimal: {
-        id: 'minimal',
-        name: 'Minimal Black',
-        description: 'Pure black backgrounds with white accents for OLED screens.',
-        colors: {
-            primary: '#000000',
-            accent: '#ffffff',
-        }
-    },
-    neon: {
-        id: 'neon',
-        name: 'Cyber Neon',
-        description: 'High contrast synthwave vibes.',
-        colors: {
-            primary: '#090914',
-            accent: '#f43f5e',
+            primary: '#131518',
+            accent: '#4da3ff',
         }
     }
 };

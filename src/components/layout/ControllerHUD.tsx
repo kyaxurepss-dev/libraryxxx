@@ -15,10 +15,9 @@ function familyLabel(family: 'xbox' | 'playstation' | 'nintendo' | 'generic') {
   }
 }
 
-function scopeUi(scope: 'content' | 'sidebar' | 'topbar') {
-  if (scope === 'sidebar') return { label: 'SIDEBAR', className: 'text-cyan-300 border-cyan-300/40 bg-cyan-400/10' };
-  if (scope === 'topbar') return { label: 'TOPBAR', className: 'text-amber-300 border-amber-300/40 bg-amber-400/10' };
-  return { label: 'CONTENT', className: 'text-green-300 border-green-300/40 bg-green-400/10' };
+function scopeUi(scope: 'content' | 'rail') {
+  if (scope === 'rail') return { label: 'MENU', className: 'text-accent border-accent/40 bg-accent/10' };
+  return { label: 'CONTENT', className: 'text-success border-success/40 bg-success/10' };
 }
 
 export function ControllerHUD() {

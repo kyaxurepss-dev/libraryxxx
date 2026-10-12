@@ -1,104 +1,120 @@
 import { useNavigate } from 'react-router-dom';
-import { Play, Clock } from 'lucide-react';
+import { Clock, Play, Search, Sparkles } from 'lucide-react';
 import type { Game } from '@/types';
-import { formatPlaytime, toMediaSrc } from '@/lib/utils';
+import { cn, formatPlaytime, toMediaSrc } from '@/lib/utils';
+import { Button, ScoreBadge } from '@/components/ui/primitives';
 
 interface HeroBannerProps {
-    game: Game | null;
+  game: Game | null;
+  loading?: boolean;
+  isRunning?: boolean;
 }
 
-export function HeroBanner({ game }: HeroBannerProps) {
-    const navigate = useNavigate();
+export function HeroBanner({ game, loading, isRunning = false }: HeroBannerProps) {
+  const navigate = useNavigate();
 
-    if (!game) {
-        return (
-        <div className="hero-banner mb-2 relative overflow-hidden group">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(59,130,246,0.35),transparent_55%),radial-gradient(circle_at_80%_10%,rgba(14,165,233,0.28),transparent_60%),linear-gradient(130deg,#020617,#020617)]" />
-                <div className="absolute inset-0 flex items-center justify-center z-10 backdrop-blur-sm px-6">
-                    <div className="text-center transform transition-transform duration-500 group-hover:scale-[1.02]">
-                        <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-accent/18 border border-accent/35 flex items-center justify-center shadow-[0_16px_40px_rgba(59,130,246,0.6)]">
-                            <Play className="w-7 h-7 text-white fill-white/90" />
-                        </div>
-                        <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-2 tracking-tight">
-                            Your library, on your terms.
-                        </h2>
-                        <p className="text-sm md:text-base text-white/75 max-w-xl mx-auto">
-                            Scan your game folders, enrich them with IGDB metadata and enjoy a unified game launcher.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+  if (loading) {
+    return <div className="skeleton h-[320px] w-full" />;
+  }
 
-    const bgImage = toMediaSrc(game.cover_url);
-
+  if (!game) {
     return (
-        <div
-            className="hero-banner mb-2 cursor-pointer group"
-            onClick={() => navigate(`/game/${game.id}`)}
-        >
-            {bgImage ? (
-                <img
-                    src={bgImage}
-                    alt={game.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                />
-            ) : (
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_0%_0%,rgba(59,130,246,0.35),transparent_55%),radial-gradient(circle_at_80%_10%,rgba(14,165,233,0.28),transparent_60%),linear-gradient(130deg,#020617,#020617)]" />
-            )}
-
-            <div className="absolute inset-0 z-10 flex items-end p-6 md:p-10 transition-all duration-700 bg-linear-to-t from-[#040812] via-transparent to-transparent">
-                <div className="max-w-3xl transition-all duration-500 group-hover:translate-x-3">
-                    <p className="text-[11px] uppercase tracking-[0.32em] text-accent font-bold mb-3 drop-shadow-lg">
-                        Featured Title
-                    </p>
-                        <h2 className="text-4xl md:text-6xl font-bold text-white mb-3 drop-shadow-2xl tracking-tight">
-                        {game.title}
-                    </h2>
-                    {game.description && (
-                        <p className="text-sm md:text-base text-white/80 line-clamp-2 mb-6 max-w-2xl leading-relaxed drop-shadow-lg">
-                            {game.description}
-                        </p>
-                    )}
-                    <div className="flex items-center gap-4 flex-wrap">
-                        {game.exe_path && (
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    window.electron.launchGame(game.id);
-                                }}
-                                className="flex items-center gap-3 px-6 py-3 rounded-xl bg-accent text-white font-bold text-sm border border-white/20 shadow-[0_18px_40px_rgba(59,130,246,0.6)] hover:shadow-[0_22px_50px_rgba(59,130,246,0.8)] hover:scale-[1.05] hover:bg-accent-hover transition-all active:scale-95 group/btn"
-                            >
-                                <div className="w-5 h-5 flex items-center justify-center bg-white/20 rounded-lg animate-pulse">
-                                    <Play className="w-3.5 h-3.5 fill-white" />
-                                </div>
-                                Play Now
-                            </button>
-                        )}
-                        {game.playtime_minutes > 0 && (
-                            <span className="flex items-center gap-1.5 text-sm text-white/80 bg-black/30 px-3 py-1.5 rounded-lg border border-white/10">
-                                <Clock className="w-4 h-4" />
-                                {formatPlaytime(game.playtime_minutes)} played
-                            </span>
-                        )}
-                        {game.metacritic_score && (
-                            <span
-                                className={`text-sm font-bold px-2.5 py-1 rounded-lg border ${
-                                    game.metacritic_score >= 75
-                                        ? 'bg-green-500/20 border-green-500/30 text-green-400'
-                                        : game.metacritic_score >= 50
-                                            ? 'bg-yellow-500/20 border-yellow-500/30 text-yellow-400'
-                                            : 'bg-red-500/20 border-red-500/30 text-red-400'
-                                }`}
-                            >
-                                {game.metacritic_score}
-                            </span>
-                        )}
-                    </div>
-                </div>
-            </div>
+      <section className="overflow-hidden rounded-sheet border border-rule bg-plate">
+        <div className="flex flex-col items-start gap-4 px-8 py-14 md:px-12 md:py-20">
+          <p className="kicker">Your archive</p>
+          <h2 className="max-w-xl font-display text-[clamp(1.75rem,3.4vw,2.75rem)] font-bold leading-tight tracking-tight text-paper">
+            Nothing here yet. Point me at your game folders.
+          </h2>
+          <p className="max-w-lg text-sm leading-relaxed text-paper-dim">
+            Add a library folder in Settings, run a scan, and enrich titles with IGDB metadata.
+            Covers and details appear as soon as they are found.
+          </p>
+          <Button variant="primary" size="lg" onClick={() => navigate('/settings')}>
+            <Search className="h-4 w-4" />
+            Set up your first library
+          </Button>
         </div>
+      </section>
     );
-}
+  }
 
+  const artSrc = toMediaSrc(game.hero_url) ?? toMediaSrc(game.cover_url);
+  const logoSrc = toMediaSrc(game.logo_url);
+  const launchable = Boolean(game.exe_path || game.rom_path);
+
+  return (
+    <section
+      className={cn(
+        'group relative overflow-hidden rounded-sheet border border-rule bg-plate',
+        'transition-colors duration-150 hover:border-rule-strong',
+      )}
+    >
+      {artSrc && (
+        <img
+          src={artSrc}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover opacity-45 transition-transform duration-500 group-hover:scale-[1.03]"
+        />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/20" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-transparent to-transparent" />
+
+      <div className="relative flex min-h-[300px] flex-col justify-end gap-5 px-8 py-10 md:min-h-[340px] md:px-12 md:py-12">
+        <div className="flex items-center gap-3">
+          <p className="kicker flex items-center gap-1.5">
+            <Sparkles className="h-3 w-3" />
+            Featured
+          </p>
+          {game.metacritic_score != null && <ScoreBadge score={game.metacritic_score} />}
+          {isRunning && (
+            <span className="flex items-center gap-1.5 rounded-control border border-success/30 bg-success/10 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-success">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-success" />
+              Running
+            </span>
+          )}
+        </div>
+
+        {logoSrc ? (
+          <img src={logoSrc} alt={game.title} className="h-16 w-auto max-w-md object-contain" />
+        ) : (
+          <h2 className="max-w-2xl font-display text-[clamp(2rem,4vw,3.25rem)] font-bold leading-none tracking-tight text-paper">
+            {game.title}
+          </h2>
+        )}
+
+        {game.description && (
+          <p className="line-clamp-2 max-w-xl text-sm leading-relaxed text-paper-dim">
+            {game.description}
+          </p>
+        )}
+
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            variant="primary"
+            size="lg"
+            data-primary-action
+            disabled={isRunning || !launchable}
+            title={launchable ? undefined : 'No executable assigned yet'}
+            onClick={() => {
+              if (launchable && !isRunning) void window.electron.launchGame(game.id);
+              else navigate(`/game/${game.id}`);
+            }}
+          >
+            <Play className="h-4 w-4 fill-current" />
+            {isRunning ? 'Running' : launchable ? 'Play' : 'Set up launch'}
+          </Button>
+          <Button variant="secondary" size="lg" onClick={() => navigate(`/game/${game.id}`)}>
+            Details
+          </Button>
+          {game.playtime_minutes > 0 && (
+            <span className="flex items-center gap-1.5 text-sm text-paper-dim">
+              <Clock className="h-4 w-4" />
+              <span className="tabular">{formatPlaytime(game.playtime_minutes)}</span>
+              played
+            </span>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}

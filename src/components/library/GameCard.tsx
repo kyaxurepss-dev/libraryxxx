@@ -1,137 +1,159 @@
 import { useState, useEffect, useRef } from 'react';
-import { Heart, Clock, Play, Star } from 'lucide-react';
+import { Heart, Play, Clock, Ban } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import type { Game } from '@/types';
-import { formatPlaytime, toMediaSrc } from '@/lib/utils';
+import { cn, formatPlaytime, toMediaSrc } from '@/lib/utils';
+import { ScoreBadge } from '@/components/ui/primitives';
 
 interface GameCardProps {
-    game: Game;
-    gamepadFocused?: boolean;
+  game: Game;
+  isRunning?: boolean;
 }
 
-export function GameCard({ game, gamepadFocused = false }: GameCardProps) {
-    const navigate = useNavigate();
-    const coverSrc = toMediaSrc(game.cover_url);
-    const [isVisible, setIsVisible] = useState(false);
-    const [imageLoaded, setImageLoaded] = useState(false);
-    const cardRef = useRef<HTMLDivElement>(null);
+export function GameCard({ game, isRunning = false }: GameCardProps) {
+  const navigate = useNavigate();
+  const coverSrc = toMediaSrc(game.cover_url);
+  const [isVisible, setIsVisible] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setIsVisible(true);
-                    // Disconnect observer once visible
-                    if (cardRef.current) observer.unobserve(cardRef.current);
-                }
-            },
-            { rootMargin: '300px' }
-        );
-
-        if (cardRef.current) {
-            observer.observe(cardRef.current);
+  useEffect(() => {
+    const node = cardRef.current;
+    if (!node) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
         }
-
-        return () => observer.disconnect();
-    }, []);
-
-    return (
-        <div
-            ref={cardRef}
-            role="button"
-            tabIndex={0}
-            className={`game-card aspect-2/3 group rounded-xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/80 ${
-                gamepadFocused
-                    ? 'ring-2 ring-cyan-400/90 ring-offset-0 scale-[1.04] shadow-[0_0_42px_rgba(34,211,238,0.6)] z-20'
-                    : ''
-            }`}
-            onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    navigate(`/game/${game.id}`);
-                }
-            }}
-            onClick={() => navigate(`/game/${game.id}`)}
-        >
-            {!isVisible ? (
-                <div className="w-full h-full skeleton opacity-70 rounded-2xl" />
-            ) : (
-                <>
-                    {coverSrc ? (
-                        <>
-                            {!imageLoaded && <div className="absolute inset-0 skeleton opacity-70 z-0 rounded-2xl" />}
-                            <img
-                                src={coverSrc}
-                                alt={game.title}
-                                onLoad={() => setImageLoaded(true)}
-                                className={`w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-110 group-hover:rotate-[0.5deg] relative z-10 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                                loading="lazy"
-                            />
-                        </>
-                    ) : (
-                        <div className="w-full h-full bg-linear-to-br from-bg-surface-hover via-bg-surface to-bg-surface-active flex items-center justify-center">
-                            <span className="text-5xl font-black text-white/10">{game.title.charAt(0).toUpperCase()}</span>
-                        </div>
-                    )}
-
-                    {game.favorite === 1 && (
-                        <div className="absolute top-2 right-2 z-20 rounded-full bg-black/40 backdrop-blur-sm p-1.5 border border-white/15">
-                            <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" />
-                        </div>
-                    )}
-
-                    {game.metacritic_score && (
-                        <div className="absolute top-2 left-2 z-20 rounded-full bg-black/40 backdrop-blur-sm px-2 py-1 border border-white/15 flex items-center gap-1">
-                            <Star className="w-3 h-3 text-yellow-300 fill-yellow-300" />
-                            <span className="text-[11px] font-bold text-white">{game.metacritic_score}</span>
-                        </div>
-                    )}
-
-                    <div className="absolute inset-x-0 bottom-0 z-10 bg-linear-to-t from-black/85 via-black/35 to-transparent" style={{ paddingLeft: '16px', paddingRight: '16px', paddingTop: '28px', paddingBottom: '16px' }}>
-                        <h3 className="font-bold text-sm text-white line-clamp-2">{game.title}</h3>
-                    </div>
-
-                    <div className="card-overlay" />
-
-                    <div className="card-content z-20">
-                        <div className="rounded-xl bg-[#17181a]/90 backdrop-blur-xl border border-white/12 px-3.5 py-3 shadow-[0_18px_40px_rgba(0,0,0,0.55)]">
-                            <h3
-                                className="font-semibold text-sm md:text-[15px] text-white line-clamp-2 mb-2 tracking-tight"
-                                style={{ textShadow: '0 4px 12px rgba(0,0,0,0.9)' }}
-                            >
-                                {game.title}
-                            </h3>
-
-                            <div className="flex items-center justify-between gap-2 text-[11px] font-semibold text-white/90 mb-1.5">
-                                {game.playtime_minutes > 0 && (
-                                    <span className="inline-flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-md border border-white/12">
-                                        <Clock className="w-3.5 h-3.5 text-accent" />
-                                        {formatPlaytime(game.playtime_minutes)}
-                                    </span>
-                                )}
-                                {game.release_year && (
-                                    <span className="ml-auto text-[10px] text-white/60 uppercase tracking-[0.16em]">
-                                        {game.release_year}
-                                    </span>
-                                )}
-                            </div>
-
-                            {game.exe_path && (
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        window.electron.launchGame(game.id);
-                                    }}
-                                    className="mt-1 w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-accent/80 hover:bg-accent-hover text-white text-[11px] font-bold border border-white/15 hover:border-accent transition-all duration-300 group/play shadow-[0_12px_32px_rgba(59,130,246,0.45)]"
-                                >
-                                    <Play className="w-3.5 h-3.5 fill-white transition-transform group-hover/play:scale-125" />
-                                    Play
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                </>
-            )}
-        </div>
+      },
+      { rootMargin: '400px' },
     );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  const launchable = Boolean(game.exe_path || game.rom_path);
+
+  return (
+    <div ref={cardRef} className="group relative flex flex-col">
+      {/* Poster — the only click target for navigation */}
+      <button
+        type="button"
+        onClick={() => navigate(`/game/${game.id}`)}
+        aria-label={`Open ${game.title}`}
+        className={cn(
+          'relative block aspect-2/3 w-full overflow-hidden rounded-plate border border-rule bg-plate',
+          'shadow-plate transition-all duration-150',
+          'hover:-translate-y-1 hover:border-rule-strong hover:shadow-lift',
+          'focus-visible:-translate-y-1 focus-visible:border-accent focus-visible:shadow-lift',
+        )}
+      >
+        {isVisible &&
+          (coverSrc ? (
+            <>
+              {!imageLoaded && <span className="skeleton absolute inset-0" />}
+              <img
+                src={coverSrc}
+                alt=""
+                onLoad={() => setImageLoaded(true)}
+                loading="lazy"
+                className={cn(
+                  'h-full w-full object-cover transition-opacity duration-200',
+                  imageLoaded ? 'opacity-100' : 'opacity-0',
+                )}
+              />
+            </>
+          ) : (
+            <span className="flex h-full w-full items-center justify-center bg-plate-raised">
+              <span className="font-display text-5xl font-bold text-muted/40">
+                {game.title.charAt(0).toUpperCase()}
+              </span>
+            </span>
+          ))}
+
+        {game.favorite === 1 && (
+          <span
+            className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-control bg-black/55 text-danger backdrop-blur-sm"
+            aria-label="Favorite"
+          >
+            <Heart className="h-3.5 w-3.5 fill-current" />
+          </span>
+        )}
+
+        {game.metacritic_score != null && (
+          <span className="absolute left-2 top-2">
+            <ScoreBadge score={game.metacritic_score} className="bg-black/55 backdrop-blur-sm" />
+          </span>
+        )}
+
+        {/* Running state — visible without hover, so gamepad users see it */}
+        {isRunning && (
+          <span className="absolute inset-x-2 bottom-2 flex items-center justify-center gap-1.5 rounded-control bg-success/90 px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-black">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-black" />
+            Running
+          </span>
+        )}
+      </button>
+
+      {/* Meta row — always visible, never hidden behind hover */}
+      <div className="mt-2.5 flex items-start gap-2">
+        <div className="min-w-0 flex-1">
+          <h3
+            className="line-clamp-2 font-display text-sm font-semibold leading-snug tracking-tight text-paper"
+            title={game.title}
+          >
+            {game.title}
+          </h3>
+          <p className="mt-1 flex items-center gap-1.5 text-xs text-muted">
+            {game.playtime_minutes > 0 ? (
+              <>
+                <Clock className="h-3 w-3" />
+                <span className="tabular">{formatPlaytime(game.playtime_minutes)}</span>
+              </>
+            ) : game.release_year ? (
+              <span className="tabular">{game.release_year}</span>
+            ) : (
+              <span>Not played</span>
+            )}
+          </p>
+        </div>
+
+        {/* Launch — 44px target, present in the layout (not hover-revealed) */}
+        {launchable ? (
+          <button
+            type="button"
+            disabled={isRunning}
+            onClick={(e) => {
+              e.stopPropagation();
+              void window.electron.launchGame(game.id);
+            }}
+            aria-label={`Launch ${game.title}`}
+            title={`Launch ${game.title}`}
+            className={cn(
+              'flex h-11 w-11 shrink-0 items-center justify-center rounded-control transition-colors duration-150',
+              isRunning
+                ? 'cursor-default border border-success/30 bg-success/10 text-success'
+                : 'bg-accent text-accent-ink hover:bg-accent-hover active:translate-y-px',
+            )}
+          >
+            <Play className={cn('h-4 w-4', !isRunning && 'fill-current')} />
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/game/${game.id}`);
+            }}
+            aria-label={`${game.title} has no executable — open details to set one`}
+            title="No executable set — open details"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-control border border-rule bg-plate text-muted transition-colors hover:border-rule-strong hover:text-paper-dim"
+          >
+            <Ban className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+    </div>
+  );
 }

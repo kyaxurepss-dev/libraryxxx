@@ -1,12 +1,15 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FolderOpen, Plus, Trash2, ChevronRight, Zap } from 'lucide-react';
+import { ChevronRight, FolderOpen, Plus, Sparkles, Trash2, Zap } from 'lucide-react';
 import type { Collection, SmartCollection } from '@/types';
-import { useControllerActions, useControllerState } from '@/hooks/useController';
-
-type ListItem =
-    | { kind: 'smart'; id: string; name: string; icon?: string | null }
-    | { kind: 'regular'; id: number; name: string };
+import {
+    Button,
+    ConfirmDialog,
+    EmptyState,
+    IconButton,
+    SectionHeading,
+} from '@/components/ui/primitives';
+import { cn } from '@/lib/utils';
 
 export function CollectionsPage() {
     const navigate = useNavigate();
@@ -15,236 +18,243 @@ export function CollectionsPage() {
     const [showCreate, setShowCreate] = useState(false);
     const [newName, setNewName] = useState('');
     const [loading, setLoading] = useState(true);
-    const [focusedIndex, setFocusedIndex] = useState(-1);
-    const { navScope } = useControllerState();
+    const [error, setError] = useState<string | null>(null);
+    const [pendingDelete, setPendingDelete] = useState<Collection | null>(null);
 
     useEffect(() => {
         loadCollections();
     }, []);
 
-    const mergedItems = useMemo<ListItem[]>(() => {
-        const smart: ListItem[] = smartCollections.map(col => ({ kind: 'smart', id: col.id, name: col.name, icon: col.icon }));
-        const regular: ListItem[] = collections.map(col => ({ kind: 'regular', id: col.id, name: col.name }));
-        return [...smart, ...regular];
-    }, [smartCollections, collections]);
-
     const loadCollections = async () => {
+        setLoading(true);
         try {
             const [regularData, smartData] = await Promise.all([
                 window.electron.getCollections(),
-                window.electron.getSmartCollections()
+                window.electron.getSmartCollections(),
             ]);
             setCollections(regularData);
             setSmartCollections(smartData);
+            setError(null);
         } catch (e) {
             console.error('Failed to load collections:', e);
+            setError(e instanceof Error ? e.message : String(e));
         } finally {
             setLoading(false);
         }
     };
 
     const handleCreate = async () => {
-        if (!newName.trim()) return;
-        await window.electron.createCollection(newName.trim());
+        const name = newName.trim();
+        if (!name) return;
+        await window.electron.createCollection(name);
         setNewName('');
         setShowCreate(false);
         loadCollections();
     };
 
-    const handleDelete = async (id: number) => {
-        await window.electron.deleteCollection(id);
+    const confirmDelete = async () => {
+        if (!pendingDelete) return;
+        await window.electron.deleteCollection(pendingDelete.id);
+        setPendingDelete(null);
         loadCollections();
     };
 
-    const handleControllerAction = useCallback((action: string) => {
-        if (loading) return;
-
+    /* Single cancel contract: ControllerContentNavigator dispatches Escape for
+       ui_cancel, so keyboard and gamepad share this one path. Rows are real
+       buttons, so the spatial navigator reaches them without an index model. */
+    const handleCancel = useCallback(() => {
+        if (pendingDelete) return;
         if (showCreate) {
-            if (action === 'ui_cancel') {
-                setShowCreate(false);
-                setNewName('');
-            }
-            if (action === 'ui_confirm') {
-                handleCreate();
-            }
+            setShowCreate(false);
+            setNewName('');
             return;
         }
+        navigate('/');
+    }, [pendingDelete, showCreate, navigate]);
 
-        const maxIndex = mergedItems.length;
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') handleCancel();
+        };
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+    }, [handleCancel]);
 
-        if (action === 'ui_up') {
-            setFocusedIndex(prev => Math.max(-1, prev - 1));
-            return;
-        }
-
-        if (action === 'ui_down') {
-            setFocusedIndex(prev => Math.min(maxIndex - 1, prev + 1));
-            return;
-        }
-
-        if (action === 'ui_confirm') {
-            if (focusedIndex < 0) {
-                setShowCreate(true);
-                return;
-            }
-
-            const item = mergedItems[focusedIndex];
-            if (item) navigate(`/collections/${item.id}`);
-            return;
-        }
-
-        if (action === 'ui_cancel') {
-            navigate('/');
-        }
-        // Controller navigation intentionally owns this complete state snapshot.
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loading, showCreate, mergedItems, focusedIndex, navigate, newName]);
-
-    useControllerActions(({ action }) => {
-        handleControllerAction(action);
-    }, navScope === 'content');
+    const rowClass = cn(
+        'group flex w-full items-center gap-3 rounded-plate border border-rule bg-plate px-5 py-4',
+        'text-left transition-colors duration-150 hover:border-rule-strong hover:bg-plate-hover',
+        'focus-visible:border-accent/60',
+    );
 
     return (
-        <div className="p-6 animate-fade-in">
-            <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-accent/15 border border-accent/20 flex items-center justify-center shadow-[0_0_20px_rgba(59,130,246,0.15)]">
-                        <FolderOpen className="w-6 h-6 text-accent" />
-                    </div>
-                    <div>
-                        <h1 className="text-3xl font-extrabold text-text-primary tracking-tight">Collections</h1>
-                        <p className="text-sm text-text-secondary mt-1">{collections.length} collections</p>
-                    </div>
-                </div>
+        <div className="animate-fade-in flex flex-col gap-7">
+            <SectionHeading
+                kicker="Organize"
+                title="Collections"
+                meta={
+                    <span className="tabular flex items-center gap-1.5">
+                        <FolderOpen className="h-3.5 w-3.5" />
+                        {collections.length} {collections.length === 1 ? 'collection' : 'collections'}
+                    </span>
+                }
+                action={
+                    <Button
+                        variant={showCreate ? 'secondary' : 'primary'}
+                        onClick={() => setShowCreate((v) => !v)}
+                    >
+                        {showCreate ? <Trash2 className="h-4 w-4 rotate-45" /> : <Plus className="h-4 w-4" />}
+                        {showCreate ? 'Cancel' : 'New collection'}
+                    </Button>
+                }
+            />
 
-                <button
-                    onClick={() => setShowCreate(true)}
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl bg-accent/15 border border-accent/20 text-white shadow-[0_0_15px_rgba(59,130,246,0.15)] hover:bg-accent/25 hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] text-sm font-semibold transition-all duration-300 ${focusedIndex === -1 ? 'ring-2 ring-accent/80' : ''}`}
-                >
-                    <Plus className="w-4 h-4" />
-                    New Collection
-                </button>
-            </div>
-
-            {/* Create input */}
             {showCreate && (
-                <div className="flex items-center gap-3 mb-6 p-4 rounded-xl bg-bg-surface border border-border animate-fade-in">
+                <form
+                    className="animate-fade-in flex items-center gap-2 rounded-sheet border border-accent/25 bg-accent/5 p-3"
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        handleCreate();
+                    }}
+                >
+                    <label className="sr-only" htmlFor="new-collection-name">
+                        Collection name
+                    </label>
                     <input
+                        id="new-collection-name"
                         type="text"
-                        placeholder="Collection name..."
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
+                        placeholder="Collection name…"
                         autoFocus
-                        className="flex-1 px-4 py-2.5 rounded-xl bg-bg-surface-hover border border-border
-              text-sm text-text-primary placeholder:text-text-muted
-              focus:outline-none focus:border-accent/50"
+                        className="h-10 flex-1 rounded-control border border-rule bg-plate px-3 text-sm text-paper placeholder:text-muted focus:border-accent/60"
                     />
-                    <button
-                        onClick={handleCreate}
-                        className="px-4 py-2.5 rounded-xl bg-accent text-white text-sm font-medium hover:bg-accent-hover transition-colors"
-                    >
+                    <Button type="submit" variant="primary" size="sm" disabled={!newName.trim()}>
                         Create
-                    </button>
-                    <button
-                        onClick={() => { setShowCreate(false); setNewName(''); }}
-                        className="px-4 py-2.5 rounded-xl bg-bg-surface-hover text-text-secondary text-sm hover:text-text-primary transition-colors"
+                    </Button>
+                    <IconButton
+                        label="Cancel creating a collection"
+                        className="h-9 w-9"
+                        onClick={() => {
+                            setShowCreate(false);
+                            setNewName('');
+                        }}
                     >
-                        Cancel
-                    </button>
-                </div>
+                        <Plus className="h-4 w-4 rotate-45" />
+                    </IconButton>
+                </form>
             )}
 
-            {/* Collection list */}
             {loading ? (
-                <div className="space-y-3">
-                    {Array.from({ length: 3 }).map((_, i) => (
-                        <div key={i} className="skeleton h-16 rounded-xl" />
+                <div className="flex flex-col gap-2" aria-busy="true" aria-label="Loading collections">
+                    {Array.from({ length: 4 }).map((_, i) => (
+                        <div key={i} className="skeleton h-16 w-full" />
                     ))}
                 </div>
+            ) : error ? (
+                <div className="rounded-sheet border border-danger/25 bg-danger/5 p-6">
+                    <p className="font-display font-bold text-paper">Could not load collections</p>
+                    <p className="mt-1 text-sm text-paper-dim">{error}</p>
+                    <Button variant="secondary" size="sm" className="mt-4" onClick={loadCollections}>
+                        Try again
+                    </Button>
+                </div>
             ) : (
-                <div className="space-y-6 animate-fade-in">
-                    {/* Smart Collections */}
+                <div className="flex flex-col gap-8">
                     {smartCollections.length > 0 && (
-                        <div>
-                            <h2 className="text-sm font-semibold text-text-secondary uppercase tracking-wider mb-3 px-2">Smart Collections</h2>
-                            <div className="space-y-2">
-                                {smartCollections.map(col => {
-                                    const itemIndex = mergedItems.findIndex(item => item.kind === 'smart' && item.id === col.id);
-                                    const isFocused = itemIndex === focusedIndex;
-
-                                    return (
-                                        <div
-                                            key={col.id}
-                                            onClick={() => navigate(`/collections/${col.id}`)}
-                                            className={`flex items-center justify-between px-6 py-5 rounded-2xl glass-panel
-                                        hover:border-accent/40 hover:shadow-[0_0_15px_rgba(59,130,246,0.1)] cursor-pointer transition-all duration-300 group ${isFocused ? 'ring-2 ring-accent/80 border-accent/50' : ''}`}
-                                        >
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-lg bg-accent/10 flex items-center justify-center text-accent text-lg">
-                                                    {col.icon || <Zap className="w-4 h-4" />}
-                                                </div>
-                                                <span className="text-sm font-medium text-text-primary">{col.name}</span>
-                                            </div>
-                                            <ChevronRight className="w-4 h-4 text-text-muted group-hover:text-accent transition-colors" />
-                                        </div>
-                                    );
-                                })}
+                        <section className="flex flex-col gap-3">
+                            <h2 className="kicker">Smart collections</h2>
+                            <div className="flex flex-col gap-2">
+                                {smartCollections.map((col) => (
+                                    <button
+                                        key={col.id}
+                                        type="button"
+                                        onClick={() => navigate(`/collections/${col.id}`)}
+                                        className={rowClass}
+                                    >
+                                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-control bg-accent/12 text-accent">
+                                            {col.icon ? (
+                                                <span className="text-base leading-none">{col.icon}</span>
+                                            ) : (
+                                                <Zap className="h-4 w-4" />
+                                            )}
+                                        </span>
+                                        <span className="min-w-0 flex-1">
+                                            <span className="block truncate font-display text-sm font-semibold text-paper">
+                                                {col.name}
+                                            </span>
+                                            <span className="tabular block text-xs text-muted">
+                                                {col.count} {col.count === 1 ? 'game' : 'games'}
+                                            </span>
+                                        </span>
+                                        <ChevronRight className="h-4 w-4 shrink-0 text-muted transition-colors group-hover:text-accent" />
+                                    </button>
+                                ))}
                             </div>
-                        </div>
+                        </section>
                     )}
 
-                    {/* Standard Collections */}
-                    <div>
-                        <h2 className="text-sm font-semibold text-text-secondary uppercase tracking-wider mb-3 px-2">My Collections</h2>
+                    <section className="flex flex-col gap-3">
+                        <h2 className="kicker">Your collections</h2>
                         {collections.length === 0 ? (
-                            <div className="text-center py-12 glass-panel rounded-2xl border-dashed">
-                                <FolderOpen className="w-8 h-8 text-text-muted mx-auto mb-3 opacity-50" />
-                                <p className="text-sm text-text-secondary">No custom collections yet</p>
-                            </div>
+                            <EmptyState
+                                icon={<FolderOpen className="h-5 w-5" />}
+                                title="No collections yet"
+                                description="Group games by series, mood, or whatever makes sense to you."
+                                action={
+                                    <Button variant="primary" onClick={() => setShowCreate(true)}>
+                                        <Plus className="h-4 w-4" />
+                                        New collection
+                                    </Button>
+                                }
+                            />
                         ) : (
-                            <div className="space-y-2">
-                                {collections.map(col => {
-                                    const itemIndex = mergedItems.findIndex(item => item.kind === 'regular' && item.id === col.id);
-                                    const isFocused = itemIndex === focusedIndex;
-
-                                    return (
-                                        <div
-                                            key={col.id}
+                            <div className="flex flex-col gap-2">
+                                {collections.map((col) => (
+                                    <div key={col.id} className={rowClass}>
+                                        <button
+                                            type="button"
                                             onClick={() => navigate(`/collections/${col.id}`)}
-                                            className={`flex items-center justify-between px-6 py-5 rounded-2xl glass-panel
-                                        hover:border-accent/40 hover:shadow-[0_0_15px_rgba(59,130,246,0.1)] cursor-pointer transition-all duration-300 group ${isFocused ? 'ring-2 ring-accent/80 border-accent/50' : ''}`}
+                                            aria-label={`Open ${col.name}`}
+                                            className="flex min-w-0 flex-1 items-center gap-3 text-left"
                                         >
-                                            <div className="flex items-center gap-3">
-                                                <FolderOpen className="w-5 h-5 text-accent" />
-                                                <span className="text-sm font-medium text-text-primary">{col.name}</span>
-                                            </div>
-
-                                            <div className="flex items-center gap-2">
-                                                <button
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleDelete(col.id);
-                                                    }}
-                                                    className="p-2 rounded-lg text-text-muted hover:text-red-400 hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all"
-                                                >
-                                                    <Trash2 className="w-4 h-4" />
-                                                </button>
-                                                <ChevronRight className="w-4 h-4 text-text-muted group-hover:text-accent transition-colors" />
-                                            </div>
-                                        </div>
-                                    );
-                                })}
+                                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-control bg-plate-raised text-paper-dim">
+                                                <FolderOpen className="h-4 w-4" />
+                                            </span>
+                                            <span className="min-w-0 flex-1 truncate font-display text-sm font-semibold text-paper">
+                                                {col.name}
+                                            </span>
+                                            <ChevronRight className="h-4 w-4 shrink-0 text-muted transition-colors group-hover:text-accent" />
+                                        </button>
+                                        <IconButton
+                                            label={`Delete ${col.name}`}
+                                            className="h-9 w-9 shrink-0"
+                                            onClick={() => setPendingDelete(col)}
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </IconButton>
+                                    </div>
+                                ))}
                             </div>
                         )}
-                    </div>
+                    </section>
+
+                    {smartCollections.length === 0 && collections.length === 0 && !showCreate && (
+                        <p className="flex items-center gap-2 text-xs text-muted">
+                            <Sparkles className="h-3.5 w-3.5" />
+                            Smart collections appear once you have enough games to filter.
+                        </p>
+                    )}
                 </div>
             )}
+
+            <ConfirmDialog
+                open={pendingDelete !== null}
+                title={`Delete “${pendingDelete?.name ?? ''}”?`}
+                description="The games stay in your library — only this collection goes away."
+                confirmLabel="Delete collection"
+                onConfirm={confirmDelete}
+                onCancel={() => setPendingDelete(null)}
+            />
         </div>
     );
 }
-
-
-
-
-

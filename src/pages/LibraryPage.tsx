@@ -1,11 +1,11 @@
-import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import type { Game } from '@/types';
 import { GameGrid } from '@/components/library/GameGrid';
 import { HeroBanner } from '@/components/library/HeroBanner';
 import { FilterBar } from '@/components/library/FilterBar';
 import { ContinuePlaying } from '@/components/library/ContinuePlaying';
-import { useControllerActions, useControllerState } from '@/hooks/useController';
-import { useNavigate } from 'react-router-dom';
+import { EmptyState } from '@/components/ui/primitives';
+import { FolderSearch } from 'lucide-react';
 
 const FILTER_PREFIXES = /^(genre:|tag:|metacritic[><=]|year[><=]|playtime[><=])/i;
 
@@ -14,24 +14,25 @@ function isAdvancedQuery(query: string): boolean {
 }
 
 export function LibraryPage() {
-    const navigate = useNavigate();
     const [games, setGames] = useState<Game[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [search, setSearch] = useState('');
     const [sort, setSort] = useState('title');
     const [advancedResults, setAdvancedResults] = useState<Game[] | null>(null);
-    const [focusedIndex, setFocusedIndex] = useState(-1);
-    const { navScope } = useControllerState();
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => { loadGames(); }, []);
 
     const loadGames = async () => {
+        setLoading(true);
         try {
             const data = await window.electron.getGames();
             setGames(data);
+            setError(null);
         } catch (e) {
             console.error('Failed to load games:', e);
+            setError(e instanceof Error ? e.message : String(e));
         } finally {
             setLoading(false);
         }
@@ -112,37 +113,13 @@ export function LibraryPage() {
         return result;
     }, [games, search, sort, advancedResults]);
 
-    // Gamepad integration (columns = 5 by default)
-    const COLS = 5;
-    const handleGamepadAction = useCallback((action: string) => {
-        setFocusedIndex(prev => {
-            const count = filteredGames.length;
-            if (count === 0) return -1;
-            const idx = prev < 0 ? 0 : prev;
-            switch (action) {
-                case 'ui_up': return Math.max(0, idx - COLS);
-                case 'ui_down': return Math.min(count - 1, idx + COLS);
-                case 'ui_left': return Math.max(0, idx - 1);
-                case 'ui_right': return Math.min(count - 1, idx + 1);
-                case 'ui_confirm': {
-                    const game = filteredGames[idx];
-                    if (game) navigate(`/game/${game.id}`);
-                    return prev;
-                }
-                default: return prev;
-            }
-        });
-    }, [filteredGames, navigate]);
-
-    useControllerActions(({ action }) => {
-        handleGamepadAction(action);
-    }, navScope === 'content');
-
+    // Gamepad/keyboard focus is owned by ControllerContentNavigator (spatial),
+    // so this page exposes plain focusable cards and no index model.
 
     return (
         <div className="animate-fade-in flex flex-col gap-7">
             <div className="pt-1">
-                <HeroBanner game={featuredGame} />
+                <HeroBanner game={featuredGame} loading={loading} />
             </div>
 
             {/* Continue Playing */}
@@ -171,12 +148,18 @@ export function LibraryPage() {
                     <GameGrid
                         games={filteredGames}
                         loading={loading}
-                        focusedIndex={focusedIndex}
-                        emptyTitle="No games found"
-                        emptyDescription={
-                            search
-                                ? 'Try a different query. Tip: use genre:rpg, metacritic>80, year>2018, tag:open-world'
-                                : 'Add a scan folder and run Scan Now to import your games.'
+                        error={error}
+                        onRetry={loadGames}
+                        empty={
+                            <EmptyState
+                                icon={<FolderSearch className="h-5 w-5" />}
+                                title={search ? 'No games match that filter' : 'No games found'}
+                                description={
+                                    search
+                                        ? 'Try a different query. Tip: use genre:rpg, metacritic>80, year>2018, tag:open-world'
+                                        : 'Add a scan folder and run Scan Now to import your games.'
+                                }
+                            />
                         }
                     />
                 </div>

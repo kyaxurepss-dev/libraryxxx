@@ -21,10 +21,26 @@ function isVisible(element: HTMLElement): boolean {
 }
 
 function getContentCandidates(): HTMLElement[] {
+  // Only the nav rail (aside) is owned by a different scope now that the
+  // top bar is gone — page headers carry real actions and must stay reachable.
   return Array.from(document.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR))
     .filter(el => isVisible(el))
-    .filter(el => !el.closest('aside'))
-    .filter(el => !el.closest('header'));
+    .filter(el => !el.closest('aside'));
+}
+
+/* Full-screen modes (Big Picture) and page-level overlays own their own
+   focus model; the spatial navigator must not fight them. */
+function hasTakeover(): boolean {
+  return Boolean(
+    document.querySelector('[data-modal="true"], [data-takeover="true"]'),
+  );
+}
+
+/* Pages can nominate the primary action (e.g. hero Play) so entering
+   content scope lands there instead of on a back button. */
+function primaryCandidate(): HTMLElement | null {
+  const el = document.querySelector<HTMLElement>('[data-primary-action]');
+  return el && isVisible(el) ? el : null;
 }
 
 function focusElement(el: HTMLElement | null) {
@@ -119,14 +135,36 @@ export function ControllerContentNavigator() {
 
   useEffect(() => {
     if (navScope !== 'content') return;
+    if (hasTakeover()) return;
     const active = document.activeElement as HTMLElement | null;
-    if (active && isVisible(active) && !active.closest('aside') && !active.closest('header')) return;
-    const candidates = getContentCandidates();
-    focusElement(candidates[0] ?? null);
+    if (active && isVisible(active) && !active.closest('aside')) return;
+    focusElement(primaryCandidate() ?? getContentCandidates()[0] ?? null);
   }, [navScope]);
+
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (hasTakeover()) return;
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName?.toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select' || target?.isContentEditable) return;
+      const directions: Record<string, Direction> = {
+        ArrowUp: 'ui_up',
+        ArrowDown: 'ui_down',
+        ArrowLeft: 'ui_left',
+        ArrowRight: 'ui_right',
+      };
+      const direction = directions[e.key];
+      if (!direction) return;
+      e.preventDefault();
+      moveFocus(direction);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
 
   useControllerActions(({ action }) => {
     if (navScope !== 'content') return;
+    if (hasTakeover()) return;
 
     if (action === 'ui_up' || action === 'ui_down' || action === 'ui_left' || action === 'ui_right') {
       moveFocus(action);

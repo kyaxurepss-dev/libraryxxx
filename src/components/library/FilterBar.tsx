@@ -1,72 +1,91 @@
-import { X } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Search, X } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface FilterBarProps {
-    onSearch: (query: string) => void;
-    onSortChange: (sort: string) => void;
-    count: number;
+  onSearch: (query: string) => void;
+  onSortChange: (sort: string) => void;
+  count: number;
 }
 
+const SORTS = [
+  { value: 'title', label: 'A–Z' },
+  { value: 'added', label: 'Recently added' },
+  { value: 'played', label: 'Recently played' },
+  { value: 'playtime', label: 'Most played' },
+  { value: 'score', label: 'Highest rated' },
+  { value: 'year', label: 'Newest first' },
+];
+
+const CHIPS = ['genre:', 'tag:', 'metacritic>', 'year>', 'playtime>'] as const;
+
 export function FilterBar({ onSearch, onSortChange, count }: FilterBarProps) {
-    const [query, setQuery] = useState('');
+  const [query, setQuery] = useState('');
 
-    useEffect(() => {
-        const timer = setTimeout(() => onSearch(query), 260);
-        return () => clearTimeout(timer);
-    }, [query, onSearch]);
+  useEffect(() => {
+    const timer = setTimeout(() => onSearch(query), 250);
+    return () => clearTimeout(timer);
+  }, [query, onSearch]);
 
-    return (
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-            <div className="relative group w-full lg:w-[360px] xl:w-[420px] 2xl:w-[460px] shrink-0">
-                <input
-                    type="text"
-                    placeholder="Search your library..."
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    className="w-full pl-4 pr-11 py-3 rounded-lg bg-black/20 border border-white/10 text-sm font-medium text-white placeholder:text-text-muted focus:outline-none focus:border-accent/70 focus:shadow-[0_0_0_3px_rgba(255,90,79,0.14)] transition-all"
-                />
-                {query.length > 0 && (
-                    <button
-                        onClick={() => setQuery('')}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md text-text-muted hover:text-white hover:bg-white/8 transition-colors"
-                    >
-                        <X className="w-3.5 h-3.5" />
-                    </button>
-                )}
-            </div>
+  return (
+    <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+      <div className="relative w-full lg:max-w-md">
+        <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Filter this view…  (genre:rpg · metacritic>80)"
+          aria-label="Filter games in this view"
+          className="h-11 w-full rounded-control border border-rule bg-plate pl-10 pr-10 text-sm text-paper placeholder:text-muted focus:border-accent/60"
+        />
+        {query && (
+          <button
+            type="button"
+            onClick={() => setQuery('')}
+            aria-label="Clear filter"
+            className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-control text-muted hover:bg-plate-hover hover:text-paper"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        )}
+      </div>
 
-            <div className="flex items-center gap-3">
-                <div className="relative">
-                    <select
-                        onChange={(e) => onSortChange(e.target.value)}
-                        className="pl-3.5 pr-7 py-2.5 rounded-xl glass-panel border border-white/12 text-sm font-semibold text-white/90 cursor-pointer focus:outline-none focus:border-accent/45 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.2)] min-w-[136px]"
-                    >
-                        <option value="title" className="bg-bg-primary text-white">A-Z</option>
-                        <option value="added" className="bg-bg-primary text-white">Recently Added</option>
-                        <option value="played" className="bg-bg-primary text-white">Recently Played</option>
-                        <option value="playtime" className="bg-bg-primary text-white">Most Played</option>
-                        <option value="score" className="bg-bg-primary text-white">Highest Rated</option>
-                        <option value="year" className="bg-bg-primary text-white">Newest First</option>
-                    </select>
-                </div>
+      <div className="flex flex-wrap items-center gap-2">
+        {CHIPS.map((chip) => (
+          <button
+            key={chip}
+            type="button"
+            onClick={() => setQuery((q) => (q.includes(chip) ? q : q + (q ? ' ' : '') + chip))}
+            className={cn(
+              'rounded-control border border-rule bg-plate px-2.5 py-1.5 font-mono text-[11px] text-muted',
+              'transition-colors hover:border-accent/40 hover:text-accent',
+            )}
+          >
+            {chip}
+          </button>
+        ))}
+      </div>
 
-                <span className="text-sm font-semibold text-text-secondary whitespace-nowrap px-1">
-                    {count} {count === 1 ? 'game' : 'games'}
-                </span>
-            </div>
-
-            {/* Advanced filter chips */}
-            <div className="flex items-center gap-1.5 flex-wrap lg:ml-auto">
-                {(['genre:', 'tag:', 'metacritic>', 'year>', 'playtime>'] as const).map(chip => (
-                    <button
-                        key={chip}
-                        onClick={() => setQuery(q => q.includes(chip) ? q : (q + (q ? ' ' : '') + chip))}
-                        className="text-[10px] font-mono px-2 py-1 rounded-lg bg-white/5 text-text-muted hover:bg-accent/15 hover:text-accent border border-white/5 hover:border-accent/30 transition-all"
-                    >
-                        {chip}
-                    </button>
-                ))}
-            </div>
-        </div>
-    );
+      <div className="flex items-center gap-3 lg:ml-auto">
+        <span className="tabular text-xs font-semibold text-muted">
+          {count} {count === 1 ? 'game' : 'games'}
+        </span>
+        <label className="sr-only" htmlFor="library-sort">
+          Sort games
+        </label>
+        <select
+          id="library-sort"
+          onChange={(e) => onSortChange(e.target.value)}
+          className="h-11 cursor-pointer rounded-control border border-rule bg-plate px-3 pr-8 text-sm font-semibold text-paper focus:border-accent/60"
+        >
+          {SORTS.map((s) => (
+            <option key={s.value} value={s.value} className="bg-plate text-paper">
+              {s.label}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+  );
 }
